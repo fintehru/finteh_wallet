@@ -2,20 +2,16 @@ package com.bitshares.bitshareswallet.repository;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.util.Pair;
 
 import com.bitshares.bitshareswallet.BitsharesApplication;
 import com.bitshares.bitshareswallet.R;
 import com.bitshares.bitshareswallet.market.MarketTicker;
 import com.bitshares.bitshareswallet.room.BitsharesAssetObject;
-import com.bitshares.bitshareswallet.room.BitsharesBalanceAsset;
 import com.bitshares.bitshareswallet.room.BitsharesDao;
 import com.bitshares.bitshareswallet.room.BitsharesMarketTicker;
 import com.bitshares.bitshareswallet.wallet.BitsharesWalletWraper;
 import com.bitshares.bitshareswallet.wallet.exception.NetworkStatusException;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.asset_object;
-import com.bitshares.bitshareswallet.wallet.graphene.chain.object_id;
-import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
 import com.bituniverse.network.Resource;
 
 import java.util.ArrayList;
@@ -27,12 +23,8 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by lorne on 02/11/2017.
- */
-
 public class MarketTickerRepository {
-    BitsharesDao bitsharesDao;
+    private BitsharesDao bitsharesDao;
     private MediatorLiveData<Resource<List<BitsharesMarketTicker>>> result = new MediatorLiveData<>();
 
     public MarketTickerRepository() {
@@ -59,10 +51,9 @@ public class MarketTickerRepository {
 
     private void fetchFromNetwork(final LiveData<List<BitsharesMarketTicker>> dbSource) {
         result.addSource(dbSource, newData -> result.setValue(Resource.loading(newData)));
-        // 向远程获取数据，并进行存储
         Flowable.just(0)
                 .subscribeOn(Schedulers.io())
-                .map(integer -> { // 获取asset list
+                .map(integer -> {
                     fetchMarketTicker();
                     return 0;
                 }).observeOn(AndroidSchedulers.mainThread())

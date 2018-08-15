@@ -124,6 +124,7 @@
     <string name="label_to">To:</string>
 
     <string name="tab_send">Send</string>
+    <string name="tab_receive">Receive</string>
     <string name="tab_balances">Balance</string>
     <string name="tab_transactions">Transaction</string>
     <string name="title_currency_settings">Currency Settings</string>
@@ -176,5 +177,17 @@
 
     <string name="loading_history_failed">Failed to load data. Please try again later</string>
     <string name="loading_history_data">Loading transaction data</string>
+    <string name="backup_wallet">Backup Wallet</string>
+    <string name="incorrect_pin">Incorrect PIN</string>
+    <string name="welcome_back">Welcome back</string>
+    <string name="pin_title">PIN code</string>
+    <string name="change_pin_title">Change PIN</string>
+    <string name="swith_pin_title">PIN lock</string>
+    <string name="pin_confirm_new">Confirm new PIN</string>
+    <string name="pin_enter_current">Enter current PIN</string>
+    <string name="pin_enter_new">Enter new PIN</string>
+    <string name="pin_edit_success">PIN changed</string>
+    <string name="pin_save_success">PIN saved</string>
+    <string name="pin_delete_success">PIN deleted</string>
 
 </resources>

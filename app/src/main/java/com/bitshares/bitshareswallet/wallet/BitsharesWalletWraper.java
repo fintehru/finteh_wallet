@@ -1,11 +1,6 @@
 package com.bitshares.bitshareswallet.wallet;
 
-import android.content.SharedPreferences;
-import android.support.v7.preference.PreferenceManager;
-import android.util.Pair;
-
 import com.bitshares.bitshareswallet.BitsharesApplication;
-import com.bitshares.bitshareswallet.R;
 import com.bitshares.bitshareswallet.market.MarketTicker;
 import com.bitshares.bitshareswallet.market.MarketTrade;
 import com.bitshares.bitshareswallet.wallet.common.ErrorCode;
@@ -22,19 +17,16 @@ import com.bitshares.bitshareswallet.wallet.graphene.chain.object_id;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.operation_history_object;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.operations;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
-import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
 import com.google.common.collect.Sets;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,6 +35,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.bitsharesmunich.graphenej.FileBin;
 import de.bitsharesmunich.graphenej.models.backup.LinkedAccount;
 import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
+import io.sentry.Sentry;
+import io.sentry.event.UserBuilder;
 
 public class BitsharesWalletWraper {
     public interface BitsharesDataObserver {

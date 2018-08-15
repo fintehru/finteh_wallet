@@ -32,9 +32,7 @@ public class WalletViewModel extends ViewModel {
                         retryData.setValue(retryData.getValue());
                         return retryData;
                     }),
-                    retryCount -> {
-                        return new BalanceRepository().getBalances(currencyData.getValue());
-                    });
+                    retryCount -> new BalanceRepository().getBalances(currencyData.getValue()));
 
             resultData.addSource(balanceData, result -> resultData.setValue(result));
         });
@@ -51,6 +49,6 @@ public class WalletViewModel extends ViewModel {
 
     public void retry() {
         int nValue = retryData.getValue();
-        retryData.setValue(nValue++);
+        retryData.setValue(++nValue);
     }
 }

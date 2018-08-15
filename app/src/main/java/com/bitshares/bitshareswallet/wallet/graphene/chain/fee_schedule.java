@@ -1,5 +1,7 @@
 package com.bitshares.bitshareswallet.wallet.graphene.chain;
 
+import android.util.Log;
+
 import com.bitshares.bitshareswallet.wallet.asset;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -61,11 +63,14 @@ public class fee_schedule {
         BigInteger bigScale = BigInteger.valueOf(scale);
         BigInteger bigScaled = bigFee.multiply(bigScale);
         BigInteger bigDefault = BigInteger.valueOf(GRAPHENE_100_PERCENT);
+
         // // TODO: 07/09/2017 需要确保 FC_ASSERT( scaled <= GRAPHENE_MAX_SHARE_SUPPLY );
 
         long lResult = bigScaled.divide(bigDefault).longValue();
 
-        asset assetResult = new asset(lResult, new object_id<asset_object>(0, asset_object.class)).multipy(core_exchange_rate);
+        asset assetResult = new asset(lResult, new object_id<asset_object>(3275, asset_object.class)).multipy(core_exchange_rate);
+
+        Log.w("FEE", assetResult.asset_id.toString());
 
         while (assetResult.multipy(core_exchange_rate).amount < lResult) {
             assetResult.amount++;

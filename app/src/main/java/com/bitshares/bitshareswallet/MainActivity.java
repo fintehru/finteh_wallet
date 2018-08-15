@@ -5,31 +5,26 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Handler;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
@@ -49,11 +44,13 @@ import com.bitshares.bitshareswallet.wallet.account_object;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
+
 import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
-
+import io.sentry.Sentry;
+import io.sentry.event.UserBuilder;
 
 
 public class MainActivity extends AppCompatActivity
@@ -77,7 +74,6 @@ public class MainActivity extends AppCompatActivity
     private TextView mTxtTitle;
     private LinearLayout mLayoutTitle;
     private BottomNavigationView mBottomNavigation;
-    private Handler mHandler = new Handler();
 
     private static final int REQUEST_CODE_SETTINGS = 1;
 
@@ -126,26 +122,28 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        account_object account = BitsharesWalletWraper.getInstance().get_account();
+        Sentry.getContext().setUser(new UserBuilder()
+                .setUsername(account.name)
+                .setId(account.id.toString())
+                .withData("pin", getSharedPreferences("data", Context.MODE_PRIVATE).contains("val"))
+                .build());
+
         rasingColorRevers = getResources().getConfiguration().locale.getCountry().equals("CN");
         setContentView(R.layout.activity_main);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mToolbar.setTitle("");
-        // Toolbar的标题文本不支持居中，故创建了新文本
-        mLayoutTitle = (LinearLayout) mToolbar.findViewById(R.id.lay_title);
-        mTxtTitle = (TextView) mToolbar.findViewById(R.id.txt_bar_title);
+
+        mLayoutTitle = mToolbar.findViewById(R.id.lay_title);
+        mTxtTitle = mToolbar.findViewById(R.id.txt_bar_title);
         updateTitle();
         setTitleVisible(false);
 
-        mLayoutTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processChooseCurency();
-            }
-        });
+        mLayoutTitle.setOnClickListener(v -> processChooseCurency());
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerLayout = findViewById(R.id.drawer);
         mActionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -156,13 +154,13 @@ public class MainActivity extends AppCompatActivity
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
         mActionBarDrawerToggle.syncState();
 
-        mViewPager = (NonScrollViewPager) findViewById(R.id.viewPager);
+        mViewPager = findViewById(R.id.viewPager);
 
         mMainFragmentPageAdapter = new BtsFragmentPageAdapter(getSupportFragmentManager());
 
-        mWalletFragment = WalletFragment.newInstance("","");
+        mWalletFragment = WalletFragment.newInstance();
         mQuotationFragment = QuotationFragment.newInstance();
-        mExchangeFragment = ExchangeFragment.newInstance("", "");
+        mExchangeFragment = ExchangeFragment.newInstance();
 
         mMainFragmentPageAdapter.addFragment(mWalletFragment, "Wallet");
         mMainFragmentPageAdapter.addFragment(mQuotationFragment, "Quotation");
@@ -193,28 +191,24 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-        NavigationView navigationView = (NavigationView)findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.logout:
-                        processLogout();
-                        break;
-                    case R.id.settings:
-                        Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
-                        //startActivity(intent);
-                        startActivityForResult(intentSettings, REQUEST_CODE_SETTINGS);
-                        break;
-                    case R.id.about:
-                        Intent intentAbout = new Intent(MainActivity.this, AboutActivity.class);
-                        startActivity(intentAbout);
-                        break;
-                }
-
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-                return false;
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.logout:
+                    processLogout();
+                    break;
+                case R.id.settings:
+                    Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivityForResult(intentSettings, REQUEST_CODE_SETTINGS);
+                    break;
+                case R.id.about:
+                    Intent intentAbout = new Intent(MainActivity.this, AboutActivity.class);
+                    startActivity(intentAbout);
+                    break;
             }
+
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+            return false;
         });
 
         WalletViewModel walletViewModel = ViewModelProviders.of(this).get(WalletViewModel.class);
@@ -223,58 +217,45 @@ public class MainActivity extends AppCompatActivity
         walletViewModel.changeCurrency(strCurrency);
 
 
-        if (BitsharesWalletWraper.getInstance().load_wallet_file() != 0 ||
-                BitsharesWalletWraper.getInstance().is_new() == true ){
-            Intent intent = new Intent(this, SignUpButtonActivity.class);
-            startActivity(intent);
-            finish();
-        } else {
-            final account_object accountObject = BitsharesWalletWraper.getInstance().get_account();
-            if (accountObject != null) {
-                View view = navigationView.getHeaderView(0);
-                TextView textViewAccountName = (TextView)view.findViewById(R.id.textViewAccountName);
-                textViewAccountName.setText(accountObject.name);
+        final account_object accountObject = BitsharesWalletWraper.getInstance().get_account();
+        if (accountObject != null) {
+            View view = navigationView.getHeaderView(0);
+            TextView textViewAccountName = view.findViewById(R.id.textViewAccountName);
+            textViewAccountName.setText(accountObject.name);
 
-                sha256_object.encoder encoder = new sha256_object.encoder();
-                encoder.write(accountObject.name.getBytes());
+            sha256_object.encoder encoder = new sha256_object.encoder();
+            encoder.write(accountObject.name.getBytes());
 
-                WebView webView = (WebView)view.findViewById(R.id.webViewAvatar);
-                loadWebView(webView, 70, encoder.result().toString());
+            WebView webView = view.findViewById(R.id.webViewAvatar);
+            loadWebView(webView, 70, encoder.result().toString());
 
-                TextView textViewAccountId = (TextView)view.findViewById(R.id.textViewAccountId);
-                textViewAccountId.setText("#" + accountObject.id.get_instance());
+            TextView textViewAccountId = view.findViewById(R.id.textViewAccountId);
+            textViewAccountId.setText("#" + accountObject.id.get_instance());
 
-                view.findViewById(R.id.textViewCopyAccount).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                        ClipData clipData = ClipData.newPlainText("account name", accountObject.name);
-                        clipboardManager.setPrimaryClip(clipData);
-                        Toast toast = Toast.makeText(MainActivity.this, "Copy Successfully", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                });
-            }
+            view.findViewById(R.id.textViewCopyAccount).setOnClickListener(v -> {
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                ClipData clipData = ClipData.newPlainText("account name", accountObject.name);
+                clipboardManager.setPrimaryClip(clipData);
+                Toast toast = Toast.makeText(MainActivity.this, "Copy Successfully", Toast.LENGTH_SHORT);
+                toast.show();
+            });
         }
 
 
-        mBottomNavigation = (BottomNavigationView) findViewById(R.id.navigation_bottom);
-        mBottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.navigation_wallet:
-                        mViewPager.setCurrentItem(0, true);
-                        return true;
-                    case R.id.navigation_quotation:
-                        mViewPager.setCurrentItem(1, true);
-                        return true;
-                    case R.id.navigation_exchange:
-                        mViewPager.setCurrentItem(2, true);
-                        return true;
-                }
-                return false;
+        mBottomNavigation = findViewById(R.id.navigation_bottom);
+        mBottomNavigation.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()){
+                case R.id.navigation_wallet:
+                    mViewPager.setCurrentItem(0, true);
+                    return true;
+                case R.id.navigation_quotation:
+                    mViewPager.setCurrentItem(1, true);
+                    return true;
+                case R.id.navigation_exchange:
+                    mViewPager.setCurrentItem(2, true);
+                    return true;
             }
+            return false;
         });
 
         QuotationViewModel viewModel = ViewModelProviders.of(this).get(QuotationViewModel.class);
@@ -316,6 +297,16 @@ public class MainActivity extends AppCompatActivity
         onCurrencyUpdate();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }
 
     public static void hideSoftKeyboard(View view, Context context) {
         if (view != null && context != null) {
@@ -341,33 +332,25 @@ public class MainActivity extends AppCompatActivity
 
     private void processLogout() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setPositiveButton(R.string.log_out_dialog_confirm_button, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Flowable.just(0)
-                        .subscribeOn(Schedulers.io())
-                        .map(integer -> {
-                            BitsharesDao bitsharesDao = BitsharesApplication.getInstance().getBitsharesDatabase().getBitsharesDao();;
-                            List<BitsharesAsset> bitsharesAssetList = bitsharesDao.queryBalanceList();
-                            List<BitsharesOperationHistory> bitsharesOperationHistoryList = bitsharesDao.queryOperationHistoryList();
-                            bitsharesDao.deleteBalance(bitsharesAssetList);
-                            bitsharesDao.deleteOperationHistory(bitsharesOperationHistoryList);
+        builder.setPositiveButton(R.string.log_out_dialog_confirm_button, (dialog, which) -> {
+            Flowable.just(0)
+                    .subscribeOn(Schedulers.io())
+                    .map(integer -> {
+                        BitsharesDao bitsharesDao = BitsharesApplication.getInstance().getBitsharesDatabase().getBitsharesDao();;
+                        List<BitsharesAsset> bitsharesAssetList = bitsharesDao.queryBalanceList();
+                        List<BitsharesOperationHistory> bitsharesOperationHistoryList = bitsharesDao.queryOperationHistoryList();
+                        bitsharesDao.deleteBalance(bitsharesAssetList);
+                        bitsharesDao.deleteOperationHistory(bitsharesOperationHistoryList);
 
-                            return 0;
-                        }).subscribe();
+                        return 0;
+                    }).subscribe();
 
-                BitsharesWalletWraper.getInstance().reset();
-                Intent intent = new Intent(MainActivity.this, SignUpButtonActivity.class);
-                startActivity(intent);
-                finish();
-            }
+            BitsharesWalletWraper.getInstance().reset();
+            Intent intent = new Intent(MainActivity.this, SignUpButtonActivity.class);
+            startActivity(intent);
+            finish();
         });
-        builder.setNegativeButton(R.string.log_out_dialog_cancel_button, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
+        builder.setNegativeButton(R.string.log_out_dialog_cancel_button, null);
 
         builder.setMessage(R.string.log_out_dialog_message);
         builder.show();
@@ -387,27 +370,19 @@ public class MainActivity extends AppCompatActivity
                 break;
             }
         }
-        dialogBuilder.setSingleChoiceItems(R.array.quotation_currency_pair_options, currSelectIndex, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                prefs.edit().
-                        putString("quotation_currency_pair", arrValues[which])
-                        .apply();
-                String strAsset[] = arrValues[which].split(":");
-                QuotationViewModel viewModel = ViewModelProviders.of(MainActivity.this).get(QuotationViewModel.class);
-                viewModel.selectedMarketTicker(new Pair(strAsset[1], strAsset[0]));
+        dialogBuilder.setSingleChoiceItems(R.array.quotation_currency_pair_options, currSelectIndex, (dialog, which) -> {
+            dialog.dismiss();
+            prefs.edit().
+                    putString("quotation_currency_pair", arrValues[which])
+                    .apply();
+            String strAsset[] = arrValues[which].split(":");
+            QuotationViewModel viewModel = ViewModelProviders.of(MainActivity.this).get(QuotationViewModel.class);
+            viewModel.selectedMarketTicker(new Pair(strAsset[1], strAsset[0]));
 
-                onCurrencyUpdate();
-            }
+            onCurrencyUpdate();
         });
 
-        dialogBuilder.setPositiveButton(R.string.log_out_dialog_cancel_button, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
+        dialogBuilder.setPositiveButton(R.string.log_out_dialog_cancel_button, null);
 
         dialogBuilder.show();
     }

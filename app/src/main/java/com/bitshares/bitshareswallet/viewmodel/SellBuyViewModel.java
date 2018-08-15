@@ -35,12 +35,8 @@ public class SellBuyViewModel extends ViewModel {
 
     public LiveData<Resource<BitsharesAsset>> getAvaliableBalance() {
         LiveData<Resource<BitsharesAsset>> balanceData = Transformations.switchMap(
-                Transformations.switchMap(currencyData, input -> {
-                    return statusChangeLiveData;
-                }),
-                statusChange -> {
-                    return new AvailableBalanceRepository().getTargetAvaliableBlance(currencyData.getValue());
-                });
+                Transformations.switchMap(currencyData, input -> statusChangeLiveData),
+                statusChange -> new AvailableBalanceRepository().getTargetAvaliableBlance(currencyData.getValue()));
 
 
         return balanceData;

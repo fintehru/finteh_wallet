@@ -28,14 +28,6 @@ import java.util.Locale;
  * create an instance of this fragment.
  */
 public class BalancesFragment extends BaseFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private BalancesAdapter mBalancesAdapter;
 
@@ -52,11 +44,11 @@ public class BalancesFragment extends BaseFragment {
         public BalanceItemViewHolder(View itemView) {
             super(itemView);
             view = itemView;
-            viewNumber = (TextView) itemView.findViewById(R.id.textViewNumber);
-            viewUnit = (TextView) itemView.findViewById(R.id.textViewUnit);
-            viewEqual = (TextView) itemView.findViewById(R.id.textViewEqual);
-            viewConvertNumber = (TextView) itemView.findViewById(R.id.textViewNumber2);
-            viewConvertUnit = (TextView) itemView.findViewById(R.id.textViewUnit2);
+            viewNumber = itemView.findViewById(R.id.textViewNumber);
+            viewUnit = itemView.findViewById(R.id.textViewUnit);
+            viewEqual = itemView.findViewById(R.id.textViewEqual);
+            viewConvertNumber = itemView.findViewById(R.id.textViewNumber2);
+            viewConvertUnit = itemView.findViewById(R.id.textViewUnit2);
         }
     }
 
@@ -110,31 +102,14 @@ public class BalancesFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment BalancesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static BalancesFragment newInstance(String param1, String param2) {
+    public static BalancesFragment newInstance() {
         BalancesFragment fragment = new BalancesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -167,7 +142,7 @@ public class BalancesFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_balances, container, false);
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mBalancesAdapter = new BalancesAdapter();
         recyclerView.setAdapter(mBalancesAdapter);

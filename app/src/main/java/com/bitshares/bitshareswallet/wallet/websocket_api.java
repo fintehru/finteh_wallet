@@ -1,6 +1,7 @@
 package com.bitshares.bitshareswallet.wallet;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 
 import com.bitshares.bitshareswallet.market.MarketTicker;
@@ -295,7 +296,7 @@ public class websocket_api extends WebSocketListener {
     @Override
     public void onMessage(WebSocket webSocket, String text) {
         //super.onMessage(webSocket, text);
-
+        Log.w("WEBSOCKET", ">>> " + text);
         try {
             int nMethod = 0;
             JSONObject jsonObject = new JSONObject(text);
@@ -976,6 +977,8 @@ public class websocket_api extends WebSocketListener {
                                       ReplyObjectProcess<Reply<T>> replyObjectProcess) throws NetworkStatusException {
         Gson gson = global_config_object.getInstance().getGsonBuilder().create();
         String strMessage = gson.toJson(callObject);
+
+        Log.w("WEBSOCKET", "<<< " + strMessage);
 
         synchronized (mHashMapIdToProcess) {
             mHashMapIdToProcess.put(callObject.id, replyObjectProcess);

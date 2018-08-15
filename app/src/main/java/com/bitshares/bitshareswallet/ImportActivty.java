@@ -179,7 +179,7 @@ public class ImportActivty extends AppCompatActivity {
     private void processImport(final String strAccount,
                                final String strPassword,
                                final String strVariant) {
-        final TextView textView = (TextView) findViewById(R.id.textViewErrorInfo);
+        final TextView textView = findViewById(R.id.textViewErrorInfo);
         new Thread(new Runnable() {
             @Override
             public void run() {

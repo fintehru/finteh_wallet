@@ -164,5 +164,24 @@
     <string name="quotation_cureency_select_dialog_title">Выбор текущей пары</string>
 
     <string name="trade_fragment_quantity">Количество</string>
+    <string name="tab_receive">Получить</string>
+    <string name="incorrect_pin">Неверный PIN код</string>
+    <string name="swith_pin_title">Блокировка PIN кодом</string>
+    <string name="change_pin_title">Изменить PIN</string>
+    <string name="pin_title">PIN код</string>
+    <string name="welcome_back">С возвращением</string>
+    <string name="pin_enter_current">Введите текущий PIN код</string>
+    <string name="pin_confirm_new">Подтвердите новый PIN код</string>
+    <string name="pin_enter_new">Введите новый PIN код</string>
+    <string name="pin_edit_success">PIN код изменён</string>
+    <string name="pin_save_success">PIN код сохранён</string>
+    <string name="pin_delete_success">PIN код удалён</string>
+    <string name="backup_wallet">Экспорт кошелька</string>
+    <string name="loading_history_data">Загрузка истории транзакций</string>
+    <string name="loading_history_failed">Ошибка при загрузке данных. Попробуйте ещё раз через</string>
+    <string name="loading_candle_data">Загрузка графика</string>
+    <string name="loading_candle_data_failed">Ошибка при загрузке данных. Попробуйте ещё раз через</string>
+    <string name="promotion_dialog_positive_button">Загрузить</string>
+    <string name="label_change">Изменить:</string>
 
 </resources>

@@ -73,9 +73,6 @@ public class wallet_api {
         List<account_object> my_accounts = new ArrayList<>();
         ByteBuffer cipher_keys;
         HashMap<object_id<account_object>, List<types.public_key_type>> extra_keys = new HashMap<>();
-        String ws_server = "";
-        String ws_user = "";
-        String ws_password = "";
 
         public void update_account(account_object accountObject) {
             boolean bUpdated = false;
@@ -88,7 +85,7 @@ public class wallet_api {
                 }
             }
 
-            if (bUpdated == false) {
+            if (!bUpdated) {
                 my_accounts.add(accountObject);
             }
         }
@@ -213,11 +210,7 @@ public class wallet_api {
         byte[] ivBytes = new byte[16];
         System.arraycopy(mCheckSum.hash, 32, ivBytes, 0, ivBytes.length);
 
-        ByteBuffer byteResult = aes.encrypt(byteKey, ivBytes, encoder.getData());
-
-        mWalletObject.cipher_keys = byteResult;
-
-        return;
+        mWalletObject.cipher_keys = aes.encrypt(byteKey, ivBytes, encoder.getData());
 
     }
 
@@ -366,7 +359,7 @@ public class wallet_api {
         // 判定这类型
         object_id<account_object> accountObjectId = object_id.create_from_string(strAccountNameOrId);
 
-        List<account_object> listAccountObject = null;
+        List<account_object> listAccountObject;
         if (accountObjectId == null) {
             listAccountObject = lookup_account_names(strAccountNameOrId);
         } else {
@@ -571,10 +564,10 @@ public class wallet_api {
             return ErrorCode.ERROR_NO_ACCOUNT_OBJECT;
         }
 
-        if (accountObject.active.is_public_key_type_exist(publicActiveKeyType) == false &&
-                accountObject.owner.is_public_key_type_exist(publicActiveKeyType) == false &&
-                accountObject.active.is_public_key_type_exist(publicOwnerKeyType) == false &&
-                accountObject.owner.is_public_key_type_exist(publicOwnerKeyType) == false){
+        if (!accountObject.active.is_public_key_type_exist(publicActiveKeyType) &&
+                !accountObject.owner.is_public_key_type_exist(publicActiveKeyType) &&
+                !accountObject.active.is_public_key_type_exist(publicOwnerKeyType) &&
+                !accountObject.owner.is_public_key_type_exist(publicOwnerKeyType)){
             return ErrorCode.ERROR_PASSWORD_INVALID;
         }
 
@@ -635,7 +628,7 @@ public class wallet_api {
                                        String strMemo) throws NetworkStatusException {
 
         object_id<asset_object> assetObjectId = object_id.create_from_string(strAssetSymbol);
-        asset_object assetObject = null;
+        asset_object assetObject;
         if (assetObjectId == null) {
             assetObject = lookup_asset_symbols(strAssetSymbol);
         } else {
@@ -655,7 +648,7 @@ public class wallet_api {
         transferOperation.to = accountObjectTo.id;
         transferOperation.amount = assetObject.amount_from_string(strAmount);
         transferOperation.extensions = new HashSet<>();
-        if (TextUtils.isEmpty(strMemo) == false) {
+        if (!TextUtils.isEmpty(strMemo)) {
             transferOperation.memo = new memo_data();
             transferOperation.memo.from = accountObjectFrom.options.memo_key;
             transferOperation.memo.to = accountObjectTo.options.memo_key;
@@ -958,7 +951,7 @@ public class wallet_api {
 
     private void set_operation_fees(signed_transaction tx, fee_schedule feeSchedule) {
         for (operations.operation_type operationType : tx.operations) {
-            feeSchedule.set_fee(operationType, price.unit_price(new object_id<asset_object>(0, asset_object.class)));
+            feeSchedule.set_fee(operationType, price.unit_price(new object_id<asset_object>(3275, asset_object.class)));
         }
     }
 

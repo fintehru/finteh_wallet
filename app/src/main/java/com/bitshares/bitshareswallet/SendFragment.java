@@ -1,17 +1,29 @@
 package com.bitshares.bitshareswallet;
 
+import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.graphics.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.ArrayMap;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +31,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +56,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,77 +64,51 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.schedulers.Schedulers;
+import io.sentry.Sentry;
+import io.sentry.event.BreadcrumbBuilder;
 
+import static android.content.Context.CAMERA_SERVICE;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SendFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SendFragment extends BaseFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
     private KProgressHUD mProcessHud;
     private Spinner mSpinner;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
     @BindView(R.id.editTextTo) EditText mEditTextTo;
     @BindView(R.id.textViewToId) TextView mTextViewId;
 
+    @BindView(R.id.qrScan) ImageView qrScan;
+
     @BindView(R.id.editTextQuantity) EditText mEditTextQuantitiy;
 
     private View mView;
-    private Handler mHandler = new Handler();
+    private SendViewModel viewModel;
 
-    public SendFragment() {
-        // Required empty public constructor
+    public SendFragment() {}
+
+    public static SendFragment newInstance() {
+        return new SendFragment();
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SendFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SendFragment newInstance(String param1, String param2) {
-        SendFragment fragment = new SendFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    public void onAttachFragment(Fragment childFragment) {
+        super.onAttachFragment(childFragment);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_send, container, false);
         ButterKnife.bind(this, mView);
 
-        EditText editTextFrom = (EditText)mView.findViewById(R.id.editTextFrom);
+        viewModel = ViewModelProviders.of(this).get(SendViewModel.class);
+
+        EditText editTextFrom = mView.findViewById(R.id.editTextFrom);
 
         String strName = BitsharesWalletWraper.getInstance().get_account().name;
         editTextFrom.setText(strName);
@@ -127,10 +116,10 @@ public class SendFragment extends BaseFragment {
         sha256_object.encoder encoder = new sha256_object.encoder();
         encoder.write(strName.getBytes());
 
-        WebView webViewFrom = (WebView)mView.findViewById(R.id.webViewAvatarFrom);
+        WebView webViewFrom = mView.findViewById(R.id.webViewAvatarFrom);
         loadWebView(webViewFrom, 40, encoder.result().toString());
 
-        TextView textView = (TextView)mView.findViewById(R.id.textViewFromId);
+        TextView textView = mView.findViewById(R.id.textViewFromId);
         String strId = String.format(
                 Locale.ENGLISH, "#%d",
                 BitsharesWalletWraper.getInstance().get_account().id.get_instance()
@@ -144,34 +133,22 @@ public class SendFragment extends BaseFragment {
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f);
 
-        mView.findViewById(R.id.btn_send).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                processSendClick(mView);
+        mView.findViewById(R.id.btn_send).setOnClickListener(v -> processSendClick(mView));
+
+        mEditTextTo.setOnFocusChangeListener((v, hasFocus) -> {
+            final String strText = mEditTextTo.getText().toString();
+            if (!hasFocus) {
+                processGetTransferToId(strText, mTextViewId);
             }
         });
 
-        mEditTextTo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                final String strText = mEditTextTo.getText().toString();
-                if (hasFocus == false) {
-                    processGetTransferToId(strText, mTextViewId);
-                }
-            }
-        });
-
-        final WebView webViewTo = (WebView)mView.findViewById(R.id.webViewAvatarTo);
+        final WebView webViewTo = mView.findViewById(R.id.webViewAvatarTo);
         mEditTextTo.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -181,39 +158,65 @@ public class SendFragment extends BaseFragment {
             }
         });
 
+        qrScan.setOnClickListener(v -> {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                CameraManager manager = (CameraManager) getActivity().getSystemService(CAMERA_SERVICE);
+                try {
+                    Map<String, String> data = new ArrayMap<>();
+                    for (String cameraId : manager.getCameraIdList()) {
+                        CameraCharacteristics chars
+                                = manager.getCameraCharacteristics(cameraId);
+                        boolean flash = chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
+                        int facing = chars.get(CameraCharacteristics.LENS_FACING);
 
-        mEditTextQuantitiy.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    return;
+                        data.put("camera# " + cameraId, "Flash: " + flash + " | Facing: " + facing);
+                    }
+                    Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder()
+                            .setCategory("CAMERA")
+                            .setData(data)
+                            .build());
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
                 }
+            }
 
-                String strQuantity = mEditTextQuantitiy.getText().toString();
-                if (TextUtils.isEmpty(strQuantity)) {
-                    return;
-                }
-
-                double quantity = NumericUtil.parseDouble(strQuantity, -1.0D);
-                if (Double.compare(quantity, 0.0D) < 0) {   // 越界或者格式错误
-                    mEditTextQuantitiy.setText("0");
-                    // TODO toast
-                    return;
-                }
-
-                processCalculateFee();
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, 111);
+            } else {
+                ScannerFragment scannerFragment = ScannerFragment.newInstance();
+                scannerFragment.setOnResultListener(data -> mEditTextTo.setText(data));
+                getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content, scannerFragment).addToBackStack(null).commit();
             }
         });
 
-        mSpinner = (Spinner) mView.findViewById(R.id.spinner_unit);
+        mEditTextQuantitiy.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                return;
+            }
 
-        SendViewModel viewModel = ViewModelProviders.of(this).get(SendViewModel.class);
+            String strQuantity = mEditTextQuantitiy.getText().toString();
+            if (TextUtils.isEmpty(strQuantity)) {
+                return;
+            }
+
+            double quantity = NumericUtil.parseDouble(strQuantity, -1.0D);
+            if (Double.compare(quantity, 0.0D) < 0) {
+                mEditTextQuantitiy.setText("0");
+                // TODO toast
+                return;
+            }
+
+            processCalculateFee();
+        });
+
+        mSpinner = mView.findViewById(R.id.spinner_unit);
+
         viewModel.getBalancesList().observe(this, bitsharesBalanceAssetList -> {
             List<String> symbolList = new ArrayList<>();
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
                 symbolList.add(bitsharesBalanceAsset.quote);
 
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                         getActivity(),
                         android.R.layout.simple_spinner_item,
                         symbolList
@@ -227,28 +230,28 @@ public class SendFragment extends BaseFragment {
         return mView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 111) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                ScannerFragment scannerFragment = ScannerFragment.newInstance();
+                scannerFragment.setOnResultListener(data -> mEditTextTo.setText(data));
+                getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content, scannerFragment).addToBackStack(null).commit();
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, 111);
+            }
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -317,35 +320,25 @@ public class SendFragment extends BaseFragment {
                     null);
 
             builder.setNegativeButton(
-                    R.string.password_confirm_button_cancel,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-
-                        }
-                    }
-            );
+                    R.string.password_confirm_button_cancel, null);
             builder.setView(viewGroup);
             final AlertDialog dialog = builder.create();
             dialog.show();
 
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    EditText editText = (EditText) viewGroup.findViewById(R.id.editTextPassword);
-                    String strPassword = editText.getText().toString();
-                    int nRet = BitsharesWalletWraper.getInstance().unlock(strPassword);
-                    if (nRet == 0) {
-                        dialog.dismiss();
-                        String strFrom = ((EditText) view.findViewById(R.id.editTextFrom)).getText().toString();
-                        String strTo = ((EditText) view.findViewById(R.id.editTextTo)).getText().toString();
-                        String strQuantity = ((EditText) view.findViewById(R.id.editTextQuantity)).getText().toString();
-                        String strSymbol = (String)mSpinner.getSelectedItem();
-                        String strMemo = ((EditText)view.findViewById(R.id.editTextMemo)).getText().toString();
-                        processTransfer(strFrom, strTo, strQuantity, strSymbol, strMemo);
-                    } else {
-                        viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
-                    }
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                EditText editText = viewGroup.findViewById(R.id.editTextPassword);
+                String strPassword = editText.getText().toString();
+                int nRet = BitsharesWalletWraper.getInstance().unlock(strPassword);
+                if (nRet == 0) {
+                    dialog.dismiss();
+                    String strFrom = ((EditText) view.findViewById(R.id.editTextFrom)).getText().toString();
+                    String strTo = ((EditText) view.findViewById(R.id.editTextTo)).getText().toString();
+                    String strQuantity = ((EditText) view.findViewById(R.id.editTextQuantity)).getText().toString();
+                    String strSymbol = (String)mSpinner.getSelectedItem();
+                    String strMemo = ((EditText)view.findViewById(R.id.editTextMemo)).getText().toString();
+                    processTransfer(strFrom, strTo, strQuantity, strSymbol, strMemo);
+                } else {
+                    viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
                 }
             });
 
@@ -426,7 +419,6 @@ public class SendFragment extends BaseFragment {
                             strSymbol,
                             strMemo
                     );
-
                     BitsharesAssetObject assetObject = BitsharesApplication.getInstance()
                             .getBitsharesDatabase().getBitsharesDao().queryAssetObjectById(fee.asset_id.toString());
                     return new Pair<>(fee, assetObject);
@@ -438,7 +430,7 @@ public class SendFragment extends BaseFragment {
                 }, throwable -> {
                     if (throwable instanceof NetworkStatusException) {
                         if (getActivity() != null && getActivity().isFinishing() == false) {
-                            EditText editTextFee = (EditText) mView.findViewById(R.id.editTextFee);
+                            EditText editTextFee = mView.findViewById(R.id.editTextFee);
                             editTextFee.setText("N/A");
                         }
                     } else {
@@ -486,7 +478,7 @@ public class SendFragment extends BaseFragment {
     }
 
     private void processDisplayFee(asset fee, BitsharesAssetObject assetObject) {
-        EditText editTextFee = (EditText) mView.findViewById(R.id.editTextFee);
+        EditText editTextFee = mView.findViewById(R.id.editTextFee);
         String strResult = String.format(
                 Locale.ENGLISH,
                 "%f (%s)",
@@ -495,21 +487,43 @@ public class SendFragment extends BaseFragment {
         );
         editTextFee.setText(strResult);
 
-        Spinner spinner = (Spinner) mView.findViewById(R.id.spinner_fee_unit);
+        Spinner spinner = mView.findViewById(R.id.spinner_fee_unit);
 
-        List<String> listSymbols = new ArrayList<>();
+        spinner.setOnItemClickListener((adapterView, view, i, l) -> {
+            processCalculateFee();
+        });
+
+        viewModel.getBalancesList().observe(this, bitsharesBalanceAssetList -> {
+            List<String> symbolList = new ArrayList<>();
+            for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
+                symbolList.add(bitsharesBalanceAsset.quote);
+
+                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                        getActivity(),
+                        android.R.layout.simple_spinner_item,
+                        symbolList
+                );
+
+                if (mSpinner != null) {
+                    arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(arrayAdapter);
+                }
+            }
+        });
+
+        /*List<String> listSymbols = new ArrayList<>();
         listSymbols.add(assetObject.symbol);
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_spinner_item,
                 listSymbols
-        );
+        );*/
 
-        if (mSpinner != null) {
+        /*if (mSpinner != null) {
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(arrayAdapter);
-        }
+        }*/
     }
 
     private void loadWebView(WebView webView, int size, String encryptText) {

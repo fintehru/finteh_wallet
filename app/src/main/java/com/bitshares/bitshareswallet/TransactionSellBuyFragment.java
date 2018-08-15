@@ -446,49 +446,28 @@ public class TransactionSellBuyFragment extends BaseFragment
 
     private void initFee() {
         isAssetObjIsInit = false;
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    btsAssetObj = BitsharesWalletWraper.getInstance().lookup_asset_symbols("BTS");
-                    baseAssetObj = BitsharesWalletWraper.getInstance().lookup_asset_symbols(baseAsset);
-                    quoteAssetObj = BitsharesWalletWraper.getInstance().lookup_asset_symbols(quoteAsset);
-                    globalPropertyObject = BitsharesWalletWraper.getInstance().get_global_properties();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            isAssetObjIsInit = true;
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            try {
+                btsAssetObj = BitsharesWalletWraper.getInstance().lookup_asset_symbols("BTS");
+                baseAssetObj = BitsharesWalletWraper.getInstance().lookup_asset_symbols(baseAsset);
+                quoteAssetObj = BitsharesWalletWraper.getInstance().lookup_asset_symbols(quoteAsset);
+                globalPropertyObject = BitsharesWalletWraper.getInstance().get_global_properties();
+                getActivity().runOnUiThread(() -> isAssetObjIsInit = true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
     }
 
     private void buy(final double rate, final double amount, final int timeSec) {
         mProcessHud.show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    BitsharesWalletWraper.getInstance().buy(quoteAsset, baseAsset, rate, amount, timeSec);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mProcessHud.dismiss();
-                        }
-                    });
-                } catch (Exception e) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mProcessHud.dismiss();
-                        }
-                    });
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            try {
+                BitsharesWalletWraper.getInstance().buy(quoteAsset, baseAsset, rate, amount, timeSec);
+                getActivity().runOnUiThread(() -> mProcessHud.dismiss());
+            } catch (Exception e) {
+                getActivity().runOnUiThread(() -> mProcessHud.dismiss());
+                e.printStackTrace();
             }
         }).start();
     }

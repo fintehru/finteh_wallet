@@ -1,1 +1,1 @@
-include ':app', ':graphenej:graphenej'
+include ':app'
