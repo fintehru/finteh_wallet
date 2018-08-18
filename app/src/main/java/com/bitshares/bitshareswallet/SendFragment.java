@@ -232,7 +232,7 @@ public class SendFragment extends BaseFragment {
             List<String> symbolList = new ArrayList<>();
             symbolList.add("FINTEH");
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
-                symbolList.add(bitsharesBalanceAsset.quote);
+                if(!bitsharesBalanceAsset.quote.equals("FINTEH")) symbolList.add(bitsharesBalanceAsset.quote);
 
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                         getActivity(),
