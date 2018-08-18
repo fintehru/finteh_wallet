@@ -10,7 +10,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.List;
 
 import static com.bitshares.bitshareswallet.wallet.graphene.chain.config.GRAPHENE_100_PERCENT;
@@ -48,6 +50,20 @@ public class fee_schedule {
         }
     }
 
+    public BigDecimal getFee(operations.operation_type operationType) {
+        fee_parameters targetParam = null;
+        for (fee_parameters param : parameters) {
+            if (param.nOperationId == operationType.nOperationType) {
+                targetParam = param;
+                break;
+            }
+        }
+
+        operations.base_operation operationBase = (operations.base_operation)operationType.operationContent;
+        long lFee = operationBase.calculate_fee(targetParam.objectFeeParametersType);
+        return new BigDecimal(lFee).setScale(5, RoundingMode.UNNECESSARY).divide(new BigDecimal(Math.pow(10, 5)), RoundingMode.UNNECESSARY);
+    }
+
     public asset calculate_fee(operations.operation_type operationType, price core_exchange_rate) {
         fee_parameters targetParam = null;
         for (fee_parameters param : parameters) {
@@ -68,9 +84,7 @@ public class fee_schedule {
 
         long lResult = bigScaled.divide(bigDefault).longValue();
 
-        asset assetResult = new asset(lResult, new object_id<asset_object>(3275, asset_object.class)).multipy(core_exchange_rate);
-
-        Log.w("FEE", assetResult.asset_id.toString());
+        asset assetResult = new asset(lResult, new object_id<asset_object>(0, asset_object.class)).multipy(core_exchange_rate);
 
         while (assetResult.multipy(core_exchange_rate).amount < lResult) {
             assetResult.amount++;
@@ -87,8 +101,8 @@ public class fee_schedule {
         operations.base_operation operationBase = (operations.base_operation)operationType.operationContent;
         for (int i = 0; i < MAX_FEE_STABILIZATION_ITERATION; ++i) {
             operationBase.set_fee(assetFee);
-            asset assetNewFee = calculate_fee(operationType, core_exchange_rate);
-            if (assetFee.amount == assetNewFee.amount) {
+             asset assetNewFee = calculate_fee(operationType, core_exchange_rate);
+                      if (assetFee.amount == assetNewFee.amount) {
                 break;
             }
             assetFee = assetNewFee;

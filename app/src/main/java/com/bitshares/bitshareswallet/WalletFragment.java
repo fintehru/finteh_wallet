@@ -114,14 +114,14 @@ public class WalletFragment extends BaseFragment {
                     totalBalance,
                     bitsharesBalanceAsset.currency,
                     exchangeRate,
-                    "BTS",
+                    "FINTEH",
                     bitsharesBalanceAsset.currency
             );
 
             textViewCurency.setText(strTotalCurrency);
         }
 
-        String strTotalBalance = String.format(Locale.ENGLISH, "%d %s", totalBTS, "BTS");
+        String strTotalBalance = String.format(Locale.ENGLISH, "%d %s", totalBTS, "FINTEH");
         textViewBalances.setText(strTotalBalance);
         textViewCurency.setVisibility(View.VISIBLE);
 

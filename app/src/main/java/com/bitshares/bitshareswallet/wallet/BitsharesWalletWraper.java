@@ -440,13 +440,13 @@ public class BitsharesWalletWraper {
                          String strTo,
                          String strAmount,
                          String strAssetSymbol,
-                         String strMemo) throws NetworkStatusException {
+                         String strMemo, asset feeAsset) throws NetworkStatusException {
         signed_transaction signedTransaction = mWalletApi.transfer(
                 strFrom,
                 strTo,
                 strAmount,
                 strAssetSymbol,
-                strMemo
+                strMemo, feeAsset
         );
         return signedTransaction;
     }
@@ -598,8 +598,8 @@ public class BitsharesWalletWraper {
 
     public asset transfer_calculate_fee(String strAmount,
                                         String strAssetSymbol,
-                                        String strMemo) throws NetworkStatusException {
-        return mWalletApi.transfer_calculate_fee(strAmount, strAssetSymbol, strMemo);
+                                        String strMemo, String feeAssetSymbol) throws NetworkStatusException {
+        return mWalletApi.transfer_calculate_fee(strAmount, strAssetSymbol, strMemo, feeAssetSymbol);
     }
 
     public String get_plain_text_message(memo_data memoData) {

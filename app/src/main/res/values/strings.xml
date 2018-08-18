@@ -189,5 +189,6 @@
     <string name="pin_edit_success">PIN changed</string>
     <string name="pin_save_success">PIN saved</string>
     <string name="pin_delete_success">PIN deleted</string>
+    <string name="fee_first">Fee calculation is not completed</string>
 
 </resources>

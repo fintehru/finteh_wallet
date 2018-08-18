@@ -1,9 +1,13 @@
 package com.bitshares.bitshareswallet.wallet.graphene.chain;
 
+import android.util.Log;
+
 import com.bitshares.bitshareswallet.wallet.account_object;
 import com.bitshares.bitshareswallet.wallet.asset;
 import com.bituniverse.utils.NumericUtil;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -76,6 +80,17 @@ public class asset_object {
 
         long lQuoteAmount = (long)(amount * ((double)base.amount / quote.amount));
         return lQuoteAmount;
+    }
+
+    public long convertBtsFee(BigDecimal amount) {
+        asset base = options.core_exchange_rate.base;
+        asset quote = options.core_exchange_rate.quote;
+        BigDecimal dec = amount.multiply(new BigDecimal(quote.amount*100000)).divide(new BigDecimal(base.amount), RoundingMode.UP).setScale(0, RoundingMode.UP);
+        //BigDecimal dec = amount.setScale(precision, RoundingMode.UNNECESSARY).divide(new BigDecimal(base.amount/quote.amount).multiply(new BigDecimal(Math.pow(10, precision-5))), RoundingMode.UP).multiply(new BigDecimal(Math.pow(10, precision)));
+
+        return dec.longValue();
+
+        //return amount.multiply(new BigDecimal((base.amount/(Math.pow(10, 5)))/(quote.amount/(Math.pow(10, precision))))).multiply(new BigDecimal(Math.pow(10, precision))).toBigInteger().longValue();
     }
 
     public asset amount_from_string(String strAmount) {

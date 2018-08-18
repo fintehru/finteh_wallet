@@ -72,12 +72,12 @@ public class BalancesFragment extends BaseFragment {
 
             holder.viewNumber.setText(strBalances);
             holder.viewUnit.setText(bitsharesBalanceAsset.quote);
-            if (bitsharesBalanceAsset.quote.compareTo("BTS") != 0) {
+            if (bitsharesBalanceAsset.quote.compareTo("FINTEH") != 0) {
                 int nResult = (int)Math.rint(bitsharesBalanceAsset.total / bitsharesBalanceAsset.base_precision);
 
                 holder.viewEqual.setText("=");
                 holder.viewConvertNumber.setText(Integer.valueOf(nResult).toString());
-                holder.viewConvertUnit.setText("BTS");
+                holder.viewConvertUnit.setText("FINTEH");
             }
 
         }

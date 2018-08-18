@@ -142,6 +142,15 @@ public class AvailableBalanceRepository {
 
         bitsharesDao.insertBlance(bitsharesAssetList);
         List<BitsharesAssetObject> bitsharesAssetObjectList = new ArrayList<>();
+
+        asset_object finteh = BitsharesWalletWraper.getInstance()
+                .list_assets("FINTEH", 1).get(0);
+        BitsharesAssetObject fintehAssetObject = new BitsharesAssetObject();
+        fintehAssetObject.symbol = finteh.symbol;
+        fintehAssetObject.precision = finteh.get_scaled_precision();
+        fintehAssetObject.asset_id = finteh.id;
+        bitsharesAssetObjectList.add(fintehAssetObject);
+
         for (asset_object assetObject : mapId2Object.values()) {
             BitsharesAssetObject bitsharesAssetObject = new BitsharesAssetObject();
             bitsharesAssetObject.asset_id = assetObject.id;

@@ -53,6 +53,8 @@ import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
 import com.bituniverse.utils.NumericUtil;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -73,6 +75,7 @@ public class SendFragment extends BaseFragment {
 
     private KProgressHUD mProcessHud;
     private Spinner mSpinner;
+    private Spinner feeSpinner;
 
     @BindView(R.id.editTextTo) EditText mEditTextTo;
     @BindView(R.id.textViewToId) TextView mTextViewId;
@@ -83,6 +86,8 @@ public class SendFragment extends BaseFragment {
 
     private View mView;
     private SendViewModel viewModel;
+
+    private asset lastFeeAsset;
 
     public SendFragment() {}
 
@@ -209,10 +214,23 @@ public class SendFragment extends BaseFragment {
             processCalculateFee();
         });
 
+        feeSpinner = mView.findViewById(R.id.spinner_fee_unit);
+
+        feeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                processCalculateFee();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) { }
+        });
+
         mSpinner = mView.findViewById(R.id.spinner_unit);
 
         viewModel.getBalancesList().observe(this, bitsharesBalanceAssetList -> {
             List<String> symbolList = new ArrayList<>();
+            symbolList.add("FINTEH");
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
                 symbolList.add(bitsharesBalanceAsset.quote);
 
@@ -224,6 +242,7 @@ public class SendFragment extends BaseFragment {
 
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 mSpinner.setAdapter(arrayAdapter);
+                feeSpinner.setAdapter(arrayAdapter);
             }
         });
 
@@ -283,7 +302,7 @@ public class SendFragment extends BaseFragment {
                             strTo,
                             strQuantity,
                             strSymbol,
-                            strMemo
+                            strMemo, lastFeeAsset
                     );
                     return signedTransaction;
                 }).observeOn(AndroidSchedulers.mainThread())
@@ -311,6 +330,10 @@ public class SendFragment extends BaseFragment {
     }
 
     private void processSendClick(final View view) {
+        if(lastFeeAsset == null) {
+            Toast.makeText(getActivity(), R.string.fee_first, Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (BitsharesWalletWraper.getInstance().is_locked()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             LayoutInflater layoutInflater = getActivity().getLayoutInflater();
@@ -405,6 +428,7 @@ public class SendFragment extends BaseFragment {
         final String strQuantity = ((EditText) mView.findViewById(R.id.editTextQuantity)).getText().toString();
         final String strSymbol = (String) mSpinner.getSelectedItem();
         final String strMemo = ((EditText) mView.findViewById(R.id.editTextMemo)).getText().toString();
+        final String strFeeAsset = (String) feeSpinner.getSelectedItem();
 
         // 用户没有任何货币，这个symbol会为空，则会出现崩溃，进行该处理进行规避
         if (TextUtils.isEmpty(strQuantity) || TextUtils.isEmpty(strSymbol)) {
@@ -417,8 +441,9 @@ public class SendFragment extends BaseFragment {
                     asset fee = BitsharesWalletWraper.getInstance().transfer_calculate_fee(
                             strQuantity,
                             strSymbol,
-                            strMemo
+                            strMemo, strFeeAsset
                     );
+                    lastFeeAsset = fee;
                     BitsharesAssetObject assetObject = BitsharesApplication.getInstance()
                             .getBitsharesDatabase().getBitsharesDao().queryAssetObjectById(fee.asset_id.toString());
                     return new Pair<>(fee, assetObject);
@@ -478,22 +503,28 @@ public class SendFragment extends BaseFragment {
     }
 
     private void processDisplayFee(asset fee, BitsharesAssetObject assetObject) {
+        //Toast.makeText(getActivity(), assetObject.symbol + " " + fee.amount + " " + assetObject.precision, Toast.LENGTH_SHORT).show();
         EditText editTextFee = mView.findViewById(R.id.editTextFee);
         String strResult = String.format(
                 Locale.ENGLISH,
-                "%f (%s)",
-                (double)fee.amount / assetObject.precision,
+                "%s (%s)",
+                new BigDecimal(fee.amount).setScale((int) Math.log10(assetObject.precision), RoundingMode.UNNECESSARY).divide(new BigDecimal(assetObject.precision), RoundingMode.UNNECESSARY).toPlainString(),
                 "Cannot be modified"
         );
         editTextFee.setText(strResult);
+        /*spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                processCalculateFee();
+            }
 
-        Spinner spinner = mView.findViewById(R.id.spinner_fee_unit);
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
-        spinner.setOnItemClickListener((adapterView, view, i, l) -> {
-            processCalculateFee();
-        });
+            }
+        });*/
 
-        viewModel.getBalancesList().observe(this, bitsharesBalanceAssetList -> {
+        /*viewModel.getBalancesList().observe(this, bitsharesBalanceAssetList -> {
             List<String> symbolList = new ArrayList<>();
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
                 symbolList.add(bitsharesBalanceAsset.quote);
@@ -506,10 +537,10 @@ public class SendFragment extends BaseFragment {
 
                 if (mSpinner != null) {
                     arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner.setAdapter(arrayAdapter);
+                    feeSpinner.setAdapter(arrayAdapter);
                 }
             }
-        });
+        });*/
 
         /*List<String> listSymbols = new ArrayList<>();
         listSymbols.add(assetObject.symbol);

@@ -696,7 +696,8 @@ public class websocket_api extends WebSocketListener {
                 new ReplyObjectProcess<>(new TypeToken<Reply<List<asset_object>>>(){}.getType());
         Reply<List<asset_object>> replyObject = sendForReply(callObject, replyObjectProcess);
 
-        return replyObject.result.get(0);
+        asset_object ret = replyObject.result.get(0);
+        return ret;
     }
 
     public block_header get_block_header(int nBlockNumber) throws NetworkStatusException {

@@ -1,6 +1,7 @@
 package com.bitshares.bitshareswallet.wallet;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.bitshares.bitshareswallet.market.MarketTicker;
 import com.bitshares.bitshareswallet.market.MarketTrade;
@@ -588,7 +589,7 @@ public class wallet_api {
 
     public asset transfer_calculate_fee(String strAmount,
                                         String strAssetSymbol,
-                                        String strMemo) throws NetworkStatusException {
+                                        String strMemo, String strAssetFee) throws NetworkStatusException {
         object_id<asset_object> assetObjectId = object_id.create_from_string(strAssetSymbol);
         asset_object assetObject = null;
         if (assetObjectId == null) {
@@ -599,14 +600,21 @@ public class wallet_api {
             assetObject = get_assets(listAssetObjectId).get(0);
         }
 
+        object_id<asset_object> feeObjectId = object_id.create_from_string(strAssetFee);
+        asset_object feeObject = null;
+        if (feeObjectId == null) {
+            feeObject = lookup_asset_symbols(strAssetFee);
+        } else {
+            List<object_id<asset_object>> feeListAssetObjectId = new ArrayList<>();
+            feeListAssetObjectId.add(feeObjectId);
+            feeObject = get_assets(feeListAssetObjectId).get(0);
+        }
         operations.transfer_operation transferOperation = new operations.transfer_operation();
         transferOperation.from = new object_id<account_object>(0, account_object.class);//accountObjectFrom.id;
         transferOperation.to = new object_id<account_object>(0, account_object.class);
         transferOperation.amount = assetObject.amount_from_string(strAmount);
+        transferOperation.fee = new asset(-1, feeObject.id); // <--
         transferOperation.extensions = new HashSet<>();
-        /*if (TextUtils.isEmpty(strMemo) == false) {
-
-        }*/
 
         operations.operation_type operationType = new operations.operation_type();
         operationType.nOperationType = 0;
@@ -616,16 +624,24 @@ public class wallet_api {
         tx.operations = new ArrayList<>();
         tx.operations.add(operationType);
         tx.extensions = new HashSet<>();
-        set_operation_fees(tx, get_global_properties().parameters.current_fees);
+        //set_operation_fees(tx, get_global_properties().parameters.current_fees);
 
-        return transferOperation.fee;
+        //return transferOperation.fee;*/
+
+        operations.operation_type ott = null;
+        for (operations.operation_type ot : tx.operations) {
+            ott = ot;
+        }
+
+        return new asset(feeObject.convertBtsFee(get_global_properties().parameters.current_fees.getFee(ott)),
+                feeObject.id);
     }
 
     public signed_transaction transfer(String strFrom,
                                        String strTo,
                                        String strAmount,
                                        String strAssetSymbol,
-                                       String strMemo) throws NetworkStatusException {
+                                       String strMemo, asset feeAsset) throws NetworkStatusException {
 
         object_id<asset_object> assetObjectId = object_id.create_from_string(strAssetSymbol);
         asset_object assetObject;
@@ -647,6 +663,7 @@ public class wallet_api {
         transferOperation.from = accountObjectFrom.id;
         transferOperation.to = accountObjectTo.id;
         transferOperation.amount = assetObject.amount_from_string(strAmount);
+        transferOperation.fee = feeAsset;
         transferOperation.extensions = new HashSet<>();
         if (!TextUtils.isEmpty(strMemo)) {
             transferOperation.memo = new memo_data();
@@ -678,8 +695,7 @@ public class wallet_api {
         tx.operations = new ArrayList<>();
         tx.operations.add(operationType);
         tx.extensions = new HashSet<>();
-        set_operation_fees(tx, get_global_properties().parameters.current_fees);
-
+        //set_operation_fees(tx, get_global_properties().parameters.current_fees);
 
         //// TODO: 07/09/2017 tx.validate();
         return sign_transaction(tx);
@@ -951,7 +967,12 @@ public class wallet_api {
 
     private void set_operation_fees(signed_transaction tx, fee_schedule feeSchedule) {
         for (operations.operation_type operationType : tx.operations) {
-            feeSchedule.set_fee(operationType, price.unit_price(new object_id<asset_object>(3275, asset_object.class)));
+            //Log.w("FEE", "wallet_api:957 |" + ((operations.base_operation) operationType.operationContent).toString()
+            feeSchedule.set_fee(operationType, price.unit_price(new object_id<asset_object>(0, asset_object.class)));
+            //feeSchedule.set_fee(operationType, new price(new asset(19272900000L, new object_id<asset_object>(0, asset_object.class)), new asset(100000000, new object_id<asset_object>(850, asset_object.class))));
+            //:{"base":{"amount":"19272900000","asset_id":"1.3.0"},"quote":{"amount":100000000,"asset_id":"1.3.850"}
+
+            // price * base_amount / quote_amount
         }
     }
 
