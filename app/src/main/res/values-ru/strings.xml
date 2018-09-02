@@ -184,5 +184,7 @@
     <string name="promotion_dialog_positive_button">Загрузить</string>
     <string name="label_change">Изменить:</string>
     <string name="fee_first">Дождитесь завершения подсчёта комиссии</string>
+    <string name="server_name">Server name</string>
+    <string name="server_address">Server address</string>
 
 </resources>

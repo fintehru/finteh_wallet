@@ -51,7 +51,6 @@
     </string-array>
 
     <string-array name="full_node_api_server_options">
-        <item>Autoselect</item>
         <item>Openledger (Nuremberg, Germany)</item>
         <item>Openledger (Berlin, Germany)</item>
         <item>Btsabc (Hong Kong)</item>
@@ -66,7 +65,6 @@
     </string-array>
 
     <string-array name="full_node_api_server_values">
-        <item>autoselect</item>
         <item>wss://bitshares.openledger.info/ws</item>
         <item>wss://eu.openledger.info/ws</item>
         <item>wss://bit.btsabc.org/ws</item>

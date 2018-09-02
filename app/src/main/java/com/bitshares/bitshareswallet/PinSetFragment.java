@@ -1,13 +1,18 @@
 package com.bitshares.bitshareswallet;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +20,7 @@ import com.andrognito.pinlockview.IndicatorDots;
 import com.andrognito.pinlockview.PinLockListener;
 import com.andrognito.pinlockview.PinLockView;
 import com.bitshares.bitshareswallet.util.Safe;
+import com.bitshares.bitshareswallet.wallet.BitsharesWalletWraper;
 
 public class PinSetFragment extends Fragment {
 
@@ -53,7 +59,7 @@ public class PinSetFragment extends Fragment {
                              Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_pin_set, container, false);
 
-        preferences = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         PinLockView pinLockView = fragmentView.findViewById(R.id.pin_lock_view);
         IndicatorDots indicatorDots = fragmentView.findViewById(R.id.indicator_dots);
@@ -63,7 +69,7 @@ public class PinSetFragment extends Fragment {
         pinLockView.setPinLength(6);
         pinLockView.setShowDeleteButton(true);
 
-        indicatorDots.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
+        indicatorDots.setIndicatorType(IndicatorDots.IndicatorType.FIXED);
 
         TextView textView = fragmentView.findViewById(R.id.textView);
 
@@ -81,9 +87,10 @@ public class PinSetFragment extends Fragment {
                         } else if(step == 1) {
                             if(pin.equals(temp)) {
                                 temp = null;
-                                preferences.edit().putString("val", Safe.encryptDecrypt(pin, new char[]{'B','I','T','S','H','A','R','E'})).apply();
-                                Toast.makeText(getActivity(), R.string.pin_save_success, Toast.LENGTH_SHORT).show();
-                                getActivity().getSupportFragmentManager().popBackStack();
+                                showPassDialog(pin);
+                                //preferences.edit().putString("val", Safe.encryptDecrypt(pin, new char[]{'B','I','T','S','H','A','R','E'})).apply();
+                                //Toast.makeText(getActivity(), R.string.pin_save_success, Toast.LENGTH_SHORT).show();
+                                //getActivity().getSupportFragmentManager().popBackStack();
                             } else {
                                 Toast.makeText(getActivity(), R.string.incorrect_pin, Toast.LENGTH_SHORT).show();
                                 textView.setText(R.string.pin_enter_new);
@@ -141,9 +148,10 @@ public class PinSetFragment extends Fragment {
                                 case 2:
                                     if(pin.equals(temp)) {
                                         temp = null;
-                                        preferences.edit().putString("val", Safe.encryptDecrypt(pin, new char[]{'B','I','T','S','H','A','R','E'})).apply();
-                                        Toast.makeText(getActivity(), R.string.pin_edit_success, Toast.LENGTH_SHORT).show();
-                                        getActivity().getSupportFragmentManager().popBackStack();
+                                        showPassDialog(pin);
+                                        //preferences.edit().putString("val", Safe.encryptDecrypt(pin, new char[]{'B','I','T','S','H','A','R','E'})).apply();
+                                        //Toast.makeText(getActivity(), R.string.pin_edit_success, Toast.LENGTH_SHORT).show();
+                                        //getActivity().getSupportFragmentManager().popBackStack();
                                     } else {
                                         Toast.makeText(getActivity(), R.string.incorrect_pin, Toast.LENGTH_SHORT).show();
                                         textView.setText(R.string.pin_enter_new);
@@ -180,6 +188,32 @@ public class PinSetFragment extends Fragment {
             return Safe.encryptDecrypt(val, new char[]{'B','I','T','S','H','A','R','E'}).equals(pin);
         }
         return false;
+    }
+
+    private void showPassDialog(String pin) {
+
+        EditText editText = new EditText(getActivity());
+
+        editText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        editText.setHint(R.string.wallet_pass);
+
+        new AlertDialog.Builder(getActivity())
+                .setView(editText)
+                .setMessage("App does not store your password for security reason. Therefore you have to input current wallet password to use pin code instead password.")
+                .setPositiveButton(R.string.save, (dialogInterface, i) -> {
+                    int res = BitsharesWalletWraper.getInstance().unlock(editText.getText().toString());
+                    if(res == 0) {
+                        preferences.edit().putString("val", Safe.encryptDecrypt(pin, new char[]{'B','I','T','S','H','A','R','E'})).putString("pass", editText.getText().toString()).apply();
+                        Toast.makeText(getActivity(), R.string.pin_edit_success, Toast.LENGTH_SHORT).show();
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    } else {
+                        Toast.makeText(getActivity(), "Incorrect password", Toast.LENGTH_SHORT).show();
+                        showPassDialog(pin);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .create().show();
+
     }
 
 }

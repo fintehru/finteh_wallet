@@ -1,10 +1,14 @@
 package com.bitshares.bitshareswallet.wallet;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.bitshares.bitshareswallet.BitsharesApplication;
+import com.good.code.starts.here.servers.Server;
+import com.good.code.starts.here.servers.ServersRepository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,37 +25,34 @@ import okhttp3.WebSocketListener;
  */
 
 public class FullNodeServerSelect {
-    private List<String> mListNode = Arrays.asList(
-            "wss://bitshares.openledger.info/ws",
-            "wss://eu.openledger.info/ws",
-            "wss://bit.btsabc.org/ws",
-            "wss://bts.transwiser.com/ws",
-            "wss://bitshares.dacplay.org/ws",
-            "wss://bitshares-api.wancloud.io/ws",
-            "wss://openledger.hk/ws",
-            "wss://secure.freedomledger.com/ws",
-            "wss://dexnode.net/ws",
-            "wss://altcap.io/ws",
-            "wss://bitshares.crypto.fans/ws"
-    );
 
     public String getServer() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
         String strServer = sharedPreferences.getString("full_node_api_server", "autoselect");
-        if (strServer.equals("autoselect")) {
-            return getAutoSelectServer();
-        } else {
-            return strServer;
+        switch (strServer) {
+            case "autoselect":
+                String server = getAutoSelectServer();
+                sharedPreferences.edit().putString("full_node_api_server", server).apply();
+                Log.w("FULL NODE", server);
+                return server;
+            default:
+                Log.w("FULL NODE", "?>" + strServer);
+                return strServer;
         }
     }
 
-    private String getAutoSelectServer() {
+    public String getAutoSelectServer() {
         List<WebSocket> listWebsocket = new ArrayList<>();
         final Object objectSync = new Object();
 
-        final int nTotalCount = mListNode.size();
+        List<String> serverList = new ArrayList<>();
+        for(Server s: ServersRepository.INSTANCE.get().getValue()) {
+            serverList.add(s.getAddress());
+        }
+
+        final int nTotalCount = serverList.size();
         final List<String> listSelectedServer = new ArrayList<>();
-        for (final String strServer : mListNode) {
+        for (final String strServer : serverList) {
             Request request = new Request.Builder().url(strServer).build();
             OkHttpClient okHttpClient = new OkHttpClient();
             WebSocket webSocket = okHttpClient.newWebSocket(request, new WebSocketListener() {

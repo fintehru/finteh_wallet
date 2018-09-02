@@ -27,4 +27,8 @@
     <color name="ma5">#823E66</color>
     <color name="ma10">#B99C7A</color>
     <color name="ma20">#3C7193</color>
+
+    <color name="ping_check">#1565c0</color>
+    <color name="ping_result">#2e7d32</color>
+    <color name="ping_fail">#c62828</color>
 </resources>

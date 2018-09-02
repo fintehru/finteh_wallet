@@ -126,7 +126,7 @@
     <string name="tab_send">Send</string>
     <string name="tab_receive">Receive</string>
     <string name="tab_balances">Balance</string>
-    <string name="tab_transactions">Transaction</string>
+    <string name="tab_transactions">Transactions</string>
     <string name="title_currency_settings">Currency Settings</string>
     <string name="title_full_node_api_server_select">Full Node Api Server Select</string>
     <string name="title_select_currency">Choose a currency</string>
@@ -190,5 +190,23 @@
     <string name="pin_save_success">PIN saved</string>
     <string name="pin_delete_success">PIN deleted</string>
     <string name="fee_first">Fee calculation is not completed</string>
+    <string name="server_name">Server name</string>
+    <string name="server_address">Server address</string>
+    <string name="add_server">Add server</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
+    <string name="checking">Checking...</string>
+    <string name="error">Error</string>
+    <string name="restart_now">Restart now</string>
+    <string name="app_will_restart">App will restart to apply changes</string>
+    <string name="servers">Servers</string>
+    <string name="cant_delete">Can not delete selected server!</string>
+    <string name="cant_delete_last">Can not delete last server!</string>
+    <string name="amount">Amount</string>
+    <string name="token">Token</string>
+    <string name="generate_qr_code">Generate QR code</string>
+    <string name="copy_account">Copy Account</string>
+    <string name="wallet_pass">Wallet password</string>
+    <string name="save">Save</string>
 
 </resources>

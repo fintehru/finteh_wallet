@@ -46,7 +46,7 @@ public class ExchangeFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_exchange, container, false);
         mTabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         mViewPager = (ViewPager) view.findViewById(R.id.exchangeViewPager);
-        mExchangeFragmentPageAdapter = new BtsFragmentPageAdapter(getFragmentManager());
+        mExchangeFragmentPageAdapter = new BtsFragmentPageAdapter(getFragmentManager(), false);
         mExchangeFragmentPageAdapter.addFragment(TransactionSellBuyFragment.newInstance(TransactionSellBuyFragment.TRANSACTION_BUY), getResources().getString(R.string.label_buy));
         mExchangeFragmentPageAdapter.addFragment(TransactionSellBuyFragment.newInstance(TransactionSellBuyFragment.TRANSACTION_SELL), getResources().getString(R.string.label_sell));
         mOrdersFragment = OrdersFragment.newInstance();

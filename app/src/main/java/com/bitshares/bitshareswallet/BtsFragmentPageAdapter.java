@@ -15,19 +15,27 @@ public class BtsFragmentPageAdapter extends FragmentPagerAdapter {
     private List<Fragment> mListFragment = new ArrayList<>();
     private final List<String> mListFragmentTitle = new ArrayList<>();
     private int position = 0;
-    public BtsFragmentPageAdapter(FragmentManager fm) {
+
+    private boolean hide;
+
+    public BtsFragmentPageAdapter(FragmentManager fm, boolean hide) {
         super(fm);
+        this.hide = hide;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mListFragmentTitle.get(position);
+        return hide ? "" : mListFragmentTitle.get(position);
     }
 
     public void addFragment(Fragment fragment, String strTitle) {
         mListFragment.add(fragment);
         mListFragmentTitle.add(strTitle);
         this.notifyDataSetChanged();
+    }
+
+    public String getTitle(int position) {
+        return mListFragmentTitle.get(position);
     }
 
     @Override

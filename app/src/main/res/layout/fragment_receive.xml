@@ -14,22 +14,64 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/amountTextInput"
             android:layout_width="match_parent"
-            android:layout_height="43dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/amountEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:hint="@string/amount"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tokenTextInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/amountTextInput">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/tokenEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/token"/>
+
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/qrGenerate"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="8dp"
-            android:text="Show this QR to someone who is going to send you tokens" />
+            android:text="@string/generate_qr_code"
+            android:layout_below="@id/tokenTextInput" />
 
         <ImageView
             android:id="@+id/qrImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"
-            tools:src="@tools:sample/avatars" />
+            android:layout_below="@id/qrGenerate"/>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="40dp"
+            android:visibility="invisible"
+            android:layout_alignStart="@+id/qrImageView"
+            android:layout_alignLeft="@+id/qrImageView"
+            android:layout_alignTop="@+id/qrImageView"
+            android:layout_alignEnd="@+id/qrImageView"
+            android:layout_alignRight="@+id/qrImageView" />
 
     </RelativeLayout>
 

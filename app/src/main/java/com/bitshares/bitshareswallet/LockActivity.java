@@ -79,7 +79,7 @@ public class LockActivity extends AppCompatActivity {
                 mPinLockView.setShowDeleteButton(true);
                 mPinLockView.setTextColor(ContextCompat.getColor(this, R.color.white));
 
-                mIndicatorDots.setIndicatorType(IndicatorDots.IndicatorType.FILL_WITH_ANIMATION);
+                mIndicatorDots.setIndicatorType(IndicatorDots.IndicatorType.FIXED);
             }
         }
     }

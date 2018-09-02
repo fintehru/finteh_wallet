@@ -38,8 +38,10 @@ import com.bituniverse.utils.NumericUtil;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 
@@ -146,7 +148,10 @@ public class TransactionSellBuyFragment extends BaseFragment
     }
 
     public void initPriceValue() {
-        DecimalFormat decimalFormat = new DecimalFormat("#.####");
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        DecimalFormat decimalFormat = (DecimalFormat)nf;
+        decimalFormat.applyPattern("#.####");
+
         if (!isInitPriceValue) {
             isInitPriceValue = true;
             if (transactionType == TRANSACTION_BUY && lowestSellPrice != -1) {
@@ -373,7 +378,10 @@ public class TransactionSellBuyFragment extends BaseFragment
         double pValue = NumericUtil.parseDouble(pString, -1.0D);
         double total = qValue * pValue;
 
-        DecimalFormat decimalFormat = new DecimalFormat("#.########");
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+        DecimalFormat decimalFormat = (DecimalFormat)nf;
+        decimalFormat.applyPattern("#.########");
+
         tEditText.setText(decimalFormat.format(total));
 
         if (isBuy()) {

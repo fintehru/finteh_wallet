@@ -64,18 +64,18 @@
             android:layout_alignParentRight="true"
             android:layout_margin="8dp"
             android:gravity="center_vertical|right"
-            android:layout_width="100dp"
+            android:layout_width="110dp"
             android:layout_height="60dp"
             android:id="@+id/linearLayout">
             <TextView
                 android:id="@+id/textViewOperation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:text="Transfer"/>
             <TextView
                 android:id="@+id/textViewTime"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1 year ago"/>

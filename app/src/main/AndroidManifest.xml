@@ -61,6 +61,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.jakewharton.processphoenix.ProcessPhoenix"></activity>
     </application>
 
 </manifest>

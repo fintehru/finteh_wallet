@@ -35,6 +35,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -121,7 +122,9 @@ public class QuotationFragment extends BaseFragment {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd HH:mm");
                 textViewDate.setText(simpleDateFormat.format(historyPrice.date));
 
-                DecimalFormat decimalFormat = new DecimalFormat("#.####");
+                NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+                DecimalFormat decimalFormat = (DecimalFormat)nf;
+                decimalFormat.applyPattern("#.####");
                 textViewHigh.setText(decimalFormat.format(candleEntry.getHigh()));
                 textViewLow.setText(decimalFormat.format(candleEntry.getHigh()));
 

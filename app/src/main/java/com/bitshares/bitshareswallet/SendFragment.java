@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Camera;
 import android.hardware.camera2.CameraAccessException;
@@ -13,6 +14,7 @@ import android.hardware.camera2.CameraManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -87,6 +89,7 @@ public class SendFragment extends BaseFragment {
     private View mView;
     private SendViewModel viewModel;
 
+    private List<String> symbolList;
     private asset lastFeeAsset;
 
     public SendFragment() {}
@@ -189,7 +192,12 @@ public class SendFragment extends BaseFragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, 111);
             } else {
                 ScannerFragment scannerFragment = ScannerFragment.newInstance();
-                scannerFragment.setOnResultListener(data -> mEditTextTo.setText(data));
+                scannerFragment.setOnResultListener(data -> {
+                    String[] dataSplit = data.split("'");
+                    mEditTextTo.setText(dataSplit[0]);
+                    mEditTextQuantitiy.setText(dataSplit[1]);
+                    mSpinner.setSelection(symbolList.indexOf(dataSplit[2]));
+                });
                 getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content, scannerFragment).addToBackStack(null).commit();
             }
         });
@@ -229,7 +237,7 @@ public class SendFragment extends BaseFragment {
         mSpinner = mView.findViewById(R.id.spinner_unit);
 
         viewModel.getBalancesList().observe(this, bitsharesBalanceAssetList -> {
-            List<String> symbolList = new ArrayList<>();
+            symbolList = new ArrayList<>();
             symbolList.add("FINTEH");
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
                 if(!bitsharesBalanceAsset.quote.equals("FINTEH")) symbolList.add(bitsharesBalanceAsset.quote);
@@ -335,35 +343,47 @@ public class SendFragment extends BaseFragment {
             return;
         }
         if (BitsharesWalletWraper.getInstance().is_locked()) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-            final View viewGroup = layoutInflater.inflate(R.layout.dialog_password_confirm, null);
-            builder.setPositiveButton(
-                    R.string.password_confirm_button_confirm,
-                    null);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if(prefs.contains("pass")) {
+                BitsharesWalletWraper.getInstance().unlock(prefs.getString("pass", ""));
+                String strFrom = ((EditText) view.findViewById(R.id.editTextFrom)).getText().toString();
+                String strTo = ((EditText) view.findViewById(R.id.editTextTo)).getText().toString();
+                String strQuantity = ((EditText) view.findViewById(R.id.editTextQuantity)).getText().toString();
+                String strSymbol = (String)mSpinner.getSelectedItem();
+                String strMemo = ((EditText)view.findViewById(R.id.editTextMemo)).getText().toString();
+                processTransfer(strFrom, strTo, strQuantity, strSymbol, strMemo);
+            } else {
 
-            builder.setNegativeButton(
-                    R.string.password_confirm_button_cancel, null);
-            builder.setView(viewGroup);
-            final AlertDialog dialog = builder.create();
-            dialog.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+                final View viewGroup = layoutInflater.inflate(R.layout.dialog_password_confirm, null);
+                builder.setPositiveButton(
+                        R.string.password_confirm_button_confirm,
+                        null);
 
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
-                EditText editText = viewGroup.findViewById(R.id.editTextPassword);
-                String strPassword = editText.getText().toString();
-                int nRet = BitsharesWalletWraper.getInstance().unlock(strPassword);
-                if (nRet == 0) {
-                    dialog.dismiss();
-                    String strFrom = ((EditText) view.findViewById(R.id.editTextFrom)).getText().toString();
-                    String strTo = ((EditText) view.findViewById(R.id.editTextTo)).getText().toString();
-                    String strQuantity = ((EditText) view.findViewById(R.id.editTextQuantity)).getText().toString();
-                    String strSymbol = (String)mSpinner.getSelectedItem();
-                    String strMemo = ((EditText)view.findViewById(R.id.editTextMemo)).getText().toString();
-                    processTransfer(strFrom, strTo, strQuantity, strSymbol, strMemo);
-                } else {
-                    viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
-                }
-            });
+                builder.setNegativeButton(
+                        R.string.password_confirm_button_cancel, null);
+                builder.setView(viewGroup);
+                final AlertDialog dialog = builder.create();
+                dialog.show();
+
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                    EditText editText = viewGroup.findViewById(R.id.editTextPassword);
+                    String strPassword = editText.getText().toString();
+                    int nRet = BitsharesWalletWraper.getInstance().unlock(strPassword);
+                    if (nRet == 0) {
+                        dialog.dismiss();
+                        String strFrom = ((EditText) view.findViewById(R.id.editTextFrom)).getText().toString();
+                        String strTo = ((EditText) view.findViewById(R.id.editTextTo)).getText().toString();
+                        String strQuantity = ((EditText) view.findViewById(R.id.editTextQuantity)).getText().toString();
+                        String strSymbol = (String) mSpinner.getSelectedItem();
+                        String strMemo = ((EditText) view.findViewById(R.id.editTextMemo)).getText().toString();
+                        processTransfer(strFrom, strTo, strQuantity, strSymbol, strMemo);
+                    } else {
+                        viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
+                    }
+                });
+            }
 
         } else {
             String strFrom = ((EditText) view.findViewById(R.id.editTextFrom)).getText().toString();

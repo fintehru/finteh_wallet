@@ -14,12 +14,9 @@
         android:entryValues="@array/bts_currency_unit_values"
         android:defaultValue="USD"/>
 
-    <ListPreference
+    <Preference
         android:key="full_node_api_server"
         android:title="@string/title_full_node_api_server_select"
-        android:dialogTitle="@string/title_select_api_server"
-        android:entries="@array/full_node_api_server_options"
-        android:entryValues="@array/full_node_api_server_values"
         android:defaultValue="autoselect"/>
 
     <ListPreference
@@ -29,5 +26,10 @@
         android:entries="@array/quotation_currency_pair_options"
         android:entryValues="@array/quotation_currency_pair_values"
         android:defaultValue="BTS:USD"/>
+
+    <Preference
+        android:key="export"
+        android:title="Export settings"
+        android:defaultValue="null" />
 
 </PreferenceScreen>

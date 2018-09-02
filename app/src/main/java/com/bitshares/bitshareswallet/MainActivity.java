@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity
     private LinearLayout mLayoutTitle;
     private BottomNavigationView mBottomNavigation;
 
+    private String lastTitle;
+
     private static final int REQUEST_CODE_SETTINGS = 1;
 
 
@@ -108,10 +110,12 @@ public class MainActivity extends AppCompatActivity
         String strCurrencySetting = prefs.getString("quotation_currency_pair", "BTS:USD");
         String strAsset[] = strCurrencySetting.split(":");
 
-        mTxtTitle.setText(String.format("%s : %s ",
-                utils.getAssetSymbolDisply(strAsset[0]),
-                utils.getAssetSymbolDisply(strAsset[1]))
-        );
+        try {
+            mTxtTitle.setText(String.format("%s : %s ",
+                    utils.getAssetSymbolDisply(strAsset[0]),
+                    utils.getAssetSymbolDisply(strAsset[1]))
+            );
+        } catch (ArrayIndexOutOfBoundsException ignored) {}
     }
 
     private void setTitleVisible(boolean visible){
@@ -134,7 +138,7 @@ public class MainActivity extends AppCompatActivity
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        mToolbar.setTitle("");
+        mToolbar.setTitle(getResources().getString(R.string.tab_send));
 
         mLayoutTitle = mToolbar.findViewById(R.id.lay_title);
         mTxtTitle = mToolbar.findViewById(R.id.txt_bar_title);
@@ -156,7 +160,7 @@ public class MainActivity extends AppCompatActivity
 
         mViewPager = findViewById(R.id.viewPager);
 
-        mMainFragmentPageAdapter = new BtsFragmentPageAdapter(getSupportFragmentManager());
+        mMainFragmentPageAdapter = new BtsFragmentPageAdapter(getSupportFragmentManager(), false);
 
         mWalletFragment = WalletFragment.newInstance();
         mQuotationFragment = QuotationFragment.newInstance();
@@ -177,10 +181,16 @@ public class MainActivity extends AppCompatActivity
             public void onPageSelected(int position) {
                 if(position == 0) {
                     mBottomNavigation.setSelectedItemId(R.id.navigation_wallet);
+                    if(lastTitle != null) getSupportActionBar().setTitle(lastTitle);
+                    lastTitle = null;
                 } else if(position == 1) {
                     mBottomNavigation.setSelectedItemId(R.id.navigation_quotation);
+                    if(lastTitle == null) lastTitle = mToolbar.getTitle().toString();
+                    mToolbar.setTitle("");
                 } else if(position == 2) {
                     mBottomNavigation.setSelectedItemId(R.id.navigation_exchange);
+                    if(lastTitle == null) lastTitle = mToolbar.getTitle().toString();
+                    mToolbar.setTitle("");
                 }
                 setTitleVisible(position!=0);
                 mMainFragmentPageAdapter.updatePagePosition(position);

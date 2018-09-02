@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +35,6 @@ public class WalletFragment extends BaseFragment {
 
     @BindView(R.id.fw_viewPager) ViewPager mViewPager;
     @BindView(R.id.tabLayout) TabLayout mTabLayout;
-    @BindView(R.id.textTotalBalance) TextView textViewBalances;
-    @BindView(R.id.textViewCurrency) TextView textViewCurency;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -44,7 +43,7 @@ public class WalletFragment extends BaseFragment {
     public void onNewIntent(Intent intent){
         String strAction = intent.getStringExtra("action");
         if (!TextUtils.isEmpty(strAction)) {
-            mViewPager.setCurrentItem(2);
+            mViewPager.setCurrentItem(0);
             String strName = intent.getStringExtra("name");
             int nAmount = Integer.valueOf(intent.getStringExtra("amount"));
             String strUnit = intent.getStringExtra("unit");
@@ -95,7 +94,7 @@ public class WalletFragment extends BaseFragment {
     }
 
     void processShowdata(List<BitsharesBalanceAsset> bitsharesBalanceAssetList) {
-        long totalBTS = 0;
+        /*long totalBTS = 0;
         long totalBalance = 0;
         for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
             totalBTS += bitsharesBalanceAsset.total;
@@ -119,11 +118,11 @@ public class WalletFragment extends BaseFragment {
             );
 
             textViewCurency.setText(strTotalCurrency);
-        }
+        }*/
 
-        String strTotalBalance = String.format(Locale.ENGLISH, "%d %s", totalBTS, "FINTEH");
+       /* String strTotalBalance = String.format(Locale.ENGLISH, "%d %s", totalBTS, "FINTEH");
         textViewBalances.setText(strTotalBalance);
-        textViewCurency.setVisibility(View.VISIBLE);
+        textViewCurency.setVisibility(View.VISIBLE);*/
 
         mWalletFragmentPageAdapter.notifyUpdate();
     }
@@ -147,7 +146,7 @@ public class WalletFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_wallet, container, false);
         ButterKnife.bind(this, view);
         Resources res = getResources();
-        mWalletFragmentPageAdapter = new BtsFragmentPageAdapter(getFragmentManager());
+        mWalletFragmentPageAdapter = new BtsFragmentPageAdapter(getFragmentManager(), true);
         mSendFragment = SendFragment.newInstance();
         mWalletFragmentPageAdapter.addFragment(mSendFragment, res.getString(R.string.tab_send));
         mWalletFragmentPageAdapter.addFragment(TransactionsFragment.newInstance(), res.getString(R.string.tab_transactions));
@@ -177,6 +176,21 @@ public class WalletFragment extends BaseFragment {
             }
         });
         mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.getTabAt(0).setIcon(R.drawable.ic_send);
+        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_history);
+        mTabLayout.getTabAt(2).setIcon(R.drawable.ic_wallet);
+        mTabLayout.getTabAt(3).setIcon(R.drawable.ic_qrcode);
+
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(mWalletFragmentPageAdapter.getTitle(tab.getPosition()));
+            }
+
+            @Override public void onTabUnselected(TabLayout.Tab tab) { }
+            @Override public void onTabReselected(TabLayout.Tab tab) { }
+        });
+
         return view;
     }
 
