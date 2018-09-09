@@ -83,7 +83,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
         if (requestCode == REQUEST_CODE_SETTINGS && resultCode == RESULT_OK) {
             String strChanged = data.getStringExtra("setting_changed");
             if (strChanged.equals("currency_setting")) {
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity
         Sentry.getContext().setUser(new UserBuilder()
                 .setUsername(account.name)
                 .setId(account.id.toString())
-                .withData("pin", getSharedPreferences("data", Context.MODE_PRIVATE).contains("val"))
+                .withData("pin", PreferenceManager.getDefaultSharedPreferences(this).contains("val"))
                 .build());
 
         rasingColorRevers = getResources().getConfiguration().locale.getCountry().equals("CN");
@@ -396,4 +398,5 @@ public class MainActivity extends AppCompatActivity
 
         dialogBuilder.show();
     }
+
 }

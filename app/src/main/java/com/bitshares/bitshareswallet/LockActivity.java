@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
@@ -33,7 +34,7 @@ public class LockActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            preferences = getSharedPreferences("data", Context.MODE_PRIVATE);
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
             if(!preferences.contains("val")) {
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);

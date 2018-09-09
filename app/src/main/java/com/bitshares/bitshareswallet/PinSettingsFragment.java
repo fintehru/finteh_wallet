@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v14.preference.SwitchPreference;
+import android.support.v7.preference.PreferenceManager;
 
 public class PinSettingsFragment extends PreferenceFragmentCompat {
 
@@ -17,7 +18,7 @@ public class PinSettingsFragment extends PreferenceFragmentCompat {
         SwitchPreference switchPreference = (SwitchPreference) findPreference("pin_switch");
         Preference preference = findPreference("pin_set");
 
-        boolean status = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE).contains("val");
+        boolean status = PreferenceManager.getDefaultSharedPreferences(getActivity()).contains("val");
         switchPreference.setChecked(status);
         preference.setVisible(status);
 

@@ -186,5 +186,6 @@
     <string name="fee_first">Дождитесь завершения подсчёта комиссии</string>
     <string name="server_name">Server name</string>
     <string name="server_address">Server address</string>
+    <string name="no_req_token">You do not have the requested token!</string>
 
 </resources>

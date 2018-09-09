@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Camera;
@@ -71,6 +72,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.sentry.Sentry;
 import io.sentry.event.BreadcrumbBuilder;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.CAMERA_SERVICE;
 
 public class SendFragment extends BaseFragment {
@@ -167,39 +169,7 @@ public class SendFragment extends BaseFragment {
         });
 
         qrScan.setOnClickListener(v -> {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                CameraManager manager = (CameraManager) getActivity().getSystemService(CAMERA_SERVICE);
-                try {
-                    Map<String, String> data = new ArrayMap<>();
-                    for (String cameraId : manager.getCameraIdList()) {
-                        CameraCharacteristics chars
-                                = manager.getCameraCharacteristics(cameraId);
-                        boolean flash = chars.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
-                        int facing = chars.get(CameraCharacteristics.LENS_FACING);
-
-                        data.put("camera# " + cameraId, "Flash: " + flash + " | Facing: " + facing);
-                    }
-                    Sentry.getContext().recordBreadcrumb(new BreadcrumbBuilder()
-                            .setCategory("CAMERA")
-                            .setData(data)
-                            .build());
-                } catch (CameraAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, 111);
-            } else {
-                ScannerFragment scannerFragment = ScannerFragment.newInstance();
-                scannerFragment.setOnResultListener(data -> {
-                    String[] dataSplit = data.split("'");
-                    mEditTextTo.setText(dataSplit[0]);
-                    mEditTextQuantitiy.setText(dataSplit[1]);
-                    mSpinner.setSelection(symbolList.indexOf(dataSplit[2]));
-                });
-                getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content, scannerFragment).addToBackStack(null).commit();
-            }
+            startActivityForResult(new Intent(getActivity(), ScannerActivity.class), ScannerActivity.REQUEST_CODE);
         });
 
         mEditTextQuantitiy.setOnFocusChangeListener((v, hasFocus) -> {
@@ -240,33 +210,38 @@ public class SendFragment extends BaseFragment {
             symbolList = new ArrayList<>();
             symbolList.add("FINTEH");
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
-                if(!bitsharesBalanceAsset.quote.equals("FINTEH")) symbolList.add(bitsharesBalanceAsset.quote);
-
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
-                        getActivity(),
-                        android.R.layout.simple_spinner_item,
-                        symbolList
-                );
-
-                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                mSpinner.setAdapter(arrayAdapter);
-                feeSpinner.setAdapter(arrayAdapter);
+                if (!bitsharesBalanceAsset.quote.equals("FINTEH"))
+                    symbolList.add(bitsharesBalanceAsset.quote);
             }
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                    getActivity(),
+                    android.R.layout.simple_spinner_item,
+                    symbolList
+            );
+
+            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            mSpinner.setAdapter(arrayAdapter);
+            feeSpinner.setAdapter(arrayAdapter);
         });
 
         return mView;
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 111) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                ScannerFragment scannerFragment = ScannerFragment.newInstance();
-                scannerFragment.setOnResultListener(data -> mEditTextTo.setText(data));
-                getActivity().getSupportFragmentManager().beginTransaction().add(android.R.id.content, scannerFragment).addToBackStack(null).commit();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ScannerActivity.REQUEST_CODE && resultCode == RESULT_OK) {
+            String scanData = data.getStringExtra("DATA");
+            Toast.makeText(getActivity(), scanData, Toast.LENGTH_SHORT).show();
+            String[] splited = scanData.split("'");
+            mEditTextTo.setText(splited[0]);
+            mEditTextQuantitiy.setText(splited[1]);
+            int index = symbolList.indexOf(splited[2]);
+            if(index >= 0) {
+                mSpinner.setSelection(index);
+                feeSpinner.setSelection(index);
             } else {
-                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.CAMERA}, 111);
+                Toast.makeText(getActivity(), R.string.no_req_token, Toast.LENGTH_SHORT).show();
             }
         }
     }

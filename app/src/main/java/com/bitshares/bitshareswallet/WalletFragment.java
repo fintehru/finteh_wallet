@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitshares.bitshareswallet.room.BitsharesBalanceAsset;
 import com.bitshares.bitshareswallet.viewmodel.WalletViewModel;
@@ -202,5 +203,10 @@ public class WalletFragment extends BaseFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

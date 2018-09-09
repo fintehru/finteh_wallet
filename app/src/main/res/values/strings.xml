@@ -208,5 +208,6 @@
     <string name="copy_account">Copy Account</string>
     <string name="wallet_pass">Wallet password</string>
     <string name="save">Save</string>
+    <string name="no_req_token">You do not have the requested token!</string>
 
 </resources>
