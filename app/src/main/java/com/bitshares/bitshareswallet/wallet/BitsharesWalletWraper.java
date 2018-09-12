@@ -599,7 +599,7 @@ public class BitsharesWalletWraper {
     public asset transfer_calculate_fee(String strAmount,
                                         String strAssetSymbol,
                                         String strMemo, String feeAssetSymbol) throws NetworkStatusException {
-        return mWalletApi.transfer_calculate_fee(strAmount, strAssetSymbol, strMemo, feeAssetSymbol);
+        return mWalletApi.transfer_calculate_fee2(strAmount, strAssetSymbol, strMemo, feeAssetSymbol);
     }
 
     public String get_plain_text_message(memo_data memoData) {

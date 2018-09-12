@@ -531,6 +531,27 @@ public class websocket_api extends WebSocketListener {
         return replyAccountObjectList.result;
     }
 
+    public asset get_required_fees(operations.operation_type transferOperation, String feeAsset) throws NetworkStatusException {
+        Call callObject = new Call();
+        callObject.id = mnCallId.getAndIncrement();
+        callObject.method = "call";
+        callObject.params = new ArrayList<>();
+        callObject.params.add(_nDatabaseId);
+        callObject.params.add("get_required_fees");
+
+
+        List<Object> listAccountIds = new ArrayList<>();
+        listAccountIds.add(Collections.singletonList(transferOperation));
+        listAccountIds.add(feeAsset);
+
+        callObject.params.add(listAccountIds);
+        ReplyObjectProcess<Reply<List<asset>>> replyObject =
+                new ReplyObjectProcess<>(new TypeToken<Reply<List<asset>>>(){}.getType());
+        Reply<List<asset>> replyLookupAccountNames = sendForReply(callObject, replyObject);
+
+        return replyLookupAccountNames.result.get(0);
+    }
+
     public List<account_object> get_accounts(List<object_id<account_object>> listAccountObjectId) throws NetworkStatusException {
         Call callObject = new Call();
         callObject.id = mnCallId.getAndIncrement();

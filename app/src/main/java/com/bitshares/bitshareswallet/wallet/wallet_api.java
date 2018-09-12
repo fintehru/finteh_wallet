@@ -587,6 +587,42 @@ public class wallet_api {
         return 0;
     }
 
+    public asset transfer_calculate_fee2(String strAmount,
+                                   String strAssetSymbol,
+                                   String strMemo, String strAssetFee) throws NetworkStatusException {
+        object_id<asset_object> assetObjectId = object_id.create_from_string(strAssetSymbol);
+        asset_object assetObject = null;
+        if (assetObjectId == null) {
+            assetObject = lookup_asset_symbols(strAssetSymbol);
+        } else {
+            List<object_id<asset_object>> listAssetObjectId = new ArrayList<>();
+            listAssetObjectId.add(assetObjectId);
+            assetObject = get_assets(listAssetObjectId).get(0);
+        }
+
+        object_id<asset_object> feeObjectId = object_id.create_from_string(strAssetFee);
+        asset_object feeObject = null;
+        if (feeObjectId == null) {
+            feeObject = lookup_asset_symbols(strAssetFee);
+        } else {
+            List<object_id<asset_object>> feeListAssetObjectId = new ArrayList<>();
+            feeListAssetObjectId.add(feeObjectId);
+            feeObject = get_assets(feeListAssetObjectId).get(0);
+        }
+        operations.transfer_operation transferOperation = new operations.transfer_operation();
+        transferOperation.from = new object_id<account_object>(0, account_object.class);//accountObjectFrom.id;
+        transferOperation.to = new object_id<account_object>(0, account_object.class);
+        transferOperation.amount = assetObject.amount_from_string(strAmount);
+        transferOperation.fee = new asset(-1, feeObject.id); // <--
+        transferOperation.extensions = new HashSet<>();
+
+        operations.operation_type operationType = new operations.operation_type();
+        operationType.nOperationType = 0;
+        operationType.operationContent = transferOperation;
+
+        return mWebsocketApi.get_required_fees(operationType, feeObject.id.toString());
+    }
+
     public asset transfer_calculate_fee(String strAmount,
                                         String strAssetSymbol,
                                         String strMemo, String strAssetFee) throws NetworkStatusException {
