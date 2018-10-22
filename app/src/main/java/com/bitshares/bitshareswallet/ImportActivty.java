@@ -78,8 +78,8 @@ public class ImportActivty extends AppCompatActivity {
                 // 将按钮转换成为进度条
                 mProcessHud.show();
 
-                String strAccount = ((EditText)findViewById(R.id.editTextAccountName)).getText().toString();
-                String strPassword = ((EditText)findViewById(R.id.editTextPassword)).getText().toString();
+                String strAccount = ((EditText)findViewById(R.id.accountNameET)).getText().toString();
+                String strPassword = ((EditText)findViewById(R.id.passwordET)).getText().toString();
                 String strPrivateKey = ((EditText)findViewById(R.id.editTextPrivateKey)).getText().toString();
 
                 if (mnModel == ACCOUNT_MODEL) {
@@ -122,7 +122,7 @@ public class ImportActivty extends AppCompatActivity {
         View layoutPrivateKey = findViewById(R.id.layoutPrivateKey);
         View layoutBrainKey = findViewById(R.id.layoutBrainKey);
         View layoutFileBin = findViewById(R.id.layoutFileBin);
-        View layoutAccountName = findViewById(R.id.layoutAccountName);
+        View layoutAccountName = findViewById(R.id.accountNameIL);
 
         mnModel = getIntent().getIntExtra("model", 0);
         switch (mnModel) {

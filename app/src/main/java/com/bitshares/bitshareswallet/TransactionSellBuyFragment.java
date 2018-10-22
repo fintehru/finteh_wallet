@@ -443,7 +443,20 @@ public class TransactionSellBuyFragment extends BaseFragment
                     dialog.dismiss();
                 }
             });
-            builder.show();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if(prefs.contains("pass")) {
+                if (BitsharesWalletWraper.getInstance().unlock(prefs.getString("pass", "")) == 0) {
+                    if (transactionType == TRANSACTION_BUY) {
+                        buy(pValue, qValue, buyTimeSec);
+                    } else if (transactionType == TRANSACTION_SELL) {
+                        sell(pValue, qValue, buyTimeSec);
+                    }
+                } else {
+                    Toast.makeText(getContext(), getContext().getString(R.string.password_invalid), Toast.LENGTH_LONG).show();
+                }
+            } else {
+                builder.show();
+            }
         }
     }
 
@@ -518,7 +531,7 @@ public class TransactionSellBuyFragment extends BaseFragment
 
     private void updateCurency(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String strAssetPair = prefs.getString("quotation_currency_pair", "BTS:USD");
+        String strAssetPair = prefs.getString("quotation_currency_pair", "FINTEH:USD");
         String strAsset[] = strAssetPair.split(":");
         baseAsset = strAsset[1];
         quoteAsset = strAsset[0];

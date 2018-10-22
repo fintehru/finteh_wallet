@@ -6,11 +6,6 @@
         android:title="@string/title_wallet" />
 
     <item
-        android:id="@+id/navigation_quotation"
-        android:icon="@mipmap/ic_tab_quotation_normal"
-        android:title="@string/title_quotation" />
-
-    <item
         android:id="@+id/navigation_exchange"
         android:icon="@mipmap/ic_tab_exchange_normal"
         android:title="@string/title_exchange" />

@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -192,13 +193,12 @@ public class PinSetFragment extends Fragment {
 
     private void showPassDialog(String pin) {
 
-        EditText editText = new EditText(getActivity());
 
-        editText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        editText.setHint(R.string.wallet_pass);
+        View layout = LayoutInflater.from(getActivity()).inflate(R.layout.other_textinput, null, false);
+        EditText editText = layout.findViewById(R.id.editText);
 
         new AlertDialog.Builder(getActivity())
-                .setView(editText)
+                .setView(layout)
                 .setMessage("App does not store your password for security reason. Therefore you have to input current wallet password to use pin code instead password.")
                 .setPositiveButton(R.string.save, (dialogInterface, i) -> {
                     int res = BitsharesWalletWraper.getInstance().unlock(editText.getText().toString());

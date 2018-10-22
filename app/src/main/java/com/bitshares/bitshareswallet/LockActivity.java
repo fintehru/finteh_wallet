@@ -3,10 +3,12 @@ package com.bitshares.bitshareswallet;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
@@ -18,6 +20,14 @@ import com.bitshares.bitshareswallet.util.Safe;
 import com.bitshares.bitshareswallet.wallet.BitsharesWalletWraper;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import de.bitsharesmunich.graphenej.FileBin;
+import de.bitsharesmunich.graphenej.Util;
+import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
+
 public class LockActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
@@ -25,7 +35,6 @@ public class LockActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         BitsharesWalletWraper bitsharesWalletWraper = BitsharesWalletWraper.getInstance();
 
         if (bitsharesWalletWraper.load_wallet_file() != 0 || bitsharesWalletWraper.is_new()){
