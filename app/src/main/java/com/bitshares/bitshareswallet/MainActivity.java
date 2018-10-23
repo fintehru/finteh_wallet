@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity
 
     private void updateTitle(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "BTS:USD");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:USD");
         String strAsset[] = strCurrencySetting.split(":");
 
         try {
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity
         mExchangeFragment = ExchangeFragment.newInstance();
 
         mMainFragmentPageAdapter.addFragment(mWalletFragment, "Wallet");
-        mMainFragmentPageAdapter.addFragment(mQuotationFragment, "Quotation");
+        //mMainFragmentPageAdapter.addFragment(mQuotationFragment, "Quotation");
         mMainFragmentPageAdapter.addFragment(mExchangeFragment, "Exchange");
         mViewPager.setAdapter(mMainFragmentPageAdapter);
 
@@ -186,14 +186,18 @@ public class MainActivity extends AppCompatActivity
                     if(lastTitle != null) getSupportActionBar().setTitle(lastTitle);
                     lastTitle = null;
                 } else if(position == 1) {
-                    mBottomNavigation.setSelectedItemId(R.id.navigation_quotation);
+                    /*mBottomNavigation.setSelectedItemId(R.id.navigation_quotation);
                     if(lastTitle == null) lastTitle = mToolbar.getTitle().toString();
+                    mToolbar.setTitle("");*/
+                    mBottomNavigation.setSelectedItemId(R.id.navigation_exchange);
+                    if (lastTitle == null) lastTitle = mToolbar.getTitle().toString();
                     mToolbar.setTitle("");
-                } else if(position == 2) {
+                }
+                /*} else if(position == 2) {
                     mBottomNavigation.setSelectedItemId(R.id.navigation_exchange);
                     if(lastTitle == null) lastTitle = mToolbar.getTitle().toString();
                     mToolbar.setTitle("");
-                }
+                }*/
                 setTitleVisible(position!=0);
                 mMainFragmentPageAdapter.updatePagePosition(position);
             }
@@ -217,6 +221,8 @@ public class MainActivity extends AppCompatActivity
                     Intent intentAbout = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(intentAbout);
                     break;
+                case R.id.backup:
+                    //BitsharesWalletWraper.getInstance().get_account().
             }
 
             mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -260,12 +266,12 @@ public class MainActivity extends AppCompatActivity
                 case R.id.navigation_wallet:
                     mViewPager.setCurrentItem(0, true);
                     return true;
-                case R.id.navigation_quotation:
+                case R.id.navigation_exchange:
                     mViewPager.setCurrentItem(1, true);
                     return true;
-                case R.id.navigation_exchange:
+                /*case R.id.navigation_exchange:
                     mViewPager.setCurrentItem(2, true);
-                    return true;
+                    return true;*/
             }
             return false;
         });
@@ -374,7 +380,7 @@ public class MainActivity extends AppCompatActivity
         Resources res = getResources();
         final String[] arrValues = res.getStringArray(R.array.quotation_currency_pair_values);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "BTS:USD");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:USD");
         int currSelectIndex = 0;
         for(int i=0; i<arrValues.length; i++){
             if(arrValues[i].equals(strCurrencySetting)){

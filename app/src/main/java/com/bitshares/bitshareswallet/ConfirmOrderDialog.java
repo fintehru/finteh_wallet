@@ -118,6 +118,9 @@ public class ConfirmOrderDialog {
 
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_confirm_order, null);
 
+        TextView tokenText = (TextView) view.findViewById(R.id.dco_txt_target_coin_name);
+        tokenText.setText(confirmOrderData.getQuantityType() + ":");
+
         TextView txtOperation = (TextView) view.findViewById(R.id.dco_txt_operation);
         txtOperation.setText(confirmOrderData.getOperationName());
 

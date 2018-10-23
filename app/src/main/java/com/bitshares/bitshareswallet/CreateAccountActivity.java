@@ -1,6 +1,7 @@
 package com.bitshares.bitshareswallet;
 
 import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,33 +65,36 @@ public class CreateAccountActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mProcessHud.show();
 
-                String strAccount = ((EditText)findViewById(R.id.editTextAccountName)).getText().toString();
-                String strPassword = ((EditText)findViewById(R.id.editTextPassword)).getText().toString();
-                String strPasswordConfirm = ((EditText)findViewById(R.id.editTextPasswordConfirm)).getText().toString();
+                String strAccount = ((EditText)findViewById(R.id.accountNameET)).getText().toString();
+                String strPassword = ((EditText)findViewById(R.id.passwordET)).getText().toString();
+                String strPasswordConfirm = ((EditText)findViewById(R.id.passwordConfET)).getText().toString();
                 CheckBox checkBox = (CheckBox)findViewById(R.id.checkBoxConfirm);
 
 
-                TextView textViewAccountError = (TextView)findViewById(R.id.textViewErrorAccount);
+                /*TextView textViewAccountError = (TextView)findViewById(R.id.textViewErrorAccount);
                 TextView textViewPasswordError = (TextView)findViewById(R.id.textViewErrorPasswrod);
-                TextView textViewPasswordConfirmError = (TextView)findViewById(R.id.textViewErrorInfo);
+                TextView textViewPasswordConfirmError = (TextView)findViewById(R.id.textViewErrorInfo);*/
+                TextInputLayout textViewAccount = findViewById(R.id.accountNameIL);
+                TextInputLayout textViewPassword = findViewById(R.id.passwordIL);
+                TextInputLayout textViewPasswordConfirm = findViewById(R.id.passwordConfIL);
 
                 boolean bError = false;
                 if (strAccount.isEmpty()) {
-                    textViewAccountError.setText(R.string.create_account_account_name_empty);
+                    textViewAccount.setError(getString(R.string.create_account_account_name_empty));
                     bError = true;
                 }
 
                 if (strPassword.isEmpty()) {
-                    textViewPasswordError.setText(R.string.create_account_password_empty);
+                    textViewPassword.setError(getString(R.string.create_account_password_empty));
                     bError = true;
                 }
 
                 if (strPasswordConfirm.isEmpty()) {
-                    textViewPasswordConfirmError.setText(R.string.create_account_password_confirm_empty);
+                    textViewPasswordConfirm.setError(getString(R.string.create_account_password_confirm_empty));
                     bError = true;
                 }
 
-                if (bError == false && textViewAccountError.getText().length() == 0 && textViewPasswordError.getText().length() == 0) {
+                if (bError == false && !textViewAccount.isErrorEnabled() && !textViewPassword.isErrorEnabled()) {
                     if (checkBox.isChecked() == true) {
                         processCreateAccount(strAccount, strPassword, strPasswordConfirm);
                     } else {
@@ -105,13 +109,8 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
-        EditText editTextAccountName = (EditText)findViewById(R.id.editTextAccountName);
-        InputFilter lowercaseFilter = new InputFilter() {
-            @Override
-            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-                return source.toString().toLowerCase();
-            }
-        };
+        EditText editTextAccountName = findViewById(R.id.accountNameET);
+        InputFilter lowercaseFilter = (source, start, end, dest, dstart, dend) -> source.toString().toLowerCase();
         editTextAccountName.setFilters(new InputFilter[] {lowercaseFilter, new InputFilter.LengthFilter(63)});
 
         editTextAccountName.addTextChangedListener(new TextWatcher() {
@@ -132,16 +131,16 @@ public class CreateAccountActivity extends AppCompatActivity {
                     return;
                 }
 
-                TextView textViewError = (TextView)findViewById(R.id.textViewErrorAccount);
+                TextInputLayout textViewError = findViewById(R.id.accountNameIL);
                 if (Character.isLetter(strAccountName.charAt(0)) == false) {
-                    textViewError.setText(R.string.create_account_account_name_error_start_letter);
-                    findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
+                    textViewError.setError(getString(R.string.create_account_account_name_error_start_letter));
+                    //findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
                 } else if (strAccountName.length() <= 4) {  // 用户名太短
-                    textViewError.setText(R.string.create_account_account_name_too_short);
-                    findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
+                    textViewError.setError(getString(R.string.create_account_account_name_too_short));
+                    //findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
                 } else if (strAccountName.endsWith("-")) {
-                    textViewError.setText(R.string.create_account_account_name_error_dash_end);
-                    findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
+                    textViewError.setError(getString(R.string.create_account_account_name_error_dash_end));
+                    //findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
                 } else {
                     boolean bCombineAccount = false;
                     for (char c : strAccountName.toCharArray()) {
@@ -151,10 +150,11 @@ public class CreateAccountActivity extends AppCompatActivity {
                     }
 
                     if (bCombineAccount == false) {
-                        textViewError.setText(R.string.create_account_account_name_error_full_letter);
-                        findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
+                        textViewError.setError(getString(R.string.create_account_account_name_error_full_letter));
+                        //findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
                     } else {
-                        textViewError.setText("");
+                        textViewError.setError("");
+                        textViewError.setErrorEnabled(false);
                         //findViewById(R.id.imageViewAccountCheck).setVisibility(View.VISIBLE);
                         processCheckAccount(strAccountName);
                     }
@@ -162,7 +162,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             }
         });
 
-        final EditText editTextPassword = (EditText)findViewById(R.id.editTextPassword);
+        final EditText editTextPassword = (EditText)findViewById(R.id.passwordET);
         editTextPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -178,23 +178,24 @@ public class CreateAccountActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String strPassword = s.toString();
 
-                TextView textViewError = (TextView)findViewById(R.id.textViewErrorPasswrod);
+                TextInputLayout textViewError = findViewById(R.id.passwordIL);
                 if (strPassword.length() < 12) {
-                    textViewError.setText(R.string.create_account_password_requirement);
+                    textViewError.setError(getString(R.string.create_account_password_requirement));
                 } else {
                     boolean bDigit = strPassword.matches(".*\\d+.*");
                     boolean bUpperCase = strPassword.matches(".*[A-Z]+.*");
                     boolean bLowerCase = strPassword.matches(".*[a-z]+.*");
-                    if ((bDigit && bUpperCase && bLowerCase) == false) {
-                        textViewError.setText(R.string.create_account_password_requirement);
+                    if (!(bDigit && bUpperCase && bLowerCase)) {
+                        textViewError.setError(getString(R.string.create_account_password_requirement));
                     } else {
-                        textViewError.setText("");
+                        textViewError.setError("");
+                        textViewError.setErrorEnabled(false);
                     }
                 }
             }
         });
 
-        EditText editTextPasswordConfirm = (EditText)findViewById(R.id.editTextPasswordConfirm);
+        EditText editTextPasswordConfirm = findViewById(R.id.passwordConfET);
         editTextPasswordConfirm.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -211,13 +212,15 @@ public class CreateAccountActivity extends AppCompatActivity {
                 String strPassword = editTextPassword.getText().toString();
                 String strPasswordConfirm = s.toString();
 
-                TextView textViewErrorInfo = (TextView)findViewById(R.id.textViewErrorInfo);
+                TextInputLayout textViewErrorInfo = findViewById(R.id.passwordConfIL);
                 if (strPassword.compareTo(strPasswordConfirm) == 0) {
-                    findViewById(R.id.imageViewPasswordConfirmCheck).setVisibility(View.VISIBLE);
-                    textViewErrorInfo.setText("");
+                    //findViewById(R.id.imageViewPasswordConfirmCheck).setVisibility(View.VISIBLE);
+                    textViewErrorInfo.setError("");
+                    textViewErrorInfo.setErrorEnabled(false);
                 } else {
-                    findViewById(R.id.imageViewPasswordConfirmCheck).setVisibility(View.INVISIBLE);
-                    textViewErrorInfo.setText(R.string.create_account_password_confirm_error);
+                    textViewErrorInfo.setError(getString(R.string.pass_no_match));
+                    //findViewById(R.id.imageViewPasswordConfirmCheck).setVisibility(View.INVISIBLE);
+                    //textViewErrorInfo.setText(R.string.create_account_password_confirm_error);
                 }
             }
         });
@@ -343,14 +346,14 @@ public class CreateAccountActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 if (accountObect == null) {
-                                    findViewById(R.id.imageViewAccountCheck).setVisibility(View.VISIBLE);
+                                    //findViewById(R.id.imageViewAccountCheck).setVisibility(View.VISIBLE);
                                 } else {
-                                    EditText editTextAccount = (EditText)findViewById(R.id.editTextAccountName);
+                                    EditText editTextAccount = (EditText)findViewById(R.id.accountNameET);
                                     String strAccountName = editTextAccount.getText().toString();
                                     if (strAccountName.compareTo(accountObect.name) == 0) {
-                                        TextView textViewError = (TextView) findViewById(R.id.textViewErrorAccount);
-                                        textViewError.setText(R.string.create_account_activity_account_object_exist);
-                                        findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
+                                        TextInputLayout textViewError = findViewById(R.id.accountNameIL);
+                                        textViewError.setError(getString(R.string.create_account_activity_account_object_exist));
+                                        //findViewById(R.id.imageViewAccountCheck).setVisibility(View.INVISIBLE);
                                     }
                                 }
                             }

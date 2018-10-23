@@ -61,8 +61,7 @@ public class ServersRecyclerAdapter extends RecyclerView.Adapter<ServersRecycler
 
     @Override
     public ServerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_server, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_server, parent, false);
         return new ServerViewHolder(view);
     }
 

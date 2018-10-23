@@ -117,8 +117,8 @@
     <string name="label_confirm_cancel_order">Are you sure you want to cancel this order?</string>
 
     <string name="menu_logout">Log out</string>
-    <string name="import_account_name">Account Name:</string>
-    <string name="import_password">Password:</string>
+    <string name="import_account_name">Account Name</string>
+    <string name="import_password">Password</string>
     <string name="label_memo">Memo:</string>
     <string name="label_from">From:</string>
     <string name="label_to">To:</string>
@@ -132,16 +132,16 @@
     <string name="title_select_currency">Choose a currency</string>
     <string name="title_select_api_server">Choose a Full Node Api Server</string>
 
-    <string name="label_file_path">File Path:</string>
+    <string name="label_file_path">File Path</string>
     <string name="label_select_file">Select File</string>
-    <string name="label_private_key">Private Key:</string>
+    <string name="label_private_key">Private Key</string>
 
     <string name="label_bts_cny">bitCNY/BTS</string>
     <string name="label_bts">BTS</string>
     <string name="label_cny">bitCNY</string>
 
     <string name="create_account_activity_title">Sign Up</string>
-    <string name="create_account_password_confirm">Confirm password:</string>
+    <string name="create_account_password_confirm">Confirm password</string>
     <string name="create_account_activity_button">SIGN UP</string>
     <string name="create_account_activity_network_fail">Failed to connect to server</string>
     <string name="create_account_activity_account_object_exist">The account has already existed</string>
@@ -209,5 +209,6 @@
     <string name="wallet_pass">Wallet password</string>
     <string name="save">Save</string>
     <string name="no_req_token">You do not have the requested token!</string>
+    <string name="pass_no_match">Passwords do not match!</string>
 
 </resources>

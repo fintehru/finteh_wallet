@@ -1,7 +1,9 @@
 package com.bitshares.bitshareswallet;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;

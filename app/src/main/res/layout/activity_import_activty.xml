@@ -39,47 +39,28 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/layoutAccountName"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/accountNameIL"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <TextView
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/accountNameET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/import_account_name"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/editTextAccountName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:hint="@string/import_account_name"
                     android:inputType="text" />
 
-            </LinearLayout>
+            </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout
+            <FrameLayout
                 android:id="@+id/layoutFileBin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:visibility="gone">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/label_file_path"
-                    android:textSize="14sp" />
-
-                <FrameLayout
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/fileSelectIL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -89,41 +70,40 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:inputType="textMultiLine"
+                        android:hint="@string/label_file_path"
                         android:lines="2"
                         android:minLines="2" />
 
-                    <TextView
-                        android:id="@+id/buttonSelectFile"
-                        android:layout_width="80dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="right|bottom"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginRight="2dp"
-                        android:background="@drawable/button_small_background"
-                        android:gravity="center"
-                        android:text="@string/label_select_file"
-                        android:textColor="@android:color/white" />
-                </FrameLayout>
+                </android.support.design.widget.TextInputLayout>
 
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/buttonSelectFile"
+                    android:layout_width="80dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="right|bottom"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="2dp"
+                    android:background="@drawable/button_small_background"
+                    android:gravity="center"
+                    android:text="@string/label_select_file"
+                    android:textColor="@android:color/white" />
+            </FrameLayout>
 
-            <TextView
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/import_password"
-                android:textSize="14sp" />
+                app:passwordToggleEnabled="true">
 
-            <EditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:inputType="textPassword" />
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/passwordET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/import_password"
+                    android:inputType="textPassword" />
 
+            </android.support.design.widget.TextInputLayout>
 
             <LinearLayout
                 android:id="@+id/layoutPrivateKey"
@@ -176,7 +156,6 @@
                     android:lines="2"
                     android:minLines="2" />
             </LinearLayout>
-
 
             <TextView
                 android:id="@+id/textViewErrorInfo"

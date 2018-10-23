@@ -39,128 +39,52 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/layoutAccountName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="8dp"
-                    android:text="@string/import_account_name"
-                    android:textSize="14sp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <EditText
-                        android:id="@+id/editTextAccountName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-"
-                        android:inputType="text" />
-
-                    <ImageView
-                        android:id="@+id/imageViewAccountCheck"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignBottom="@+id/editTextAccountName"
-                        android:layout_marginBottom="12dp"
-                        android:layout_marginRight="12dp"
-                        android:visibility="invisible"
-                        android:src="@mipmap/check"/>
-
-                </RelativeLayout>
-
-
-                <TextView
-                    android:id="@+id/textViewErrorAccount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginTop="8dp"
-                    android:textColor="@color/red"
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/import_password"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/editTextPassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:inputType="textPassword" />
-
-            <TextView
-                android:id="@+id/textViewErrorPasswrod"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/red"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="8dp"
-                android:text="@string/create_account_password_confirm"
-                android:textSize="14sp" />
-
-            <RelativeLayout
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/accountNameIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText
-                    android:id="@+id/editTextPasswordConfirm"
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/accountNameET"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:inputType="textPassword" />
+                    android:hint="@string/import_account_name"
+                    android:inputType="text" />
 
-                <ImageView
-                    android:id="@+id/imageViewPasswordConfirmCheck"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignBottom="@+id/editTextPasswordConfirm"
-                    android:layout_marginBottom="12dp"
-                    android:layout_marginRight="12dp"
-                    android:visibility="invisible"
-                    android:src="@mipmap/check"/>
+            </android.support.design.widget.TextInputLayout>
 
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/textViewErrorInfo"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordIL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/red"
-                android:textSize="14sp" />
+                app:passwordToggleEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/passwordET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/import_password"
+                    android:inputType="textPassword" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/passwordConfIL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passwordToggleEnabled="true">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/passwordConfET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/create_account_password_confirm"
+                    android:inputType="textPassword" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <CheckBox
+                android:layout_marginTop="16dp"
                 android:id="@+id/checkBoxConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
