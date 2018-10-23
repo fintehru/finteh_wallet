@@ -208,9 +208,9 @@ public class SendFragment extends BaseFragment {
 
         viewModel.getBalancesList().observe(this, bitsharesBalanceAssetList -> {
             symbolList = new ArrayList<>();
-            symbolList.add("FINTEH");
+            symbolList.add("KITACOIN");
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
-                if (!bitsharesBalanceAsset.quote.equals("FINTEH"))
+                if (!bitsharesBalanceAsset.quote.equals("KITACOIN"))
                     symbolList.add(bitsharesBalanceAsset.quote);
             }
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
