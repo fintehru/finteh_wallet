@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import com.bitshares.bitshareswallet.room.BitsharesBalanceAsset;
 import com.bitshares.bitshareswallet.viewmodel.WalletViewModel;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,18 +39,12 @@ public class BalancesFragment extends BaseFragment {
     class BalanceItemViewHolder extends RecyclerView.ViewHolder {
         public View view;
         public TextView viewNumber;
-        public TextView viewUnit;
-        public TextView viewEqual;
-        public TextView viewConvertNumber;
         public TextView viewConvertUnit;
 
         public BalanceItemViewHolder(View itemView) {
             super(itemView);
             view = itemView;
             viewNumber = itemView.findViewById(R.id.textViewNumber);
-            viewUnit = itemView.findViewById(R.id.textViewUnit);
-            viewEqual = itemView.findViewById(R.id.textViewEqual);
-            viewConvertNumber = itemView.findViewById(R.id.textViewNumber2);
             viewConvertUnit = itemView.findViewById(R.id.textViewUnit2);
         }
     }
@@ -64,22 +61,21 @@ public class BalancesFragment extends BaseFragment {
         @Override
         public void onBindViewHolder(BalanceItemViewHolder holder, int position) {
             BitsharesBalanceAsset bitsharesBalanceAsset = bitsharesBalanceAssetList.get(position);
-            String strBalances = String.format(
+            /*String strBalances = String.format(
                     Locale.ENGLISH,
                     "%.4f",
-                    (float)bitsharesBalanceAsset.amount / bitsharesBalanceAsset.quote_precision
-            );
+                    (float)bitsharesBalanceAsset.amount / bitsharesBalanceAsset.quote_precision */
+            BigDecimal balance = new BigDecimal(bitsharesBalanceAsset.amount).setScale(String.valueOf(bitsharesBalanceAsset.quote_precision).length()-1, BigDecimal.ROUND_UNNECESSARY).divide(new BigDecimal(bitsharesBalanceAsset.quote_precision), RoundingMode.UNNECESSARY).stripTrailingZeros();
 
-            holder.viewNumber.setText(strBalances);
-            holder.viewUnit.setText(bitsharesBalanceAsset.quote);
-            if (bitsharesBalanceAsset.quote.compareTo("KITACOIN") != 0) {
-                int nResult = (int)Math.rint(bitsharesBalanceAsset.total / bitsharesBalanceAsset.base_precision);
+            holder.viewNumber.setText(balance.toPlainString());
+            //holder.viewUnit.setText(bitsharesBalanceAsset.quote);
+            //if (bitsharesBalanceAsset.quote.compareTo("FINTEH") != 0) {
+                //int nResult = (int)Math.rint(bitsharesBalanceAsset.total / bitsharesBalanceAsset.base_precision);
 
-                holder.viewEqual.setText("=");
-                holder.viewConvertNumber.setText(Integer.valueOf(nResult).toString());
-                holder.viewConvertUnit.setText("KITACOIN");
-            }
-
+                //holder.viewEqual.setText("=");
+                //holder.viewConvertNumber.setText(Integer.valueOf(nResult).toString());
+                holder.viewConvertUnit.setText(bitsharesBalanceAsset.quote);
+            //}
         }
 
         @Override

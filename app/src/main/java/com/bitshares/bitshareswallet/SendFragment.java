@@ -328,7 +328,6 @@ public class SendFragment extends BaseFragment {
                 String strMemo = ((EditText)view.findViewById(R.id.editTextMemo)).getText().toString();
                 processTransfer(strFrom, strTo, strQuantity, strSymbol, strMemo);
             } else {
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 LayoutInflater layoutInflater = getActivity().getLayoutInflater();
                 final View viewGroup = layoutInflater.inflate(R.layout.dialog_password_confirm, null);
@@ -396,8 +395,6 @@ public class SendFragment extends BaseFragment {
                     }
                 });
     }
-
-
 
     public static void hideSoftKeyboard(View view, Context context) {
         if (view != null && context != null) {

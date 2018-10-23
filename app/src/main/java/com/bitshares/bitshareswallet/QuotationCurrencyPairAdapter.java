@@ -186,7 +186,7 @@ public class QuotationCurrencyPairAdapter extends RecyclerView.Adapter<Quotation
         );
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String strAssetPairConfig = prefs.getString("quotation_currency_pair", "BTS:USD");
+        String strAssetPairConfig = prefs.getString("quotation_currency_pair", "FINTEH:USD");
         for (int i = 0; i < bitsharesMarketTickerList.size(); ++i) {
             MarketTicker marketTicker = bitsharesMarketTickerList.get(i).marketTicker;
             String currencyPair = utils.getAssetSymbolDisply(marketTicker.quote) + ":" +

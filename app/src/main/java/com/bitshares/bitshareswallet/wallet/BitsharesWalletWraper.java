@@ -150,6 +150,12 @@ public class BitsharesWalletWraper {
         return mWalletApi.save_wallet_file(mstrWalletFilePath);
     }
 
+    private void serializeToBin() {
+
+        //FileBin.serializeWalletBackup(bitsharesWalletWraper.)
+
+    }
+
     public synchronized int build_connect() {
         if (mnStatus == STATUS_INITIALIZED) {
             return 0;

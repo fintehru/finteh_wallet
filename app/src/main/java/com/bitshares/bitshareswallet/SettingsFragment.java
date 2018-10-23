@@ -22,13 +22,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
 
-        Preference preference = findPreference("currency_setting");
+        findPreference("currency_setting").setVisible(false);
+
+        /*Preference preference = findPreference("currency_setting");
         preference.setOnPreferenceChangeListener((preference1, newValue) -> {
             Intent intent = new Intent();
             intent.putExtra("setting_changed", "currency_setting");
             getActivity().setResult(Activity.RESULT_OK, intent);
             return true;
-        });
+        });*/
 
         Preference pinPreference = findPreference("pin_settings");
         pinPreference.setOnPreferenceClickListener(p -> {
