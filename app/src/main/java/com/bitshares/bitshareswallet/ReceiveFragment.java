@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bitshares.bitshareswallet.wallet.BitsharesWalletWraper;
 import com.google.zxing.BarcodeFormat;
@@ -28,6 +30,7 @@ public class ReceiveFragment extends BaseFragment {
     private TextInputEditText amountEditText;
     private TextInputEditText tokenEditText;
     private ProgressBar progressBar;
+    private Button qrGenerateButton;
 
     public ReceiveFragment() {}
 
@@ -48,12 +51,71 @@ public class ReceiveFragment extends BaseFragment {
         amountEditText = fragmentView.findViewById(R.id.amountEditText);
         tokenEditText = fragmentView.findViewById(R.id.tokenEditText);
 
+        InputFilter[] editFilters =tokenEditText.getFilters();
+        InputFilter[] newFilters = new InputFilter[editFilters.length + 1];
+        System.arraycopy(editFilters, 0, newFilters, 0, editFilters.length);
+        newFilters[editFilters.length] = new InputFilter.AllCaps();
+        tokenEditText.setFilters(newFilters);
+
         progressBar = fragmentView.findViewById(R.id.progressBar);
 
-        fragmentView.findViewById(R.id.qrGenerate).setOnClickListener(view -> generateQR());
+        qrGenerateButton = fragmentView.findViewById(R.id.qrGenerate);
+        qrGenerateButton.setOnClickListener(view -> generateQR());
+
+        amountEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String token;
+                if(tokenEditText.getText() == null) token = "";
+                else token = tokenEditText.getText().toString();
+                qrGenerateButton.setEnabled(s.length() > 0 && check(token));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
+        tokenEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                /*int pos = tokenEditText.getSelectionStart();
+                tokenEditText.removeTextChangedListener(this);
+                tokenEditText.setText(s.toString().toUpperCase());
+
+                tokenEditText.setSelection(pos);
+                tokenEditText.addTextChangedListener(this);*/
+                int l;
+                if(amountEditText.getText() == null) l = 0;
+                else l = amountEditText.getText().length();
+                qrGenerateButton.setEnabled(l > 0 && check(s.toString()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+
 
         return fragmentView;
     }
+
+    public boolean check(String name) {
+        if(name.length() == 0) return false;
+        if(name.charAt(0) == '.' || name.charAt(name.length()-1) == '.') return false;
+        char[] chars = name.toCharArray();
+        for (char c : chars) {
+            if(!Character.isLetter(c) && c != '.') {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     private void generateQR() {
         qrView.setVisibility(View.INVISIBLE);

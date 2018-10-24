@@ -36,6 +36,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -54,6 +55,8 @@ import com.bitshares.bitshareswallet.wallet.exception.NetworkStatusException;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
 import com.bituniverse.utils.NumericUtil;
+import com.good.code.starts.here.dialog.TokenSelectAdapter;
+import com.good.code.starts.here.dialog.TokenSelectDialog;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.math.BigDecimal;
@@ -78,8 +81,8 @@ import static android.content.Context.CAMERA_SERVICE;
 public class SendFragment extends BaseFragment {
 
     private KProgressHUD mProcessHud;
-    private Spinner mSpinner;
-    private Spinner feeSpinner;
+    private Button mButton;
+    private Button feeButton;
 
     @BindView(R.id.editTextTo) EditText mEditTextTo;
     @BindView(R.id.textViewToId) TextView mTextViewId;
@@ -95,6 +98,8 @@ public class SendFragment extends BaseFragment {
     private asset lastFeeAsset;
 
     public SendFragment() {}
+
+    private TokenSelectDialog tokenSelectDialog;
 
     public static SendFragment newInstance() {
         return new SendFragment();
@@ -192,7 +197,16 @@ public class SendFragment extends BaseFragment {
             processCalculateFee();
         });
 
-        feeSpinner = mView.findViewById(R.id.spinner_fee_unit);
+        tokenSelectDialog = new TokenSelectDialog(getActivity());
+
+        feeButton = mView.findViewById(R.id.btn_fee_unit);
+
+        feeButton.setOnClickListener(v -> tokenSelectDialog.show(symbolList, token -> {
+            feeButton.setText(token);
+            processCalculateFee();
+            tokenSelectDialog.close();
+        }));
+        /*feeSpinner = mView.findViewById(R.id.spinner_fee_unit);
 
         feeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -202,9 +216,17 @@ public class SendFragment extends BaseFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
-        });
+        });*/
 
-        mSpinner = mView.findViewById(R.id.spinner_unit);
+
+
+        mButton = mView.findViewById(R.id.btn_unit);
+
+        mButton.setOnClickListener(v -> tokenSelectDialog.show(symbolList, token -> {
+            mButton.setText(token);
+            tokenSelectDialog.close();
+        }));
+        //mSpinner = mView.findViewById(R.id.spinner_unit);
 
         viewModel.getBalancesList().observe(this, bitsharesBalanceAssetList -> {
             symbolList = new ArrayList<>();
@@ -213,6 +235,7 @@ public class SendFragment extends BaseFragment {
                 if (!bitsharesBalanceAsset.quote.equals("FINTEH"))
                     symbolList.add(bitsharesBalanceAsset.quote);
             }
+
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                     getActivity(),
                     android.R.layout.simple_spinner_item,
@@ -220,8 +243,8 @@ public class SendFragment extends BaseFragment {
             );
 
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            mSpinner.setAdapter(arrayAdapter);
-            feeSpinner.setAdapter(arrayAdapter);
+            //mSpinner.setAdapter(arrayAdapter);
+            //feeSpinner.setAdapter(arrayAdapter);
         });
 
         return mView;
@@ -238,8 +261,10 @@ public class SendFragment extends BaseFragment {
             mEditTextQuantitiy.setText(splited[1]);
             int index = symbolList.indexOf(splited[2]);
             if(index >= 0) {
-                mSpinner.setSelection(index);
-                feeSpinner.setSelection(index);
+                mButton.setText(symbolList.get(index));
+                feeButton.setText(symbolList.get(index));
+                //mSpinner.setSelection(index);
+                //feeSpinner.setSelection(index);
             } else {
                 Toast.makeText(getActivity(), R.string.no_req_token, Toast.LENGTH_SHORT).show();
             }
@@ -324,7 +349,7 @@ public class SendFragment extends BaseFragment {
                 String strFrom = ((EditText) view.findViewById(R.id.editTextFrom)).getText().toString();
                 String strTo = ((EditText) view.findViewById(R.id.editTextTo)).getText().toString();
                 String strQuantity = ((EditText) view.findViewById(R.id.editTextQuantity)).getText().toString();
-                String strSymbol = (String)mSpinner.getSelectedItem();
+                String strSymbol = (String)mButton.getText();
                 String strMemo = ((EditText)view.findViewById(R.id.editTextMemo)).getText().toString();
                 processTransfer(strFrom, strTo, strQuantity, strSymbol, strMemo);
             } else {
@@ -350,7 +375,7 @@ public class SendFragment extends BaseFragment {
                         String strFrom = ((EditText) view.findViewById(R.id.editTextFrom)).getText().toString();
                         String strTo = ((EditText) view.findViewById(R.id.editTextTo)).getText().toString();
                         String strQuantity = ((EditText) view.findViewById(R.id.editTextQuantity)).getText().toString();
-                        String strSymbol = (String) mSpinner.getSelectedItem();
+                        String strSymbol = (String) mButton.getText();
                         String strMemo = ((EditText) view.findViewById(R.id.editTextMemo)).getText().toString();
                         processTransfer(strFrom, strTo, strQuantity, strSymbol, strMemo);
                     } else {
@@ -363,7 +388,7 @@ public class SendFragment extends BaseFragment {
             String strFrom = ((EditText) view.findViewById(R.id.editTextFrom)).getText().toString();
             String strTo = ((EditText) view.findViewById(R.id.editTextTo)).getText().toString();
             String strQuantity = ((EditText) view.findViewById(R.id.editTextQuantity)).getText().toString();
-            String strSymbol = (String)mSpinner.getSelectedItem();
+            String strSymbol = (String)mButton.getText();
             String strMemo = ((EditText)view.findViewById(R.id.editTextMemo)).getText().toString();
 
             processTransfer(strFrom, strTo, strQuantity, strSymbol, strMemo);
@@ -418,9 +443,9 @@ public class SendFragment extends BaseFragment {
 
     private void processCalculateFee() {
         final String strQuantity = ((EditText) mView.findViewById(R.id.editTextQuantity)).getText().toString();
-        final String strSymbol = (String) mSpinner.getSelectedItem();
+        final String strSymbol = (String) mButton.getText();
         final String strMemo = ((EditText) mView.findViewById(R.id.editTextMemo)).getText().toString();
-        final String strFeeAsset = (String) feeSpinner.getSelectedItem();
+        final String strFeeAsset = (String) feeButton.getText();
 
         // 用户没有任何货币，这个symbol会为空，则会出现崩溃，进行该处理进行规避
         if (TextUtils.isEmpty(strQuantity) || TextUtils.isEmpty(strSymbol)) {
@@ -560,7 +585,8 @@ public class SendFragment extends BaseFragment {
         if (isAdded()) {
             mEditTextTo.setText(strName);
             mEditTextQuantitiy.setText(Integer.toString(nAmount));
-            mSpinner.setSelection(0);
+            //mSpinner.setSelection(0);
+            mButton.setText("BTS");
         }
     }
 }
