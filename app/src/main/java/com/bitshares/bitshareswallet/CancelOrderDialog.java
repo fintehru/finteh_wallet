@@ -13,25 +13,24 @@ import java.text.SimpleDateFormat;
 
 
 public class CancelOrderDialog {
-    private Activity mActivity;
     private AlertDialog.Builder mDialogBuilder;
     private AlertDialog mDialog;
     private OnDialogInterationListener mListener;
     private boolean confirm = false;
     public CancelOrderDialog(Activity mActivity, OpenOrder order) {
-        this.mActivity = mActivity;
+        Activity mActivity1 = mActivity;
         mDialogBuilder = new AlertDialog.Builder(mActivity);
         mDialogBuilder.setTitle(R.string.label_confirm_cancel_order);
 
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_cancel_order, null);
 
-        TextView txtOperation = (TextView) view.findViewById(R.id.dco_txt_operation);
-        TextView txtPrice = (TextView)view.findViewById(R.id.dco_txt_price);
-        TextView txtSrcCoin = (TextView)view.findViewById(R.id.dco_txt_src_coin);
-        TextView txtSrcCoinName = (TextView)view.findViewById(R.id.dco_txt_src_coin_name);
-        TextView txtTargetCoin = (TextView)view.findViewById(R.id.dco_txt_target_coin);
-        TextView txtTargetCoinName = (TextView)view.findViewById(R.id.dco_txt_target_coin_name);
-        TextView txtExpiration = (TextView)view.findViewById(R.id.dco_txt_expiration);
+        TextView txtOperation = view.findViewById(R.id.dco_txt_operation);
+        TextView txtPrice = view.findViewById(R.id.dco_txt_price);
+        TextView txtSrcCoin = view.findViewById(R.id.dco_txt_src_coin);
+        TextView txtSrcCoinName = view.findViewById(R.id.dco_txt_src_coin_name);
+        TextView txtTargetCoin = view.findViewById(R.id.dco_txt_target_coin);
+        TextView txtTargetCoinName = view.findViewById(R.id.dco_txt_target_coin_name);
+        TextView txtExpiration = view.findViewById(R.id.dco_txt_expiration);
 
         if (order.limitOrder.sell_price.quote.asset_id.equals(order.quote.id)) {
             txtOperation.setText(R.string.label_buy);
@@ -56,37 +55,28 @@ public class CancelOrderDialog {
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         txtExpiration.setText(formatter.format(order.limitOrder.expiration));
 
-        TextView txtConfirm = (TextView)view.findViewById(R.id.dco_txt_confirm);
-        txtConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-                confirm = true;
-            }
+        TextView txtConfirm = view.findViewById(R.id.dco_txt_confirm);
+        txtConfirm.setOnClickListener(v -> {
+            mDialog.dismiss();
+            confirm = true;
         });
 
-        TextView txtNo = (TextView)view.findViewById(R.id.dco_txt_no);
-        txtNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDialog.dismiss();
-                confirm = false;
-            }
+        TextView txtNo = view.findViewById(R.id.dco_txt_no);
+        txtNo.setOnClickListener(v -> {
+            mDialog.dismiss();
+            confirm = false;
         });
         mDialogBuilder.setView(view);
     }
 
     public void show(){
         mDialog = mDialogBuilder.show();
-        mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                if(mListener != null){
-                    if(confirm){
-                        mListener.onConfirm();
-                    } else {
-                        mListener.onReject();
-                    }
+        mDialog.setOnDismissListener(dialog -> {
+            if(mListener != null){
+                if(confirm){
+                    mListener.onConfirm();
+                } else {
+                    mListener.onReject();
                 }
             }
         });

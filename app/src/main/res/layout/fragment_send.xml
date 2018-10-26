@@ -139,8 +139,9 @@
                     <Button
                         android:id="@+id/btn_unit"
                         android:text="BTS"
+                        android:background="@drawable/button_normal_2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="25dp"
                         android:textSize="@dimen/send_fragment_text_size" />
 
                     <EditText
@@ -185,8 +186,9 @@
                     <Button
                         android:id="@+id/btn_fee_unit"
                         android:text="BTS"
+                        android:background="@drawable/button_normal_2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="25dp"
                         android:textSize="@dimen/send_fragment_text_size" />
 
                     <EditText

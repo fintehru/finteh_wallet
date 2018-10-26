@@ -562,16 +562,16 @@ public class BitsharesWalletWraper {
 
     public asset calculate_sell_fee(asset_object assetToSell, asset_object assetToReceive,
                                     double rate, double amount,
-                                    global_property_object globalPropertyObject) {
+                                    global_property_object globalPropertyObject, String feeAsset) throws NetworkStatusException {
         return mWalletApi.calculate_sell_fee(assetToSell, assetToReceive, rate, amount,
-                globalPropertyObject);
+                globalPropertyObject, feeAsset);
     }
 
     public asset calculate_buy_fee(asset_object assetToReceive, asset_object assetToSell,
                                    double rate, double amount,
-                                   global_property_object globalPropertyObject) {
+                                   global_property_object globalPropertyObject, String feeAsset) throws NetworkStatusException {
         return mWalletApi.calculate_buy_fee(assetToReceive, assetToSell, rate, amount,
-                globalPropertyObject);
+                globalPropertyObject, feeAsset);
     }
 
     public signed_transaction sell(String base, String quote, double rate, double amount)

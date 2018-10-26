@@ -739,7 +739,18 @@ public class wallet_api {
 
     public asset calculate_sell_asset_fee(String amountToSell, asset_object assetToSell,
                                           String minToReceive, asset_object assetToReceive,
-                                          global_property_object globalPropertyObject) {
+                                          global_property_object globalPropertyObject, String feeAsset) throws NetworkStatusException {
+
+        object_id<asset_object> feeObjectId = object_id.create_from_string(feeAsset);
+        asset_object feeObject = null;
+        if (feeObjectId == null) {
+            feeObject = lookup_asset_symbols(feeAsset);
+        } else {
+            List<object_id<asset_object>> feeListAssetObjectId = new ArrayList<>();
+            feeListAssetObjectId.add(feeObjectId);
+            feeObject = get_assets(feeListAssetObjectId).get(0);
+        }
+
         operations.limit_order_create_operation op = new operations.limit_order_create_operation();
         op.amount_to_sell = assetToSell.amount_from_string(amountToSell);
         op.min_to_receive = assetToReceive.amount_from_string(minToReceive);
@@ -753,23 +764,25 @@ public class wallet_api {
         tx.operations.add(operationType);
 
         tx.extensions = new HashSet<>();
-        set_operation_fees(tx, globalPropertyObject.parameters.current_fees);
 
-        return op.fee;
+        return mWebsocketApi.get_required_fees(operationType, feeObject.id.toString());
+        //set_operation_fees(tx, globalPropertyObject.parameters.current_fees);
+
+        //return op.fee;
     }
 
     public asset calculate_sell_fee(asset_object assetToSell, asset_object assetToReceive,
                                     double rate, double amount,
-                                    global_property_object globalPropertyObject) {
+                                    global_property_object globalPropertyObject, String feeAsset) throws NetworkStatusException {
         return calculate_sell_asset_fee(Double.toString(amount), assetToSell,
-                Double.toString(rate * amount), assetToReceive, globalPropertyObject);
+                Double.toString(rate * amount), assetToReceive, globalPropertyObject, feeAsset);
     }
 
     public asset calculate_buy_fee(asset_object assetToReceive, asset_object assetToSell,
                                    double rate, double amount,
-                                   global_property_object globalPropertyObject) {
+                                   global_property_object globalPropertyObject, String feeAsset) throws NetworkStatusException {
         return calculate_sell_asset_fee(Double.toString(rate * amount), assetToSell,
-                Double.toString(amount), assetToReceive, globalPropertyObject);
+                Double.toString(amount), assetToReceive, globalPropertyObject, feeAsset);
     }
 
     public signed_transaction sell_asset(String amountToSell, String symbolToSell,
