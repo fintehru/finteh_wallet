@@ -99,7 +99,7 @@ public class TransactionSellBuyFragment extends BaseFragment
     private KProgressHUD mProcessHud;
 
     private Button feeButton;
-
+    private asset lastFeeAsset;
     private TokenSelectDialog tokenSelectDialog;
 
     private asset_object btsAssetObj;
@@ -236,7 +236,7 @@ public class TransactionSellBuyFragment extends BaseFragment
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_buy_sell, container, false);
 
-        Button okButton = (Button) view.findViewById(R.id.okButton);
+        Button okButton = view.findViewById(R.id.okButton);
         okButton.setOnClickListener(this);
         if (isBuy()) {
             okButton.setText(getResources().getString(R.string.title_buy));
@@ -368,6 +368,10 @@ public class TransactionSellBuyFragment extends BaseFragment
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.okButton:
+                if(lastFeeAsset == null) {
+                    Toast.makeText(getActivity(), R.string.fee_first, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 ConfirmOrderDialog.ConfirmOrderData confirmOrderData = new ConfirmOrderDialog.ConfirmOrderData();
                 if (transactionType == TRANSACTION_BUY) {
                     confirmOrderData.setOperationName(getResources().getString(R.string.title_buy));
@@ -533,7 +537,7 @@ public class TransactionSellBuyFragment extends BaseFragment
         mProcessHud.show();
         new Thread(() -> {
             try {
-                BitsharesWalletWraper.getInstance().buy(quoteAsset, baseAsset, rate, amount, timeSec);
+                BitsharesWalletWraper.getInstance().buy(quoteAsset, baseAsset, rate, amount, timeSec, lastFeeAsset);
                 getActivity().runOnUiThread(() -> mProcessHud.dismiss());
             } catch (Exception e) {
                 getActivity().runOnUiThread(() -> mProcessHud.dismiss());
@@ -544,26 +548,13 @@ public class TransactionSellBuyFragment extends BaseFragment
 
     private void sell(final double rate, final double amount, final int timeSec) {
         mProcessHud.show();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    BitsharesWalletWraper.getInstance().sell(quoteAsset, baseAsset, rate, amount, timeSec);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mProcessHud.dismiss();
-                        }
-                    });
-                } catch (Exception e) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mProcessHud.dismiss();
-                        }
-                    });
-                    e.printStackTrace();
-                }
+        new Thread(() -> {
+            try {
+                BitsharesWalletWraper.getInstance().sell(quoteAsset, baseAsset, rate, amount, timeSec, lastFeeAsset);
+                getActivity().runOnUiThread(() -> mProcessHud.dismiss());
+            } catch (Exception e) {
+                getActivity().runOnUiThread(() -> mProcessHud.dismiss());
+                e.printStackTrace();
             }
         }).start();
     }
@@ -633,6 +624,7 @@ public class TransactionSellBuyFragment extends BaseFragment
         try {
             asset a = BitsharesWalletWraper.getInstance().calculate_buy_fee(symbolToReceive, symbolToSell,
                     rate, amount, globalPropertyObject, feeButton.getText().toString());
+            lastFeeAsset = a;
             if (a.asset_id.equals(btsAssetObj.id)) {
                 return utils.get_asset_amount(a.amount, btsAssetObj);
             } else if (a.asset_id.equals(baseAssetObj.id)) {
