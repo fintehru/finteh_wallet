@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -26,7 +27,6 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 public class ReceiveFragment extends BaseFragment {
 
-    private ImageView qrView;
     private TextInputEditText amountEditText;
     private TextInputEditText tokenEditText;
     private ProgressBar progressBar;
@@ -47,7 +47,7 @@ public class ReceiveFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_receive, container, false);
 
-        qrView = fragmentView.findViewById(R.id.qrImageView);
+        //qrView = fragmentView.findViewById(R.id.qrImageView);
         amountEditText = fragmentView.findViewById(R.id.amountEditText);
         tokenEditText = fragmentView.findViewById(R.id.tokenEditText);
 
@@ -118,7 +118,7 @@ public class ReceiveFragment extends BaseFragment {
 
 
     private void generateQR() {
-        qrView.setVisibility(View.INVISIBLE);
+        //qrView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         new Thread(() -> {
             String data = BitsharesWalletWraper.getInstance().get_account().name + "'" + amountEditText.getText().toString() + "'" + tokenEditText.getText().toString();
@@ -134,8 +134,18 @@ public class ReceiveFragment extends BaseFragment {
                     }
                 }
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    qrView.setImageBitmap(bmp);
-                    qrView.setVisibility(View.VISIBLE);
+                    ImageView imageView = new ImageView(getActivity());
+                    imageView.setImageBitmap(bmp);
+
+                    AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                            .setView(imageView)
+                            .setTitle("Your QR code to receive " + amountEditText.getText().toString() + " " + tokenEditText.getText().toString())
+                            .setPositiveButton("OK", null)
+                            .create();
+
+                    dialog.show();
+                    //qrView.setImageBitmap(bmp);
+                    //qrView.setVisibility(View.VISIBLE);
                     progressBar.setVisibility(View.INVISIBLE);
                 });
             } catch (WriterException e) {
