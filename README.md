@@ -1,4 +1,4 @@
-# KITACOIN_wallet
+# KITATOKEN_wallet
 
 ### Technical info 
 1. The core structure of BitShares Wallet reuses the bitshares-core implementation. All communication protocols were developed from scratch. The communication part will be separated as a library in the future.
@@ -10,12 +10,12 @@
  
  
 ### Product info
-#### KITACOIN Wallet is an app for BitShares tokens with focus on KITACOIN for Android devices. The main features are:
+#### KITATOKEN Wallet is an app for BitShares tokens with focus on KITATOKEN for Android devices. The main features are:
  
 * **Wallet:**
 1. Check your balance
 2. Check the transaction records
-3. Send your KITACOIN or other properties to others.
+3. Send your KITATOKEN or other properties to others.
  
 * **Quotes:**
  

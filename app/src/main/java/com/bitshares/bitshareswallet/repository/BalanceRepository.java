@@ -148,13 +148,13 @@ public class BalanceRepository {
         bitsharesDao.insertBlance(bitsharesAssetList);
         List<BitsharesAssetObject> bitsharesAssetObjectList = new ArrayList<>();
 
-        asset_object KITACOIN = BitsharesWalletWraper.getInstance()
-                .list_assets("KITACOIN", 1).get(0);
-        BitsharesAssetObject KITACOINAssetObject = new BitsharesAssetObject();
-        KITACOINAssetObject.symbol = KITACOIN.symbol;
-        KITACOINAssetObject.precision = KITACOIN.get_scaled_precision();
-        KITACOINAssetObject.asset_id = KITACOIN.id;
-        bitsharesAssetObjectList.add(KITACOINAssetObject);
+        asset_object KITATOKEN = BitsharesWalletWraper.getInstance()
+                .list_assets("KITATOKEN", 1).get(0);
+        BitsharesAssetObject KITATOKENAssetObject = new BitsharesAssetObject();
+        KITATOKENAssetObject.symbol = KITATOKEN.symbol;
+        KITATOKENAssetObject.precision = KITATOKEN.get_scaled_precision();
+        KITATOKENAssetObject.asset_id = KITATOKEN.id;
+        bitsharesAssetObjectList.add(KITATOKENAssetObject);
 
         for (asset_object assetObject : mapId2Object.values()) {
             BitsharesAssetObject bitsharesAssetObject = new BitsharesAssetObject();
