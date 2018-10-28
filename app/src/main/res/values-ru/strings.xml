@@ -215,5 +215,9 @@
     <string name="loading_assets">Загрузка активов</string>
     <string name="lang">Язык приложения</string>
     <string name="select_lang">Выбор языка</string>
+    <string name="keys">Ключи</string>
+    <string name="pub_copied">Публичный ключ скопирован</string>
+    <string name="priv_copied">Приватный ключ скопирован</string>
+    <string name="copy_success">Успешно скопировано</string>
 
 </resources>

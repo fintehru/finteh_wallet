@@ -293,6 +293,12 @@ implements OnFragmentInteractionListener{
                                 }
                             });
                         }
+                    } else {
+                        List<Pair<String, String>> keyPairs = new ArrayList<>();
+                        for(HashMap.Entry<types.public_key_type, types.private_key_type> keys : wallet.getKeys().entrySet()) {
+                            keyPairs.add(new Pair<>(keys.getKey().toString(), keys.getValue().toString()));
+                        }
+                        showKeys(keyPairs);
                     }
                     break;
                 //case R.id.backup:
@@ -340,7 +346,7 @@ implements OnFragmentInteractionListener{
                 ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("account name", accountObject.name);
                 clipboardManager.setPrimaryClip(clipData);
-                Toast toast = Toast.makeText(MainActivity.this, "Copy Successfully", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(MainActivity.this, getString(R.string.copy_success), Toast.LENGTH_SHORT);
                 toast.show();
             });
         }
@@ -386,9 +392,9 @@ implements OnFragmentInteractionListener{
         recyclerView.setAdapter(new KeysAdapter(this, keyPairs));
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle("Keys")
+                .setTitle(R.string.keys)
                 .setView(recyclerView)
-                .setPositiveButton("Close", null)
+                .setPositiveButton(R.string.OK, null)
                 .create();
 
         dialog.show();

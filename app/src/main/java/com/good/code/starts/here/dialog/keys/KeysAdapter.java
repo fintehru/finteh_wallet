@@ -45,13 +45,13 @@ public class KeysAdapter extends RecyclerView.Adapter<KeysAdapter.KeyViewHolder>
         holder.copyPub.setOnClickListener(v -> {
             ClipData clip = ClipData.newPlainText("PUBLIC KEY", keyPair.first);
             clipboard.setPrimaryClip(clip);
-            Toast.makeText(context, "Public key was copied", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.pub_copied), Toast.LENGTH_SHORT).show();
         });
 
         holder.copyPriv.setOnClickListener(v -> {
             ClipData clip = ClipData.newPlainText("PRIVATE KEY", keyPair.second);
             clipboard.setPrimaryClip(clip);
-            Toast.makeText(context, "Private key was copied", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.priv_copied), Toast.LENGTH_SHORT).show();
         });
     }
 

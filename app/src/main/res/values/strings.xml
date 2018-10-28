@@ -220,5 +220,9 @@
     <string name="loading_assets">Loading assets</string>
     <string name="select_lang">Select language</string>
     <string name="lang">Language</string>
+    <string name="keys">Keys</string>
+    <string name="pub_copied">Public key copied</string>
+    <string name="priv_copied">Private key copied</string>
+    <string name="copy_success">Copy Successfully</string>
 
 </resources>
