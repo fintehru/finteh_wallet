@@ -583,7 +583,7 @@ public class TransactionSellBuyFragment extends BaseFragment
 
     private void updateCurency(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String strAssetPair = prefs.getString("quotation_currency_pair", "FINTEH:USD");
+        String strAssetPair = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
         String strAsset[] = strAssetPair.split(":");
         baseAsset = strAsset[1];
         quoteAsset = strAsset[0];

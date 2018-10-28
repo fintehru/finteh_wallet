@@ -25,16 +25,14 @@ public class TokenSelectAdapter extends RecyclerView.Adapter<TokenSelectAdapter.
     private SharedPreferences preferences;
     private Set<String> hidden;
 
-    public TokenSelectAdapter(Context context, List<String> tokens) {
+    public TokenSelectAdapter(Context context, List<String> tokensData) {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
         this.hidden = preferences.getStringSet("hidden", new HashSet<>());
-        this.tokens = tokens;
-        for(int i = 0; i < tokens.size(); i++) {
-            if(hidden.contains(tokens.get(i))) {
-                tokens.remove(i);
-            }
+        this.tokens = new ArrayList<>();
+        for(int i = 0; i < tokensData.size(); i++) {
+            if(!hidden.contains(tokensData.get(i))) this.tokens.add(tokensData.get(i));
         }
-        this.back = new ArrayList<>(tokens);
+        this.back = new ArrayList<>(this.tokens);
     }
 
     public void setListener(OnTokenSelectListener listener) {

@@ -29,6 +29,7 @@ import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -119,7 +120,7 @@ implements OnFragmentInteractionListener{
 
     private void updateTitle(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:USD");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
         String strAsset[] = strCurrencySetting.split(":");
 
         try {
@@ -152,10 +153,10 @@ implements OnFragmentInteractionListener{
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
         mToolbar.setTitle(getResources().getString(R.string.tab_send));
 
         color = ColorUtils.getMainColor(this);
-
         mToolbar.setBackgroundColor(color);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -422,7 +423,7 @@ implements OnFragmentInteractionListener{
         Resources res = getResources();
         final String[] arrValues = res.getStringArray(R.array.quotation_currency_pair_values);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:USD");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
         int currSelectIndex = 0;
         for(int i=0; i<arrValues.length; i++){
             if(arrValues[i].equals(strCurrencySetting)){

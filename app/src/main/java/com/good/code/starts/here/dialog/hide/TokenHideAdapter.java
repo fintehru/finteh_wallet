@@ -27,7 +27,7 @@ public class TokenHideAdapter extends RecyclerView.Adapter<TokenHideAdapter.Toke
     public TokenHideAdapter(Context context, List<String> tokens) {
         this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
         this.hidden = preferences.getStringSet("hidden", new HashSet<>());
-        this.tokens = tokens;
+        this.tokens = new ArrayList<>(tokens);
         this.tokens.remove("BTS");
         this.tokens.remove("FINTEH");
     }
