@@ -312,7 +312,12 @@ public class TransactionSellBuyFragment extends BaseFragment
         askTextInfo = (TextView) view.findViewById(R.id.askTextInfo);
 
         buyRecyclerView = (RecyclerView) view.findViewById(R.id.buy_recycler);
-        buyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        buyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
         buyRecyclerViewAdapter = new TransactionSellBuyRecyclerViewAdapter();
         buyRecyclerView.setAdapter(buyRecyclerViewAdapter);
         buyRecyclerView.setItemAnimator(null);
@@ -320,7 +325,13 @@ public class TransactionSellBuyFragment extends BaseFragment
         sellRecyclerView = (RecyclerView) view.findViewById(R.id.sell_recycler);
         sellRecyclerViewAdapter = new TransactionSellBuyRecyclerViewAdapter();
         sellRecyclerView.setAdapter(sellRecyclerViewAdapter);
-        sellRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        sellRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
         sellRecyclerView.setItemAnimator(null);
 
         return view;
