@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity
 
     private void updateTitle(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:USD");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "KITATOKEN:USD");
         String strAsset[] = strCurrencySetting.split(":");
 
         try {
@@ -380,7 +380,7 @@ public class MainActivity extends AppCompatActivity
         Resources res = getResources();
         final String[] arrValues = res.getStringArray(R.array.quotation_currency_pair_values);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:USD");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "KITATOKEN:USD");
         int currSelectIndex = 0;
         for(int i=0; i<arrValues.length; i++){
             if(arrValues[i].equals(strCurrencySetting)){

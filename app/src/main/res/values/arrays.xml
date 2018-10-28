@@ -15,27 +15,27 @@
     </string-array>
 
     <string-array name="quotation_currency_pair_options">
-        <item>FINTEH:USD</item>
-        <item>FINTEH:CNY</item>
-        <item>FINTEH:RUBLE</item>
-        <item>FINTEH:EUR</item>
-        <item>FINTEH:BTC</item>
-        <item>FINTEH:RUDEX.BTC</item>
-        <item>FINTEH:RUDEX.ETH</item>
-        <item>FINTEH:RUDEX.EOS</item>
-        <item>FINTEH:RUDEX.STEEM</item>
+        <item>KITATOKEN:USD</item>
+        <item>KITATOKEN:CNY</item>
+        <item>KITATOKEN:RUBLE</item>
+        <item>KITATOKEN:EUR</item>
+        <item>KITATOKEN:BTC</item>
+        <item>KITATOKEN:RUDEX.BTC</item>
+        <item>KITATOKEN:RUDEX.ETH</item>
+        <item>KITATOKEN:RUDEX.EOS</item>
+        <item>KITATOKEN:RUDEX.STEEM</item>
     </string-array>
 
     <string-array name="quotation_currency_pair_values">
-        <item>FINTEH:USD</item>
-        <item>FINTEH:CNY</item>
-        <item>FINTEH:RUBLE</item>
-        <item>FINTEH:EUR</item>
-        <item>FINTEH:BTC</item>
-        <item>FINTEH:RUDEX.BTC</item>
-        <item>FINTEH:RUDEX.ETH</item>
-        <item>FINTEH:RUDEX.EOS</item>
-        <item>FINTEH:RUDEX.STEEM</item>
+        <item>KITATOKEN:USD</item>
+        <item>KITATOKEN:CNY</item>
+        <item>KITATOKEN:RUBLE</item>
+        <item>KITATOKEN:EUR</item>
+        <item>KITATOKEN:BTC</item>
+        <item>KITATOKEN:RUDEX.BTC</item>
+        <item>KITATOKEN:RUDEX.ETH</item>
+        <item>KITATOKEN:RUDEX.EOS</item>
+        <item>KITATOKEN:RUDEX.STEEM</item>
     </string-array>
 
     <string-array name="full_node_api_server_options">

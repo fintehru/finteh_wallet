@@ -265,9 +265,9 @@ public class TransactionSellBuyFragment extends BaseFragment
 
         ViewModelProviders.of(this).get(SellBuyViewModel.class).getBalancesList().observe(this, bitsharesBalanceAssetList -> {
             symbolList = new ArrayList<>();
-            symbolList.add("FINTEH");
+            symbolList.add("KITATOKEN");
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
-                if (!bitsharesBalanceAsset.quote.equals("FINTEH"))
+                if (!bitsharesBalanceAsset.quote.equals("KITATOKEN"))
                     symbolList.add(bitsharesBalanceAsset.quote);
             }
         });
@@ -571,7 +571,7 @@ public class TransactionSellBuyFragment extends BaseFragment
 
     private void updateCurency(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        String strAssetPair = prefs.getString("quotation_currency_pair", "FINTEH:USD");
+        String strAssetPair = prefs.getString("quotation_currency_pair", "KITATOKEN:USD");
         String strAsset[] = strAssetPair.split(":");
         baseAsset = strAsset[1];
         quoteAsset = strAsset[0];
