@@ -1,12 +1,14 @@
 package com.bitshares.bitshareswallet;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.WebSettings;
@@ -19,6 +21,7 @@ import com.andrognito.pinlockview.PinLockView;
 import com.bitshares.bitshareswallet.util.Safe;
 import com.bitshares.bitshareswallet.wallet.BitsharesWalletWraper;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
+import com.jakewharton.processphoenix.ProcessPhoenix;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +54,18 @@ public class LockActivity extends AppCompatActivity {
                 finish();
             } else {
                 setContentView(R.layout.activity_lock);
+
+                findViewById(R.id.logoutButton).setOnClickListener(v -> {
+                    AlertDialog dialog = new AlertDialog.Builder(this)
+                            .setTitle("PIN reset")
+                            .setMessage("You will need to re-enter the password after PIN reset.")
+                            .setNegativeButton("Cancel", null)
+                            .setPositiveButton("Reset", (dialog1, which) -> {
+                                preferences.edit().remove("val").remove("pass").commit();
+                                ProcessPhoenix.triggerRebirth(this);
+                            }).create();
+                    dialog.show();
+                });
 
                 String strName = bitsharesWalletWraper.get_account().name;
 

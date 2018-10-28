@@ -25,8 +25,12 @@ public class SellBuyViewModel extends ViewModel {
     private MutableLiveData<String> currencyData = new MutableLiveData<>();
     private StatusChangeLiveData statusChangeLiveData = new StatusChangeLiveData();
 
-    public SellBuyViewModel() {
+    private BitsharesDao bitsharesDao;
+    private LiveData<List<BitsharesBalanceAsset>> balancesList;
 
+    public SellBuyViewModel() {
+        bitsharesDao = BitsharesApplication.getInstance().getBitsharesDatabase().getBitsharesDao();
+        balancesList = bitsharesDao.queryAvaliableBalances("USD");
     }
 
     public void changeBalanceAsset(String currency) {
@@ -40,5 +44,9 @@ public class SellBuyViewModel extends ViewModel {
 
 
         return balanceData;
+    }
+
+    public LiveData<List<BitsharesBalanceAsset>> getBalancesList() {
+        return balancesList;
     }
 }

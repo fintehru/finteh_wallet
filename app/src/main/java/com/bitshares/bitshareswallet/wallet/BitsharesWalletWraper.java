@@ -554,44 +554,44 @@ public class BitsharesWalletWraper {
 
     public signed_transaction sell_asset(String amountToSell, String symbolToSell,
                                          String minToReceive, String symbolToReceive,
-                                         int timeoutSecs, boolean fillOrKill)
+                                         int timeoutSecs, boolean fillOrKill, asset feeAsset)
             throws NetworkStatusException {
         return mWalletApi.sell_asset(amountToSell, symbolToSell, minToReceive, symbolToReceive,
-                timeoutSecs, fillOrKill);
+                timeoutSecs, fillOrKill, feeAsset);
     }
 
     public asset calculate_sell_fee(asset_object assetToSell, asset_object assetToReceive,
                                     double rate, double amount,
-                                    global_property_object globalPropertyObject) {
+                                    global_property_object globalPropertyObject, String feeAsset) throws NetworkStatusException {
         return mWalletApi.calculate_sell_fee(assetToSell, assetToReceive, rate, amount,
-                globalPropertyObject);
+                globalPropertyObject, feeAsset);
     }
 
     public asset calculate_buy_fee(asset_object assetToReceive, asset_object assetToSell,
                                    double rate, double amount,
-                                   global_property_object globalPropertyObject) {
+                                   global_property_object globalPropertyObject, String feeAsset) throws NetworkStatusException {
         return mWalletApi.calculate_buy_fee(assetToReceive, assetToSell, rate, amount,
-                globalPropertyObject);
+                globalPropertyObject, feeAsset);
     }
 
-    public signed_transaction sell(String base, String quote, double rate, double amount)
+    public signed_transaction sell(String base, String quote, double rate, double amount, asset feeAsset)
             throws NetworkStatusException {
-        return mWalletApi.sell(base, quote, rate, amount);
+        return mWalletApi.sell(base, quote, rate, amount, feeAsset);
     }
 
     public signed_transaction sell(String base, String quote, double rate, double amount,
-                                   int timeoutSecs) throws NetworkStatusException {
-        return mWalletApi.sell(base, quote, rate, amount, timeoutSecs);
+                                   int timeoutSecs, asset feeAsset) throws NetworkStatusException {
+        return mWalletApi.sell(base, quote, rate, amount, timeoutSecs, feeAsset);
     }
 
-    public signed_transaction buy(String base, String quote, double rate, double amount)
+    public signed_transaction buy(String base, String quote, double rate, double amount, asset feeAsset)
             throws NetworkStatusException {
-        return mWalletApi.buy(base, quote, rate, amount);
+        return mWalletApi.buy(base, quote, rate, amount, feeAsset);
     }
 
     public signed_transaction buy(String base, String quote, double rate, double amount,
-                                  int timeoutSecs) throws NetworkStatusException {
-        return mWalletApi.buy(base, quote, rate, amount, timeoutSecs);
+                                  int timeoutSecs, asset feeAsset) throws NetworkStatusException {
+        return mWalletApi.buy(base, quote, rate, amount, timeoutSecs, feeAsset);
     }
 
     /*public BitshareData getBitshareData() {

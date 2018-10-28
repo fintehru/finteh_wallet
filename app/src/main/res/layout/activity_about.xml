@@ -60,7 +60,7 @@
                 android:layout_marginTop="10dp"
                 android:autoLink="web"
                 android:textColorLink="@android:color/white"
-                android:text="https://github.com/PreICO/bitshares_wallet-1"/>
+                android:text="https://github.com/PreICO/bitshares_wallet"/>
 
         </LinearLayout>
 

@@ -50,6 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:text="@string/generate_qr_code"
+            android:enabled="false"
             android:layout_below="@id/tokenTextInput" />
 
         <ImageView

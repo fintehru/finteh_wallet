@@ -136,12 +136,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Spinner
-                        android:id="@+id/spinner_unit"
+                    <Button
+                        android:id="@+id/btn_unit"
+                        android:text="BTS"
+                        android:background="@drawable/button_normal_2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/send_fragment_text_size"
-                        android:entries="@array/bts_unit" />
+                        android:layout_height="25dp"
+                        android:textSize="@dimen/send_fragment_text_size" />
 
                     <EditText
                         android:id="@+id/editTextQuantity"
@@ -182,10 +183,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <Spinner
-                        android:id="@+id/spinner_fee_unit"
+                    <Button
+                        android:id="@+id/btn_fee_unit"
+                        android:text="BTS"
+                        android:background="@drawable/button_normal_2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="25dp"
                         android:textSize="@dimen/send_fragment_text_size" />
 
                     <EditText
