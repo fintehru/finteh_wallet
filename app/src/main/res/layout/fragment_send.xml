@@ -216,7 +216,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_vertical"
             android:layout_margin="8dp"
-            android:text="Send" />
+            android:text="@string/send_btn" />
 
     </RelativeLayout>
 

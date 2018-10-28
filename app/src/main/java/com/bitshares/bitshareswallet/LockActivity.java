@@ -18,6 +18,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.andrognito.pinlockview.IndicatorDots;
 import com.andrognito.pinlockview.PinLockListener;
 import com.andrognito.pinlockview.PinLockView;
@@ -35,13 +36,15 @@ import de.bitsharesmunich.graphenej.FileBin;
 import de.bitsharesmunich.graphenej.Util;
 import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
 
-public class LockActivity extends AppCompatActivity {
+public class LockActivity extends LocalizationActivity {
 
     private SharedPreferences preferences;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
         BitsharesWalletWraper bitsharesWalletWraper = BitsharesWalletWraper.getInstance();
 
         if (bitsharesWalletWraper.load_wallet_file() != 0 || bitsharesWalletWraper.is_new()){
@@ -50,7 +53,6 @@ public class LockActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            preferences = PreferenceManager.getDefaultSharedPreferences(this);
             if(!preferences.contains("val")) {
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);

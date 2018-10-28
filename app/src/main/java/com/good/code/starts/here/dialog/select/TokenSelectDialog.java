@@ -48,8 +48,8 @@ public class TokenSelectDialog {
 
         dialog = new AlertDialog.Builder(context)
                 .setView(dialogView)
-                .setTitle("Select token")
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.select_token)
+                .setNegativeButton(R.string.cancel, null)
                 .create();
     }
 

@@ -40,6 +40,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.bitshares.bitshareswallet.room.BitsharesAsset;
 import com.bitshares.bitshareswallet.room.BitsharesDao;
 import com.bitshares.bitshareswallet.room.BitsharesOperationHistory;
@@ -61,8 +62,8 @@ import io.sentry.Sentry;
 import io.sentry.event.UserBuilder;
 
 
-public class MainActivity extends AppCompatActivity
-        implements OnFragmentInteractionListener{
+public class MainActivity extends LocalizationActivity
+implements OnFragmentInteractionListener{
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -134,8 +135,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
 
         account_object account = BitsharesWalletWraper.getInstance().get_account();
         Sentry.getContext().setUser(new UserBuilder()
@@ -241,7 +244,7 @@ public class MainActivity extends AppCompatActivity
                     Intent intentAbout = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(intentAbout);
                     break;
-                case R.id.backup:
+                //case R.id.backup:
                     //BitsharesWalletWraper.getInstance().get_account().
             }
 
@@ -332,7 +335,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         mMainFragmentPageAdapter.updateShowing(true);
     }

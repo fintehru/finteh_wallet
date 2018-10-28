@@ -2,10 +2,13 @@ package com.bitshares.bitshareswallet;
 
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -15,7 +18,6 @@ import com.good.code.starts.here.dialog.hide.TokenHideAdapter;
 import com.good.code.starts.here.servers.ServersFragment;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 import com.kizitonwose.colorpreference.ColorDialog;
-import com.kizitonwose.colorpreference.ColorPreference;
 import com.kizitonwose.colorpreference.ColorShape;
 import com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat;
 
@@ -40,6 +42,18 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             getActivity().setResult(Activity.RESULT_OK, intent);
             return true;
         });*/
+
+        ListPreference localePreference = (ListPreference) findPreference("locale");
+        localePreference.setOnPreferenceChangeListener((preference, o) -> {
+            SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if(o.equals("null")) {
+                p.edit().remove("locale").commit();
+            } else {
+                p.edit().putString("locale", (String) o).commit();
+            }
+            ProcessPhoenix.triggerRebirth(getActivity());
+            return true;
+        });
 
         Preference pinPreference = findPreference("pin_settings");
         pinPreference.setOnPreferenceClickListener(p -> {
@@ -67,7 +81,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         Preference hidePreference = findPreference("hide");
         hidePreference.setOnPreferenceClickListener(p -> {
 
-            ProgressDialog progressDialog = ProgressDialog.show(getActivity(),"Loading assets", "");
+            ProgressDialog progressDialog = ProgressDialog.show(getActivity(),getString(R.string.loading_assets), "");
             BitsharesApplication.getInstance().getBitsharesDatabase().getBitsharesDao().queryAvaliableBalances("USD").observe(this, bitsharesBalanceAssets -> {
 
                 if(!loaded) {
@@ -86,13 +100,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     recyclerView.setAdapter(adapter);
 
                     AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                            .setTitle("Hide")
+                            .setTitle(R.string.hide)
                             .setView(recyclerView)
-                            .setPositiveButton("Save", (dialog1, which) -> {
+                            .setPositiveButton(R.string.save, (dialog1, which) -> {
                                 adapter.save();
                                 loaded = false;
                             })
-                            .setNegativeButton("Cancel", ((dialog2, which) -> {
+                            .setNegativeButton(R.string.cancel, ((dialog2, which) -> {
                                 loaded = false;
                             } ))
                             .create();

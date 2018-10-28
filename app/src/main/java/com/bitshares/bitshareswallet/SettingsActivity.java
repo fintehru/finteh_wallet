@@ -1,5 +1,6 @@
 package com.bitshares.bitshareswallet;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -10,16 +11,19 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.good.code.starts.here.ColorUtils;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 import com.kizitonwose.colorpreference.ColorDialog;
 
-public class SettingsActivity extends AppCompatActivity implements ColorDialog.OnColorSelectedListener {
+public class SettingsActivity extends LocalizationActivity implements ColorDialog.OnColorSelectedListener {
     private Toolbar mToolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
         setContentView(R.layout.activity_settings);
 
         mToolbar = findViewById(R.id.toolbar);

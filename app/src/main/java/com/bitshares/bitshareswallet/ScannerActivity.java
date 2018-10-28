@@ -2,6 +2,7 @@ package com.bitshares.bitshareswallet;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -21,10 +23,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.good.code.starts.here.ColorUtils;
 
-public class ScannerActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, QRCodeReaderView.OnQRCodeReadListener {
+public class ScannerActivity extends LocalizationActivity implements ActivityCompat.OnRequestPermissionsResultCallback, QRCodeReaderView.OnQRCodeReadListener {
 
     private static final int MY_PERMISSION_REQUEST_CAMERA = 0;
 
@@ -40,7 +43,9 @@ public class ScannerActivity extends AppCompatActivity implements ActivityCompat
     //private CheckBox enableDecodingCheckBox;
     private PointsOverlayView pointsOverlayView;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
+        //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_scanner);
@@ -62,7 +67,7 @@ public class ScannerActivity extends AppCompatActivity implements ActivityCompat
         }
     }
 
-    @Override protected void onResume() {
+    @Override public void onResume() {
         super.onResume();
 
         if (qrCodeReaderView != null) {

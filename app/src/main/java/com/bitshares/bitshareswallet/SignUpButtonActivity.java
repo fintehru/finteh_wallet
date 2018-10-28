@@ -1,21 +1,25 @@
 package com.bitshares.bitshareswallet;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.good.code.starts.here.ColorUtils;
 
-public class SignUpButtonActivity extends AppCompatActivity {
+public class SignUpButtonActivity extends LocalizationActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
         setContentView(R.layout.activity_sign_up_button);
 
         TextView button = findViewById(R.id.sign_up_button);

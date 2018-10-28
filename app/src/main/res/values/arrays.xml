@@ -66,6 +66,18 @@
         <item>wss://bitshares.crypto.fans/ws</item>
     </string-array>
 
+    <string-array name="language_values">
+        <item>null</item>
+        <item>en</item>
+        <item>ru</item>
+    </string-array>
+
+    <string-array name="language_options">
+        <item>System / Язык системы</item>
+        <item>English</item>
+        <item>Русский</item>
+    </string-array>
+
     <string-array name="color_choices">
         <item>#d32f2f</item>
         <item>#c2185b</item>

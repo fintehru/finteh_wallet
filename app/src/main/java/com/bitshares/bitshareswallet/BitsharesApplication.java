@@ -2,9 +2,12 @@ package com.bitshares.bitshareswallet;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.preference.PreferenceManager;
 
+import com.akexorcist.localizationactivity.core.LocalizationApplicationDelegate;
 import com.bitshares.bitshareswallet.room.BitsharesDatabase;
 import com.good.code.starts.here.servers.Server;
 import com.good.code.starts.here.servers.ServersRepository;
@@ -23,6 +26,9 @@ import io.sentry.android.AndroidSentryClientFactory;
 //@AcraCore(buildConfigClass = BuildConfig.class, reportFormat = StringFormat.JSON)
 //@AcraHttpSender(uri = "https://collector.tracepot.com/e05fd60d", httpMethod = HttpSender.Method.POST)
 public class BitsharesApplication extends Application {
+
+    LocalizationApplicationDelegate localizationDelegate = new LocalizationApplicationDelegate(this);
+
     private static BitsharesApplication theApp;
     private BitsharesDatabase bitsharesDatabase;
     public static BitsharesApplication getInstance() {
@@ -35,6 +41,22 @@ public class BitsharesApplication extends Application {
 
     public BitsharesDatabase getBitsharesDatabase() {
         return bitsharesDatabase;
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(localizationDelegate.attachBaseContext(base));
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        localizationDelegate.onConfigurationChanged(this);
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return localizationDelegate.getApplicationContext(super.getApplicationContext());
     }
 
     @Override

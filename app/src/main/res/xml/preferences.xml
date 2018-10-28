@@ -30,14 +30,21 @@
 
     <Preference
         android:key="hide"
-        android:title="Hide assets"
+        android:title="@string/hide_assets"
         android:defaultValue="null" />
 
+    <ListPreference
+        android:key="locale"
+        android:title="@string/lang"
+        android:dialogTitle="@string/select_lang"
+        android:entries="@array/language_options"
+        android:entryValues="@array/language_values"
+        android:defaultValue="null"/>
 
     <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
         android:defaultValue="@color/colorPrimary"
         android:key="color"
-        android:title="Color"
+        android:title="@string/color_title"
         app:colorShape="circle"
         app:showDialog="false" />
 

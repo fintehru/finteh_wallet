@@ -6,10 +6,6 @@
             android:id="@+id/settings"
             android:icon="@mipmap/setting"
             android:title="@string/settings_activity_title" />
-       <item
-            android:id="@+id/backup"
-            android:icon="@mipmap/backup"
-            android:title="@string/backup_wallet" />
         <item
             android:id="@+id/about"
             android:icon="@mipmap/about"

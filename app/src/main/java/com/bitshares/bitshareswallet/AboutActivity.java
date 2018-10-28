@@ -3,11 +3,13 @@ package com.bitshares.bitshareswallet;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Window;
@@ -17,18 +19,20 @@ import android.webkit.WebView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
 import com.good.code.starts.here.ColorUtils;
 
 import java.util.Locale;
 
-
-public class AboutActivity extends AppCompatActivity {
+public class AboutActivity extends LocalizationActivity {
     private Toolbar mToolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
         setContentView(R.layout.activity_about);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);

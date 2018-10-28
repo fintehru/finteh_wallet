@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -130,7 +131,7 @@ public class ReceiveFragment extends BaseFragment {
                 Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
-                        bmp.setPixel(x, y, bitMatrix.get(x, y) ? Color.parseColor("#263d70") : Color.WHITE);
+                        bmp.setPixel(x, y, bitMatrix.get(x, y) ? com.good.code.starts.here.ColorUtils.getMainColor(getActivity()) : Color.WHITE);
                     }
                 }
                 new Handler(Looper.getMainLooper()).post(() -> {
@@ -139,8 +140,8 @@ public class ReceiveFragment extends BaseFragment {
 
                     AlertDialog dialog = new AlertDialog.Builder(getActivity())
                             .setView(imageView)
-                            .setTitle("Your QR code to receive " + amountEditText.getText().toString() + " " + tokenEditText.getText().toString())
-                            .setPositiveButton("OK", null)
+                            .setTitle(getString(R.string.qr_to_receive) + amountEditText.getText().toString() + " " + tokenEditText.getText().toString())
+                            .setPositiveButton(R.string.OK, null)
                             .create();
 
                     dialog.show();
