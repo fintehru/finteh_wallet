@@ -24,11 +24,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -240,6 +242,17 @@ public class MainActivity extends AppCompatActivity
             View view = navigationView.getHeaderView(0);
             TextView textViewAccountName = view.findViewById(R.id.textViewAccountName);
             textViewAccountName.setText(accountObject.name);
+
+            TextView ltmText = view.findViewById(R.id.ltm_text);
+            ImageView ltmImage = view.findViewById(R.id.ltm_image);
+
+            if(accountObject.referrer.equals(accountObject.id.toString())) {
+                ltmText.setVisibility(View.VISIBLE);
+                ltmImage.setVisibility(View.VISIBLE);
+            } else {
+                ltmText.setVisibility(View.GONE);
+                ltmImage.setVisibility(View.GONE);
+            }
 
             sha256_object.encoder encoder = new sha256_object.encoder();
             encoder.write(accountObject.name.getBytes());
