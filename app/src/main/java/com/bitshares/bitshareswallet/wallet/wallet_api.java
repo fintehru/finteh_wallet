@@ -620,7 +620,13 @@ public class wallet_api {
         operationType.nOperationType = 0;
         operationType.operationContent = transferOperation;
 
-        return mWebsocketApi.get_required_fees(operationType, feeObject.id.toString());
+        asset fee = mWebsocketApi.get_required_fees(operationType, feeObject.id.toString());
+
+        if(strMemo.length() > 0) {
+            fee.amount = (long) (fee.amount * 1.1d);
+        }
+
+        return fee;
     }
 
     public asset transfer_calculate_fee(String strAmount,

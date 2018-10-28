@@ -280,6 +280,7 @@ public class SendFragment extends BaseFragment {
                                  final String strSymbol,
                                  final String strMemo) {
         mProcessHud.show();
+
         Flowable.just(0)
                 .subscribeOn(Schedulers.io())
                 .map(integer -> {
