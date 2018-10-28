@@ -1,6 +1,6 @@
 ﻿<resources>
-    <string name="app_name_full">Bitshares Portemonnee</string>
-    <string name="app_name">BTS Portemonnee</string>
+    <string name="app_name_full">KITAPortemonnee</string>
+    <string name="app_name">KITAPortemonnee</string>
 
     <!--ä¾§è¾¹æ -->
     <string name="navigation_drawer_open">Open navigatie menu</string>
@@ -11,7 +11,7 @@
 
     <string name="title_activity_sign_up_button">SignUpButtonActivity</string>
     <string name="sign_up_button">LOG IN</string>
-    <string name="dummy_content">KITATOKEN  Portemonnee</string>
+    <string name="dummy_content">KITAPortemonnee</string>
 
     <string name="splash_page_message">Een veiligere manier van bewaren en transacties doen</string>
 
