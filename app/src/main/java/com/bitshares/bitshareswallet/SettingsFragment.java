@@ -10,8 +10,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.bitshares.bitshareswallet.room.BitsharesBalanceAsset;
+import com.good.code.starts.here.ColorUtils;
 import com.good.code.starts.here.dialog.hide.TokenHideAdapter;
 import com.good.code.starts.here.servers.ServersFragment;
+import com.jakewharton.processphoenix.ProcessPhoenix;
+import com.kizitonwose.colorpreference.ColorDialog;
+import com.kizitonwose.colorpreference.ColorPreference;
+import com.kizitonwose.colorpreference.ColorShape;
+import com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +53,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             return true;
         });
 
+        ColorPreferenceCompat colorPreference = (ColorPreferenceCompat) findPreference("color");
+        colorPreference.setOnPreferenceClickListener(p -> {
+            new ColorDialog.Builder((SettingsActivity) getActivity())
+                    .setColorShape(ColorShape.CIRCLE)
+                    .setColorChoices(R.array.color_choices)
+                    .setNumColumns(5)
+                    .setSelectedColor(ColorUtils.getMainColor(getActivity()))
+                    .show();
+            return true;
+        });
 
         Preference hidePreference = findPreference("hide");
         hidePreference.setOnPreferenceClickListener(p -> {

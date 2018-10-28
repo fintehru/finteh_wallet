@@ -7,8 +7,11 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -27,6 +30,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -46,6 +51,7 @@ import com.bitshares.bitshareswallet.wallet.account_object;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
+import com.good.code.starts.here.ColorUtils;
 
 import java.util.List;
 
@@ -81,6 +87,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final int REQUEST_CODE_SETTINGS = 1;
 
+    private int color;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -143,6 +150,17 @@ public class MainActivity extends AppCompatActivity
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         mToolbar.setTitle(getResources().getString(R.string.tab_send));
+
+        color = ColorUtils.getMainColor(this);
+
+        mToolbar.setBackgroundColor(color);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ColorUtils.manipulateColor(color, 0.75f));
+        }
 
         mLayoutTitle = mToolbar.findViewById(R.id.lay_title);
         mTxtTitle = mToolbar.findViewById(R.id.txt_bar_title);
@@ -240,6 +258,7 @@ public class MainActivity extends AppCompatActivity
         final account_object accountObject = BitsharesWalletWraper.getInstance().get_account();
         if (accountObject != null) {
             View view = navigationView.getHeaderView(0);
+            view.setBackgroundColor(color);
             TextView textViewAccountName = view.findViewById(R.id.textViewAccountName);
             textViewAccountName.setText(accountObject.name);
 
@@ -274,6 +293,13 @@ public class MainActivity extends AppCompatActivity
 
 
         mBottomNavigation = findViewById(R.id.navigation_bottom);
+
+        int[] colors = new int[] {Color.parseColor("#606060"), color};
+        int [][] states = new int [][]{new int[] { android.R.attr.state_enabled, -android.R.attr.state_checked}, new int[] {android.R.attr.state_enabled, android.R.attr.state_checked}};
+
+        mBottomNavigation.setItemTextColor(new ColorStateList(states, colors));
+        mBottomNavigation.setItemIconTintList(new ColorStateList(states, colors));
+
         mBottomNavigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()){
                 case R.id.navigation_wallet:

@@ -1,11 +1,13 @@
 package com.bitshares.bitshareswallet;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +47,7 @@ public class ExchangeFragment extends BaseFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_exchange, container, false);
         mTabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        mTabLayout.setBackgroundColor(PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("color", Color.parseColor("#303F9F")));
         mViewPager = (ViewPager) view.findViewById(R.id.exchangeViewPager);
         mExchangeFragmentPageAdapter = new BtsFragmentPageAdapter(getFragmentManager(), false);
         mExchangeFragmentPageAdapter.addFragment(TransactionSellBuyFragment.newInstance(TransactionSellBuyFragment.TRANSACTION_BUY), getResources().getString(R.string.label_buy));
