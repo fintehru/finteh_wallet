@@ -26,6 +26,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Pair;
@@ -36,6 +39,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,9 +56,13 @@ import com.bitshares.bitshareswallet.wallet.Broadcast;
 import com.bitshares.bitshareswallet.wallet.account_object;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
+import com.bitshares.bitshareswallet.wallet.graphene.chain.types;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
 import com.good.code.starts.here.ColorUtils;
+import com.good.code.starts.here.dialog.keys.KeysAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -245,6 +253,48 @@ implements OnFragmentInteractionListener{
                     Intent intentAbout = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(intentAbout);
                     break;
+                case R.id.keys:
+                    BitsharesWalletWraper wallet = BitsharesWalletWraper.getInstance();
+                    if(wallet.is_locked()) {
+                        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
+                        if(p.contains("pass")) {
+                            wallet.unlock(p.getString("pass", ""));
+                            List<Pair<String, String>> keyPairs = new ArrayList<>();
+                            for(HashMap.Entry<types.public_key_type, types.private_key_type> keys : wallet.getKeys().entrySet()) {
+                                keyPairs.add(new Pair<>(keys.getKey().toString(), keys.getValue().toString()));
+                            }
+                            showKeys(keyPairs);
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            final View viewGroup = getLayoutInflater().inflate(R.layout.dialog_password_confirm, null);
+                            builder.setPositiveButton(
+                                    R.string.password_confirm_button_confirm,
+                                    null);
+
+                            builder.setNegativeButton(
+                                    R.string.password_confirm_button_cancel, null);
+                            builder.setView(viewGroup);
+                            final AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                                EditText editText = viewGroup.findViewById(R.id.editTextPassword);
+                                String strPassword = editText.getText().toString();
+                                int nRet = wallet.unlock(strPassword);
+                                if (nRet == 0) {
+                                    dialog.dismiss();
+                                    List<Pair<String, String>> keyPairs = new ArrayList<>();
+                                    for(HashMap.Entry<types.public_key_type, types.private_key_type> keys : wallet.getKeys().entrySet()) {
+                                        keyPairs.add(new Pair<>(keys.getKey().toString(), keys.getValue().toString()));
+                                    }
+                                    showKeys(keyPairs);
+                                } else {
+                                    viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }
+                    }
+                    break;
                 //case R.id.backup:
                     //BitsharesWalletWraper.getInstance().get_account().
             }
@@ -258,9 +308,9 @@ implements OnFragmentInteractionListener{
         String strCurrency = prefs.getString("currency_setting", "USD");
         walletViewModel.changeCurrency(strCurrency);
 
-
         final account_object accountObject = BitsharesWalletWraper.getInstance().get_account();
         if (accountObject != null) {
+
             View view = navigationView.getHeaderView(0);
             view.setBackgroundColor(color);
             TextView textViewAccountName = view.findViewById(R.id.textViewAccountName);
@@ -327,6 +377,21 @@ implements OnFragmentInteractionListener{
                             utils.getAssetSymbolDisply(currencyPair.first))
                     );
                 });
+    }
+
+    private void showKeys(List<Pair<String, String>> keyPairs) {
+        RecyclerView recyclerView = new RecyclerView(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(new KeysAdapter(this, keyPairs));
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Keys")
+                .setView(recyclerView)
+                .setPositiveButton("Close", null)
+                .create();
+
+        dialog.show();
     }
 
     @Override

@@ -224,6 +224,14 @@ public class wallet_api {
         return 0;
     }
 
+    public HashMap<types.public_key_type, types.private_key_type> getKeys() {
+        if(is_locked()) {
+            return null;
+        } else {
+            return mHashMapPub2Priv;
+        }
+    }
+
     public int unlock(String strPassword) {
         assert(strPassword.length() > 0);
         sha512_object passwordHash = sha512_object.create_from_string(strPassword);

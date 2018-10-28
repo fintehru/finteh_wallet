@@ -17,6 +17,7 @@ import com.bitshares.bitshareswallet.wallet.graphene.chain.object_id;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.operation_history_object;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.operations;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
+import com.bitshares.bitshareswallet.wallet.graphene.chain.types;
 import com.google.common.collect.Sets;
 
 import java.io.File;
@@ -312,6 +313,10 @@ public class BitsharesWalletWraper {
 
         return 0;
 
+    }
+
+    public HashMap<types.public_key_type, types.private_key_type> getKeys() {
+        return mWalletApi.getKeys();
     }
 
     public int unlock(String strPassword) {

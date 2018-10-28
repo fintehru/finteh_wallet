@@ -6,6 +6,12 @@
             android:id="@+id/settings"
             android:icon="@mipmap/setting"
             android:title="@string/settings_activity_title" />
+
+        <item
+            android:id="@+id/keys"
+            android:icon="@drawable/ic_key_change"
+            android:title="Show keys" />
+
         <item
             android:id="@+id/about"
             android:icon="@mipmap/about"
