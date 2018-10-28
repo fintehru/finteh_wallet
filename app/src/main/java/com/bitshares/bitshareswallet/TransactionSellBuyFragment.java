@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 
 import com.bitshares.bitshareswallet.market.MarketStat;
 import com.bitshares.bitshareswallet.room.BitsharesAsset;
+import com.bitshares.bitshareswallet.room.BitsharesAssetObject;
 import com.bitshares.bitshareswallet.room.BitsharesBalanceAsset;
 import com.bitshares.bitshareswallet.viewmodel.SellBuyViewModel;
 import com.bitshares.bitshareswallet.wallet.BitsharesWalletWraper;
@@ -278,6 +280,7 @@ public class TransactionSellBuyFragment extends BaseFragment
             String qString = qEditText.getText().toString();
             String pString = pEditText.getText().toString();
             if (TextUtils.isEmpty(qString) || TextUtils.isEmpty(pString)) {
+                tokenSelectDialog.close();
                 return;
             }
 
@@ -608,8 +611,12 @@ public class TransactionSellBuyFragment extends BaseFragment
                 return utils.get_asset_amount(a.amount, btsAssetObj);
             } else if (a.asset_id.equals(baseAssetObj.id)) {
                 return utils.get_asset_amount(a.amount, baseAssetObj);
-            } else {
+            } else if(a.asset_id.equals(quoteAssetObj.id)) {
                 return utils.get_asset_amount(a.amount, quoteAssetObj);
+            } else {
+                BitsharesAssetObject assetObject = BitsharesApplication.getInstance()
+                        .getBitsharesDatabase().getBitsharesDao().queryAssetObjectById(a.asset_id.toString());
+                return utils.get_asset_amount(a.amount, assetObject);
             }
         } catch (NetworkStatusException e) {
             return 0;
@@ -629,8 +636,12 @@ public class TransactionSellBuyFragment extends BaseFragment
                 return utils.get_asset_amount(a.amount, btsAssetObj);
             } else if (a.asset_id.equals(baseAssetObj.id)) {
                 return utils.get_asset_amount(a.amount, baseAssetObj);
-            } else {
+            } else if(a.asset_id.equals(quoteAssetObj.id)) {
                 return utils.get_asset_amount(a.amount, quoteAssetObj);
+            } else {
+                BitsharesAssetObject assetObject = BitsharesApplication.getInstance()
+                        .getBitsharesDatabase().getBitsharesDao().queryAssetObjectById(a.asset_id.toString());
+                return utils.get_asset_amount(a.amount, assetObject);
             }
         } catch (NetworkStatusException e) {
             return 0;

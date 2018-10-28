@@ -87,6 +87,6 @@ public class BitsharesApplication extends Application {
                 this,
                 BitsharesDatabase.class,
                 "bitshares.db"
-        ).build();
+        ).allowMainThreadQueries().build();
     }
 }
