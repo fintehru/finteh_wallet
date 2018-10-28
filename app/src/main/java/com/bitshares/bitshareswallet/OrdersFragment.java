@@ -297,24 +297,31 @@ public class OrdersFragment extends BaseFragment
         }
 
         private void showPasswordDialog(){
-            TransactionSellBuyPasswordDialog builder = new TransactionSellBuyPasswordDialog(getActivity());
-            builder.setListener(new TransactionSellBuyPasswordDialog.OnDialogInterationListener() {
-                @Override
-                public void onConfirm(AlertDialog dialog, String passwordString) {
-                    if (BitsharesWalletWraper.getInstance().unlock(passwordString) == 0) {
-                        dialog.dismiss();
-                        showConfirmDialog();
-                    } else {
-                        Toast.makeText(getContext(), getContext().getString(R.string.password_invalid), Toast.LENGTH_LONG).show();
-                    }
-                }
 
-                @Override
-                public void onReject(AlertDialog dialog) {
-                    dialog.dismiss();
-                }
-            });
-            builder.show();
+            SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if(prefs.contains("pass")) {
+                BitsharesWalletWraper.getInstance().unlock(prefs.getString("pass", ""));
+                showConfirmDialog();
+            } else {
+                TransactionSellBuyPasswordDialog builder = new TransactionSellBuyPasswordDialog(getActivity());
+                builder.setListener(new TransactionSellBuyPasswordDialog.OnDialogInterationListener() {
+                    @Override
+                    public void onConfirm(AlertDialog dialog, String passwordString) {
+                        if (BitsharesWalletWraper.getInstance().unlock(passwordString) == 0) {
+                            dialog.dismiss();
+                            showConfirmDialog();
+                        } else {
+                            Toast.makeText(getContext(), getContext().getString(R.string.password_invalid), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onReject(AlertDialog dialog) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+            }
         }
     }
 }

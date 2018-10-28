@@ -51,4 +51,16 @@
         app:keypadDeleteButtonDrawable="@drawable/ic_delete"
         app:keypadTextSize="18dp" />
 
+    <ImageView
+        android:id="@+id/logoutButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginRight="101dp"
+        app:srcCompat="@drawable/ic_exit_to_app" />
+
 </RelativeLayout>

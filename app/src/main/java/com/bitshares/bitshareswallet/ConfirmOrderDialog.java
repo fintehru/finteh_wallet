@@ -22,6 +22,7 @@ public class ConfirmOrderDialog {
                                 String total,
                                 String timeExpiration,
                                 String free,
+                                String feeType,
                                 String quantityType,
                                 String totalType) {
             this.operationName = operationName;
@@ -30,6 +31,7 @@ public class ConfirmOrderDialog {
             this.total = total;
             this.timeExpiration = timeExpiration;
             this.free = free;
+            this.feeType = feeType;
             this.quantityType = quantityType;
             this.totalType = totalType;
         }
@@ -88,6 +90,7 @@ public class ConfirmOrderDialog {
         private String total;
         private String timeExpiration;
         private String free;
+        private String feeType;
         private String quantityType;
 
 
@@ -107,6 +110,14 @@ public class ConfirmOrderDialog {
 
         public void setTotalType(String totalType) {
             this.totalType = totalType;
+        }
+
+        public String getFeeType() {
+            return feeType;
+        }
+
+        public void setFeeType(String feeType) {
+            this.feeType = feeType;
         }
     }
 
@@ -146,7 +157,7 @@ public class ConfirmOrderDialog {
         txtExpiration.setText(confirmOrderData.getTimeExpiration());
 
         TextView txtFee = (TextView)view.findViewById(R.id.dco_txt_fee);
-        txtFee.setText(confirmOrderData.getFree());
+        txtFee.setText(confirmOrderData.getFree() + " " + confirmOrderData.getFeeType());
 
         TextView txtConfirm = (TextView)view.findViewById(R.id.dco_txt_confirm);
         txtConfirm.setOnClickListener(new View.OnClickListener() {
