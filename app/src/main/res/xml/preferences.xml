@@ -28,8 +28,8 @@
         android:defaultValue="FINTEH:USD"/>
 
     <Preference
-        android:key="export"
-        android:title="Export settings"
+        android:key="hide"
+        android:title="Hide assets"
         android:defaultValue="null" />
 
 </PreferenceScreen>

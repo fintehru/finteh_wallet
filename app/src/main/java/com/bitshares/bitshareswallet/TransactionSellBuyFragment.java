@@ -16,11 +16,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -40,7 +38,7 @@ import com.bitshares.bitshareswallet.wallet.graphene.chain.global_property_objec
 import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
 import com.bituniverse.network.Status;
 import com.bituniverse.utils.NumericUtil;
-import com.good.code.starts.here.dialog.TokenSelectDialog;
+import com.good.code.starts.here.dialog.select.TokenSelectDialog;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.text.DecimalFormat;

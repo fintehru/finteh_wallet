@@ -1,7 +1,9 @@
-package com.good.code.starts.here.dialog;
+package com.good.code.starts.here.dialog.select;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,16 +13,27 @@ import android.widget.TextView;
 import com.bitshares.bitshareswallet.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class TokenSelectAdapter extends RecyclerView.Adapter<TokenSelectAdapter.TokenViewHolder> {
 
     private List<String> tokens;
     private List<String> back;
     private OnTokenSelectListener listener;
+    private SharedPreferences preferences;
+    private Set<String> hidden;
 
-    public TokenSelectAdapter(List<String> tokens) {
+    public TokenSelectAdapter(Context context, List<String> tokens) {
+        this.preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        this.hidden = preferences.getStringSet("hidden", new HashSet<>());
         this.tokens = tokens;
+        for(int i = 0; i < tokens.size(); i++) {
+            if(hidden.contains(tokens.get(i))) {
+                tokens.remove(i);
+            }
+        }
         this.back = new ArrayList<>(tokens);
     }
 
