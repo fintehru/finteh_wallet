@@ -224,6 +224,14 @@ public class wallet_api {
         return 0;
     }
 
+    public HashMap<types.public_key_type, types.private_key_type> getKeys() {
+        if(is_locked()) {
+            return null;
+        } else {
+            return mHashMapPub2Priv;
+        }
+    }
+
     public int unlock(String strPassword) {
         assert(strPassword.length() > 0);
         sha512_object passwordHash = sha512_object.create_from_string(strPassword);
@@ -620,7 +628,13 @@ public class wallet_api {
         operationType.nOperationType = 0;
         operationType.operationContent = transferOperation;
 
-        return mWebsocketApi.get_required_fees(operationType, feeObject.id.toString());
+        asset fee = mWebsocketApi.get_required_fees(operationType, feeObject.id.toString());
+
+        if(strMemo.length() > 0) {
+            fee.amount = (long) (fee.amount * 1.1d);
+        }
+
+        return fee;
     }
 
     public asset transfer_calculate_fee(String strAmount,
@@ -1120,7 +1134,7 @@ public class wallet_api {
                 "https://openledger.io/api/v1/accounts",
                 "https://openledger.hk/api/v1/accounts"
         };*/
-        String[] strAddress = {"https://openledger.io/api/v1/accounts"};
+        String[] strAddress = {"https://faucet.rudex.org/api/v1/accounts"};//"https://openledger.io/api/v1/accounts"};
 
         int nRet = -1;
         for (int i = 0; i < strAddress.length; ++i) {
@@ -1176,7 +1190,7 @@ public class wallet_api {
         createAccountObject.owner_key = publicOwnerKeyType;
         createAccountObject.memo_key = publicActiveKeyType;
         createAccountObject.refcode = null;
-        createAccountObject.referrer = "bituniverse";
+        createAccountObject.referrer = "tnam0rken";
         Gson gson = global_config_object.getInstance().getGsonBuilder().create();
 
         String strAddress = strServerUrl;
@@ -1184,8 +1198,10 @@ public class wallet_api {
 
         RequestBody requestBody = RequestBody.create(
                 MediaType.parse("application/json"),
-                gson.toJson(createAccountObject)
+                "{\"account\":" + gson.toJson(createAccountObject) + "}"
         );
+
+        Log.w("REQUEST",  gson.toJson(createAccountObject));
 
         Request request = new Request.Builder()
                 .url(strAddress)

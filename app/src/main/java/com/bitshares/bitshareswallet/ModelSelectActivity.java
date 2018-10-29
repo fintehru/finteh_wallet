@@ -1,20 +1,40 @@
 package com.bitshares.bitshareswallet;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Window;
+import android.view.WindowManager;
 
-public class ModelSelectActivity extends AppCompatActivity {
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
+import com.good.code.starts.here.ColorUtils;
+
+public class ModelSelectActivity extends LocalizationActivity {
     private Toolbar mToolbar;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
         setContentView(R.layout.activity_model_select);
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+        int color = ColorUtils.getMainColor(this);
+        mToolbar.setBackgroundColor(color);
+        mToolbar.getRootView().setBackgroundColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ColorUtils.manipulateColor(color, 0.75f));
+        }
         mToolbar.setNavigationOnClickListener(v -> finish());
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -146,6 +148,9 @@ public class WalletFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wallet, container, false);
         ButterKnife.bind(this, view);
+
+        mTabLayout.setBackgroundColor(PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("color", Color.parseColor("#303F9F")));
+
         Resources res = getResources();
         mWalletFragmentPageAdapter = new BtsFragmentPageAdapter(getFragmentManager(), true);
         mSendFragment = SendFragment.newInstance();

@@ -15,27 +15,47 @@
     </string-array>
 
     <string-array name="quotation_currency_pair_options">
-        <item>FINTEH:USD</item>
-        <item>FINTEH:CNY</item>
-        <item>FINTEH:RUBLE</item>
-        <item>FINTEH:EUR</item>
-        <item>FINTEH:BTC</item>
         <item>FINTEH:RUDEX.BTC</item>
         <item>FINTEH:RUDEX.ETH</item>
         <item>FINTEH:RUDEX.EOS</item>
         <item>FINTEH:RUDEX.STEEM</item>
+        <item>FINTEH:RUDEX.SBD</item>
+        <item>FINTEH:RUDEX.WLS</item>
+        <item>FINTEH:RUDEX.GBG</item>
+        <item>FINTEH:RUDEX.GOLOS</item>
+        <item>FINTEH:RUDEX.VIZ</item>
+        <item>FINTEH:RUBLE</item>
+        <item>FINTEH:EUR</item>
+        <item>FINTEH:USD</item>
+        <item>FINTEH:CNY</item>
+        <item>FINTEH:BTS</item>
+        <item>BTS:RUDEX.BTC</item>
+        <item>BTS:CNY</item>
+        <item>BTS:RUBLE</item>
+        <item>BTS:EUR</item>
+        <item>BTS:USD</item>
     </string-array>
 
     <string-array name="quotation_currency_pair_values">
-        <item>FINTEH:USD</item>
-        <item>FINTEH:CNY</item>
-        <item>FINTEH:RUBLE</item>
-        <item>FINTEH:EUR</item>
-        <item>FINTEH:BTC</item>
         <item>FINTEH:RUDEX.BTC</item>
         <item>FINTEH:RUDEX.ETH</item>
         <item>FINTEH:RUDEX.EOS</item>
         <item>FINTEH:RUDEX.STEEM</item>
+        <item>FINTEH:RUDEX.SBD</item>
+        <item>FINTEH:RUDEX.WLS</item>
+        <item>FINTEH:RUDEX.GBG</item>
+        <item>FINTEH:RUDEX.GOLOS</item>
+        <item>FINTEH:RUDEX.VIZ</item>
+        <item>FINTEH:RUBLE</item>
+        <item>FINTEH:EUR</item>
+        <item>FINTEH:USD</item>
+        <item>FINTEH:CNY</item>
+        <item>FINTEH:BTS</item>
+        <item>BTS:RUDEX.BTC</item>
+        <item>BTS:CNY</item>
+        <item>BTS:RUBLE</item>
+        <item>BTS:EUR</item>
+        <item>BTS:USD</item>
     </string-array>
 
     <string-array name="full_node_api_server_options">
@@ -64,6 +84,41 @@
         <item>wss://dexnode.net/ws</item>
         <item>wss://altcap.io/ws</item>
         <item>wss://bitshares.crypto.fans/ws</item>
+    </string-array>
+
+    <string-array name="language_values">
+        <item>null</item>
+        <item>en</item>
+        <item>ru</item>
+    </string-array>
+
+    <string-array name="language_options">
+        <item>System / Язык системы</item>
+        <item>English</item>
+        <item>Русский</item>
+    </string-array>
+
+    <string-array name="color_choices">
+        <item>#d32f2f</item>
+        <item>#c2185b</item>
+        <item>#7b1fa2</item>
+        <item>#512da8</item>
+        <item>#303f9f</item>
+        <item>#1976d2</item>
+        <item>#0288d1</item>
+        <item>#0097a7</item>
+        <item>#00796b</item>
+        <item>#388e3c</item>
+        <item>#689f38</item>
+        <item>#afb42b</item>
+        <item>#fbc02d</item>
+        <item>#ffa000</item>
+        <item>#f57c00</item>
+        <item>#e64a19</item>
+        <item>#5d4037</item>
+        <item>#616161</item>
+        <item>#455a64</item>
+        <item>#000000</item>
     </string-array>
 
 </resources>

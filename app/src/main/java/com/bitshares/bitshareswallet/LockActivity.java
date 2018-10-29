@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,16 +12,20 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.andrognito.pinlockview.IndicatorDots;
 import com.andrognito.pinlockview.PinLockListener;
 import com.andrognito.pinlockview.PinLockView;
 import com.bitshares.bitshareswallet.util.Safe;
 import com.bitshares.bitshareswallet.wallet.BitsharesWalletWraper;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
+import com.good.code.starts.here.ColorUtils;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 
 import java.io.File;
@@ -31,13 +36,15 @@ import de.bitsharesmunich.graphenej.FileBin;
 import de.bitsharesmunich.graphenej.Util;
 import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
 
-public class LockActivity extends AppCompatActivity {
+public class LockActivity extends LocalizationActivity {
 
     private SharedPreferences preferences;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
         BitsharesWalletWraper bitsharesWalletWraper = BitsharesWalletWraper.getInstance();
 
         if (bitsharesWalletWraper.load_wallet_file() != 0 || bitsharesWalletWraper.is_new()){
@@ -46,7 +53,6 @@ public class LockActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            preferences = PreferenceManager.getDefaultSharedPreferences(this);
             if(!preferences.contains("val")) {
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -54,6 +60,17 @@ public class LockActivity extends AppCompatActivity {
                 finish();
             } else {
                 setContentView(R.layout.activity_lock);
+
+                WebView webViewFrom = findViewById(R.id.webViewAvatarFrom);
+
+                int color = ColorUtils.getMainColor(this);
+                webViewFrom.getRootView().setBackgroundColor(color);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getWindow();
+                    window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(ColorUtils.manipulateColor(color, 0.75f));
+                }
 
                 findViewById(R.id.logoutButton).setOnClickListener(v -> {
                     AlertDialog dialog = new AlertDialog.Builder(this)
@@ -72,7 +89,6 @@ public class LockActivity extends AppCompatActivity {
                 sha256_object.encoder encoder = new sha256_object.encoder();
                 encoder.write(strName.getBytes());
 
-                WebView webViewFrom = findViewById(R.id.webViewAvatarFrom);
                 loadWebView(webViewFrom, 85, encoder.result().toString());
 
                 PinLockView mPinLockView = findViewById(R.id.pin_lock_view);

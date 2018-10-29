@@ -7,8 +7,11 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -23,16 +26,26 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.bitshares.bitshareswallet.room.BitsharesAsset;
 import com.bitshares.bitshareswallet.room.BitsharesDao;
 import com.bitshares.bitshareswallet.room.BitsharesOperationHistory;
@@ -43,8 +56,13 @@ import com.bitshares.bitshareswallet.wallet.Broadcast;
 import com.bitshares.bitshareswallet.wallet.account_object;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
+import com.bitshares.bitshareswallet.wallet.graphene.chain.types;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
+import com.good.code.starts.here.ColorUtils;
+import com.good.code.starts.here.dialog.keys.KeysAdapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import io.reactivex.Flowable;
@@ -53,8 +71,8 @@ import io.sentry.Sentry;
 import io.sentry.event.UserBuilder;
 
 
-public class MainActivity extends AppCompatActivity
-        implements OnFragmentInteractionListener{
+public class MainActivity extends LocalizationActivity
+implements OnFragmentInteractionListener{
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -79,6 +97,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final int REQUEST_CODE_SETTINGS = 1;
 
+    private int color;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -109,7 +128,7 @@ public class MainActivity extends AppCompatActivity
 
     private void updateTitle(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:USD");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
         String strAsset[] = strCurrencySetting.split(":");
 
         try {
@@ -125,8 +144,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
 
         account_object account = BitsharesWalletWraper.getInstance().get_account();
         Sentry.getContext().setUser(new UserBuilder()
@@ -140,7 +161,18 @@ public class MainActivity extends AppCompatActivity
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
         mToolbar.setTitle(getResources().getString(R.string.tab_send));
+
+        color = ColorUtils.getMainColor(this);
+        mToolbar.setBackgroundColor(color);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ColorUtils.manipulateColor(color, 0.75f));
+        }
 
         mLayoutTitle = mToolbar.findViewById(R.id.lay_title);
         mTxtTitle = mToolbar.findViewById(R.id.txt_bar_title);
@@ -221,7 +253,55 @@ public class MainActivity extends AppCompatActivity
                     Intent intentAbout = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(intentAbout);
                     break;
-                case R.id.backup:
+                case R.id.keys:
+                    BitsharesWalletWraper wallet = BitsharesWalletWraper.getInstance();
+                    if(wallet.is_locked()) {
+                        SharedPreferences p = PreferenceManager.getDefaultSharedPreferences(this);
+                        if(p.contains("pass")) {
+                            wallet.unlock(p.getString("pass", ""));
+                            List<Pair<String, String>> keyPairs = new ArrayList<>();
+                            for(HashMap.Entry<types.public_key_type, types.private_key_type> keys : wallet.getKeys().entrySet()) {
+                                keyPairs.add(new Pair<>(keys.getKey().toString(), keys.getValue().toString()));
+                            }
+                            showKeys(keyPairs);
+                        } else {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                            final View viewGroup = getLayoutInflater().inflate(R.layout.dialog_password_confirm, null);
+                            builder.setPositiveButton(
+                                    R.string.password_confirm_button_confirm,
+                                    null);
+
+                            builder.setNegativeButton(
+                                    R.string.password_confirm_button_cancel, null);
+                            builder.setView(viewGroup);
+                            final AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+                                EditText editText = viewGroup.findViewById(R.id.editTextPassword);
+                                String strPassword = editText.getText().toString();
+                                int nRet = wallet.unlock(strPassword);
+                                if (nRet == 0) {
+                                    dialog.dismiss();
+                                    List<Pair<String, String>> keyPairs = new ArrayList<>();
+                                    for(HashMap.Entry<types.public_key_type, types.private_key_type> keys : wallet.getKeys().entrySet()) {
+                                        keyPairs.add(new Pair<>(keys.getKey().toString(), keys.getValue().toString()));
+                                    }
+                                    showKeys(keyPairs);
+                                } else {
+                                    viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
+                                }
+                            });
+                        }
+                    } else {
+                        List<Pair<String, String>> keyPairs = new ArrayList<>();
+                        for(HashMap.Entry<types.public_key_type, types.private_key_type> keys : wallet.getKeys().entrySet()) {
+                            keyPairs.add(new Pair<>(keys.getKey().toString(), keys.getValue().toString()));
+                        }
+                        showKeys(keyPairs);
+                    }
+                    break;
+                //case R.id.backup:
                     //BitsharesWalletWraper.getInstance().get_account().
             }
 
@@ -234,12 +314,24 @@ public class MainActivity extends AppCompatActivity
         String strCurrency = prefs.getString("currency_setting", "USD");
         walletViewModel.changeCurrency(strCurrency);
 
-
         final account_object accountObject = BitsharesWalletWraper.getInstance().get_account();
         if (accountObject != null) {
+
             View view = navigationView.getHeaderView(0);
+            view.setBackgroundColor(color);
             TextView textViewAccountName = view.findViewById(R.id.textViewAccountName);
             textViewAccountName.setText(accountObject.name);
+
+            TextView ltmText = view.findViewById(R.id.ltm_text);
+            ImageView ltmImage = view.findViewById(R.id.ltm_image);
+
+            if(accountObject.referrer.equals(accountObject.id.toString())) {
+                ltmText.setVisibility(View.VISIBLE);
+                ltmImage.setVisibility(View.VISIBLE);
+            } else {
+                ltmText.setVisibility(View.GONE);
+                ltmImage.setVisibility(View.GONE);
+            }
 
             sha256_object.encoder encoder = new sha256_object.encoder();
             encoder.write(accountObject.name.getBytes());
@@ -254,13 +346,20 @@ public class MainActivity extends AppCompatActivity
                 ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("account name", accountObject.name);
                 clipboardManager.setPrimaryClip(clipData);
-                Toast toast = Toast.makeText(MainActivity.this, "Copy Successfully", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(MainActivity.this, getString(R.string.copy_success), Toast.LENGTH_SHORT);
                 toast.show();
             });
         }
 
 
         mBottomNavigation = findViewById(R.id.navigation_bottom);
+
+        int[] colors = new int[] {Color.parseColor("#606060"), color};
+        int [][] states = new int [][]{new int[] { android.R.attr.state_enabled, -android.R.attr.state_checked}, new int[] {android.R.attr.state_enabled, android.R.attr.state_checked}};
+
+        mBottomNavigation.setItemTextColor(new ColorStateList(states, colors));
+        mBottomNavigation.setItemIconTintList(new ColorStateList(states, colors));
+
         mBottomNavigation.setOnNavigationItemSelectedListener(item -> {
             switch (item.getItemId()){
                 case R.id.navigation_wallet:
@@ -286,6 +385,21 @@ public class MainActivity extends AppCompatActivity
                 });
     }
 
+    private void showKeys(List<Pair<String, String>> keyPairs) {
+        RecyclerView recyclerView = new RecyclerView(this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        recyclerView.setAdapter(new KeysAdapter(this, keyPairs));
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.keys)
+                .setView(recyclerView)
+                .setPositiveButton(R.string.OK, null)
+                .create();
+
+        dialog.show();
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -293,7 +407,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         mMainFragmentPageAdapter.updateShowing(true);
     }
@@ -380,7 +494,7 @@ public class MainActivity extends AppCompatActivity
         Resources res = getResources();
         final String[] arrValues = res.getStringArray(R.array.quotation_currency_pair_values);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:USD");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
         int currSelectIndex = 0;
         for(int i=0; i<arrValues.length; i++){
             if(arrValues[i].equals(strCurrencySetting)){

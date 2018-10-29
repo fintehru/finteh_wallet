@@ -210,5 +210,19 @@
     <string name="save">Save</string>
     <string name="no_req_token">You do not have the requested token!</string>
     <string name="pass_no_match">Passwords do not match!</string>
+    <string name="send_btn">Send</string>
+    <string name="select_token">Select token</string>
+    <string name="qr_to_receive">Your QR code to receive</string>
+    <string name="OK">OK</string>
+    <string name="hide_assets">Hide assets</string>
+    <string name="color_title">Color</string>
+    <string name="hide">Hide</string>
+    <string name="loading_assets">Loading assets</string>
+    <string name="select_lang">Select language</string>
+    <string name="lang">Language</string>
+    <string name="keys">Keys</string>
+    <string name="pub_copied">Public key copied</string>
+    <string name="priv_copied">Private key copied</string>
+    <string name="copy_success">Copy Successfully</string>
 
 </resources>

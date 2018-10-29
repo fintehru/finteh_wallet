@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
         android:key="pin_settings"
@@ -25,11 +26,27 @@
         android:dialogTitle="@string/quotation_cureency_select_dialog_title"
         android:entries="@array/quotation_currency_pair_options"
         android:entryValues="@array/quotation_currency_pair_values"
-        android:defaultValue="FINTEH:USD"/>
+        android:defaultValue="FINTEH:RUDEX.BTC"/>
 
     <Preference
-        android:key="export"
-        android:title="Export settings"
+        android:key="hide"
+        android:title="@string/hide_assets"
         android:defaultValue="null" />
+
+    <ListPreference
+        android:key="locale"
+        android:title="@string/lang"
+        android:dialogTitle="@string/select_lang"
+        android:entries="@array/language_options"
+        android:entryValues="@array/language_values"
+        android:defaultValue="null"/>
+
+    <com.kizitonwose.colorpreferencecompat.ColorPreferenceCompat
+        android:defaultValue="@color/colorPrimary"
+        android:key="color"
+        android:title="@string/color_title"
+        app:colorShape="circle"
+        app:showDialog="false" />
+
 
 </PreferenceScreen>

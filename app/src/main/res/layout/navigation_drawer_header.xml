@@ -54,4 +54,32 @@
         android:textColor="@color/grey"
         android:text="Copy Account" />
 
+    <ImageView
+        android:id="@+id/ltm_image"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="1dp"
+        android:layout_alignBottom="@+id/textViewAccountId"
+        android:layout_marginLeft="8dp"
+        android:layout_toEndOf="@+id/textViewAccountId"
+        android:layout_toRightOf="@+id/textViewAccountId"
+        app:srcCompat="@drawable/ic_crown" />
+
+    <TextView
+        android:id="@+id/ltm_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textViewAccountId"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="1dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:textSize="12sp"
+        android:layout_toEndOf="@+id/ltm_image"
+        android:layout_toRightOf="@+id/ltm_image"
+        android:text="LTM"
+        android:textColor="#FFF" />
+
 </RelativeLayout>

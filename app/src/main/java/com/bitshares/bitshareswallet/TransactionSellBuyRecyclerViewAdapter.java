@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.bitshares.bitshareswallet.market.Order;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TransactionSellBuyRecyclerViewAdapter extends RecyclerView.Adapter<TransactionSellBuyRecyclerViewAdapter.ViewHolder> {
@@ -20,11 +21,14 @@ public class TransactionSellBuyRecyclerViewAdapter extends RecyclerView.Adapter<
     }
 
     public void setList(List<Order> list){
-        if(getItemCount()>0){
+        /*if(getItemCount()>0){
             notifyItemRangeRemoved(0,getItemCount());
         }
         this.list = list;
-        notifyItemRangeInserted(0,getItemCount());
+        notifyItemRangeInserted(0,getItemCount());*/
+        this.list = new ArrayList<>(list);
+        notifyDataSetChanged();
+
     }
 
     @Override

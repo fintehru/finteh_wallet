@@ -1,32 +1,17 @@
 package com.bitshares.bitshareswallet;
 
-import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Camera;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.ArrayMap;
-import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,12 +19,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,8 +38,7 @@ import com.bitshares.bitshareswallet.wallet.exception.NetworkStatusException;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
 import com.bituniverse.utils.NumericUtil;
-import com.good.code.starts.here.dialog.TokenSelectAdapter;
-import com.good.code.starts.here.dialog.TokenSelectDialog;
+import com.good.code.starts.here.dialog.select.TokenSelectDialog;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.math.BigDecimal;
@@ -64,7 +46,6 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,11 +53,8 @@ import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.exceptions.Exceptions;
 import io.reactivex.schedulers.Schedulers;
-import io.sentry.Sentry;
-import io.sentry.event.BreadcrumbBuilder;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.CAMERA_SERVICE;
 
 public class SendFragment extends BaseFragment {
 
@@ -302,6 +280,7 @@ public class SendFragment extends BaseFragment {
                                  final String strSymbol,
                                  final String strMemo) {
         mProcessHud.show();
+
         Flowable.just(0)
                 .subscribeOn(Schedulers.io())
                 .map(integer -> {

@@ -2,25 +2,32 @@ package com.bitshares.bitshareswallet;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.PointF;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.preference.PreferenceManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
+import com.good.code.starts.here.ColorUtils;
 
-public class ScannerActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, QRCodeReaderView.OnQRCodeReadListener {
+public class ScannerActivity extends LocalizationActivity implements ActivityCompat.OnRequestPermissionsResultCallback, QRCodeReaderView.OnQRCodeReadListener {
 
     private static final int MY_PERMISSION_REQUEST_CAMERA = 0;
 
@@ -36,10 +43,19 @@ public class ScannerActivity extends AppCompatActivity implements ActivityCompat
     //private CheckBox enableDecodingCheckBox;
     private PointsOverlayView pointsOverlayView;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override public void onCreate(Bundle savedInstanceState) {
+        //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_scanner);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ColorUtils.manipulateColor(ColorUtils.getMainColor(this), 0.75f));
+        }
 
         mainLayout = findViewById(android.R.id.content);
 
@@ -51,7 +67,7 @@ public class ScannerActivity extends AppCompatActivity implements ActivityCompat
         }
     }
 
-    @Override protected void onResume() {
+    @Override public void onResume() {
         super.onResume();
 
         if (qrCodeReaderView != null) {
@@ -114,6 +130,7 @@ public class ScannerActivity extends AppCompatActivity implements ActivityCompat
 
         qrCodeReaderView = findViewById(R.id.qrdecoderview);
         FloatingActionButton flashAction = findViewById(R.id.flashAction);
+        flashAction.setBackgroundColor(ColorUtils.getMainColor(this));
         //resultTextView = (TextView) content.findViewById(R.id.result_text_view);
         //flashlightCheckBox = (CheckBox) content.findViewById(R.id.flashlight_checkbox);
         //enableDecodingCheckBox = (CheckBox) content.findViewById(R.id.enable_decoding_checkbox);

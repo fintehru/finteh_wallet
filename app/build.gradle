@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         jcenter()
+        mavenCentral()
         google()
     }
     dependencies {
@@ -13,6 +14,7 @@ apply plugin: 'io.sentry.android.gradle'
 
 repositories {
     jcenter()
+    mavenCentral()
     maven { url "https://jitpack.io" }
     google()
 }
@@ -22,7 +24,7 @@ android {
     buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.bitshares.bitshareswallet"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 28
         versionCode 10201001
         versionName "1.2.1.1"
@@ -103,7 +105,7 @@ dependencies {
     implementation 'com.android.support:preference-v14:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.google.guava:guava:23.0-android'
-    implementation 'com.madgag.spongycastle:core:1.56.0.0'
+    implementation 'com.madgag.spongycastle:core:1.58.0.0'
     implementation 'com.madgag.spongycastle:prov:1.56.0.0'
     implementation 'com.madgag.spongycastle:pkix:1.51.0.0'
     implementation 'com.madgag.spongycastle:pg:1.51.0.0'
@@ -111,12 +113,12 @@ dependencies {
     implementation 'com.google.protobuf:protobuf-java:3.4.0'
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
-    implementation 'com.google.code.gson:gson:2.8.2'
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.kaopiz:kprogresshud:1.0.2'
     implementation 'com.wang.avi:library:2.1.3'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.2'
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'android.arch.persistence.room:runtime:1.1.1'
@@ -132,8 +134,11 @@ dependencies {
     //implementation project(':graphenej:graphenej')
     implementation 'com.github.bilthon:graphenej:0.4.2'
 
+    implementation 'com.akexorcist:localizationactivity:1.2.2'
+
     implementation 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3'
 
+    implementation 'com.github.kizitonwose.colorpreference:support:1.0.6'
     /*implementation('com.crashlytics.sdk.android:answers:1.4.2@aar') {
         transitive = true;
     }

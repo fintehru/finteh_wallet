@@ -1,4 +1,4 @@
-package com.good.code.starts.here.dialog;
+package com.good.code.starts.here.dialog.select;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bitshares.bitshareswallet.R;
 
@@ -21,8 +20,10 @@ public class TokenSelectDialog {
     private SearchView searchView;
     private TokenSelectAdapter adapter;
 
-    public TokenSelectDialog(Context context) {
+    private Context context;
 
+    public TokenSelectDialog(Context context) {
+        this.context = context;
         View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_search, null, false);
         tokensRecycler = dialogView.findViewById(R.id.tokensRecycler);
         searchView = dialogView.findViewById(R.id.searchView);
@@ -47,13 +48,13 @@ public class TokenSelectDialog {
 
         dialog = new AlertDialog.Builder(context)
                 .setView(dialogView)
-                .setTitle("Select token")
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.select_token)
+                .setNegativeButton(R.string.cancel, null)
                 .create();
     }
 
     public void show(List<String> tokens, TokenSelectAdapter.OnTokenSelectListener listener) {
-        adapter = new TokenSelectAdapter(tokens);
+        adapter = new TokenSelectAdapter(context, tokens);
         adapter.setListener(listener);
         tokensRecycler.setAdapter(adapter);
         dialog.show();
