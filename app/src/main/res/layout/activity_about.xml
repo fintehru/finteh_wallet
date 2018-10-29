@@ -61,7 +61,7 @@
                 android:layout_marginTop="10dp"
                 android:autoLink="web"
                 android:textColorLink="@android:color/white"
-                android:text="https://github.com/PreICO/bitshares_wallet"/>
+               />
 
         </LinearLayout>
 
@@ -107,7 +107,7 @@
                 android:layout_marginStart="19dp"
                 android:layout_toEndOf="@+id/webViewAvatar"
                 android:layout_toRightOf="@+id/webViewAvatar"
-                android:text="finteh" />
+                android:text="cryptokita" />
 
             <TextView
                 android:id="@+id/textViewAccountId"
