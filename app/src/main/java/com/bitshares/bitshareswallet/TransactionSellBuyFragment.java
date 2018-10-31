@@ -597,11 +597,15 @@ public class TransactionSellBuyFragment extends BaseFragment
             balanceTextBase.setText(baseAssetDisplay);
             askTextBase.setText(baseAssetDisplay);
             askTextInfo.setText(getString(R.string.label_lowest_ask));
+            askText.setText(" ");
         } else {
             balanceTextBase.setText(quoteAssetDisplay);
             askTextBase.setText(quoteAssetDisplay);
             askTextInfo.setText(getString(R.string.label_highest_bid));
+            askText.setText(" ");
         }
+        sellRecyclerViewAdapter.clear();
+        buyRecyclerViewAdapter.clear();
     }
 
     private boolean isBuy(){

@@ -48,6 +48,11 @@ public class TransactionSellBuyRecyclerViewAdapter extends RecyclerView.Adapter<
         return list==null ? 0: list.size();
     }
 
+    public void clear() {
+        list = new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View view;
         public Order item;

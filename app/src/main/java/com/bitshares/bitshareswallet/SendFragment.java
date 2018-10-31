@@ -36,6 +36,8 @@ import com.bitshares.bitshareswallet.wallet.common.ErrorCode;
 import com.bitshares.bitshareswallet.wallet.exception.ErrorCodeException;
 import com.bitshares.bitshareswallet.wallet.exception.NetworkStatusException;
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
+import com.bitshares.bitshareswallet.wallet.graphene.chain.asset_object;
+import com.bitshares.bitshareswallet.wallet.graphene.chain.object_id;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
 import com.bituniverse.utils.NumericUtil;
 import com.good.code.starts.here.dialog.select.TokenSelectDialog;
@@ -442,6 +444,16 @@ public class SendFragment extends BaseFragment {
                     lastFeeAsset = fee;
                     BitsharesAssetObject assetObject = BitsharesApplication.getInstance()
                             .getBitsharesDatabase().getBitsharesDao().queryAssetObjectById(fee.asset_id.toString());
+
+                    if(assetObject == null) {
+                        asset_object ao = BitsharesWalletWraper.getInstance().lookup_asset_symbols(fee.asset_id.toString());
+                        BitsharesAssetObject apiAssetObject = new BitsharesAssetObject();
+                        apiAssetObject.asset_id = ao.id;
+                        apiAssetObject.precision = ao.precision;
+                        apiAssetObject.symbol = ao.symbol;
+                        assetObject = apiAssetObject;
+                    }
+
                     return new Pair<>(fee, assetObject);
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(resultPair -> {

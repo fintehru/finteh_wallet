@@ -1,17 +1,13 @@
 package com.bitshares.bitshareswallet;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -30,7 +26,7 @@ import com.kaopiz.kprogresshud.KProgressHUD;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class ImportActivty extends LocalizationActivity {
+public class ImportActivity extends LocalizationActivity {
     private Toolbar mToolbar;
     private KProgressHUD mProcessHud;
     private int mnModel;
@@ -82,7 +78,7 @@ public class ImportActivty extends LocalizationActivity {
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mProcessHud = KProgressHUD.create(ImportActivty.this)
+        mProcessHud = KProgressHUD.create(ImportActivity.this)
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setLabel("Please Wait")
                 .setCancellable(false)
@@ -122,11 +118,11 @@ public class ImportActivty extends LocalizationActivity {
             @Override
             public void onClick(View v) {
                 if (ContextCompat.checkSelfPermission(
-                        ImportActivty.this,
+                        ImportActivity.this,
                         android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     String[] strPermission = new String[1];
                     strPermission[0] = android.Manifest.permission.READ_EXTERNAL_STORAGE;
-                    ActivityCompat.requestPermissions(ImportActivty.this, strPermission, REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
+                    ActivityCompat.requestPermissions(ImportActivity.this, strPermission, REQUEST_PERMISSION_READ_EXTERNAL_STORAGE);
                 } else {
                     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                     intent.setType("*/*");//设置类型，我这里是任意类型，任意后缀的可以这样写。
@@ -179,7 +175,7 @@ public class ImportActivty extends LocalizationActivity {
 //                            at android.database.CursorWrapper.getColumnIndexOrThrow(CursorWrapper.java:87)
 //                            at com.bitshares.bitshareswallet.wallet.common.ConvertUriToFilePath.getDataColumn(ConvertUriToFilePath.java:112)
 //                            at com.bitshares.bitshareswallet.wallet.common.ConvertUriToFilePath.getPathFromURI(ConvertUriToFilePath.java:79)
-//                            at com.bitshares.bitshareswallet.ImportActivty.onActivityResult(ImportActivty.java:156)
+//                            at com.bitshares.bitshareswallet.ImportActivity.onActivityResult(ImportActivity.java:156)
                         e.printStackTrace();
                     }
                     if (!TextUtils.isEmpty(strFilePathAboveKitKat)) {
@@ -238,7 +234,7 @@ public class ImportActivty extends LocalizationActivity {
 
                 if (nRet == 0) {
                     mProcessHud.dismiss();
-                    Intent intent = new Intent(ImportActivty.this, MainActivity.class);
+                    Intent intent = new Intent(ImportActivity.this, MainActivity.class);
                     intent.setFlags(FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 } else {
