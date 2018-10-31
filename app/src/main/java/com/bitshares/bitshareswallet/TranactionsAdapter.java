@@ -2,6 +2,8 @@ package com.bitshares.bitshareswallet;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -44,9 +46,11 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
     private TransactionsFragment transactionsFragment;
     private TransactionViewModel.OperationHistoryWrapper operationHistoryWrapper;
     private final LayoutInflater mLayoutInflater;
+    private Context context;
 
     public TranactionsAdapter(TransactionsFragment transactionsFragment, Context context) {
         this.transactionsFragment = transactionsFragment;
+        this.context = context;
         mLayoutInflater = LayoutInflater.from(context);
     }
 
@@ -235,26 +239,22 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
             layoutMemo.setVisibility(View.VISIBLE);
             View layoutTransaction = holder.view.findViewById(R.id.layoutTransactionDetail);
 
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            if(prefs.contains("pass")) {
+                BitsharesWalletWraper.getInstance().unlock(prefs.getString("pass", ""));
+            }
             if (BitsharesWalletWraper.getInstance().is_locked()) {
-                layoutTransaction.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        processMemoUnlockClick();
-                    }
-                });
+                layoutTransaction.setOnClickListener(v -> processMemoUnlockClick());
             } else {
                 TextView textViewMemo = (TextView) holder.view.findViewById(R.id.textViewMemo);
                 holder.view.findViewById(R.id.imageViewMemoLock).setVisibility(View.GONE);
                 final String strMemo = "Memo: " + BitsharesWalletWraper.getInstance().get_plain_text_message(memoData);
                 textViewMemo.setText(strMemo);
 
-                layoutTransaction.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(transactionsFragment.getActivity());
-                        builder.setMessage(strMemo);
-                        builder.show();
-                    }
+                layoutTransaction.setOnClickListener(v -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(transactionsFragment.getActivity());
+                    builder.setMessage(strMemo);
+                    builder.show();
                 });
             }
         } else {

@@ -1,12 +1,8 @@
 package com.bitshares.bitshareswallet;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Window;
 import android.view.WindowManager;
@@ -40,26 +36,26 @@ public class ModelSelectActivity extends LocalizationActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         findViewById(R.id.textViewAccountModel).setOnClickListener(v -> {
-            Intent intent = new Intent(ModelSelectActivity.this, ImportActivty.class);
-            intent.putExtra("model", ImportActivty.ACCOUNT_MODEL);
+            Intent intent = new Intent(ModelSelectActivity.this, ImportActivity.class);
+            intent.putExtra("model", ImportActivity.ACCOUNT_MODEL);
             startActivity(intent);
         });
 
         findViewById(R.id.textViewWalletModelWifKey).setOnClickListener(v -> {
-            Intent intent = new Intent(ModelSelectActivity.this, ImportActivty.class);
-            intent.putExtra("model", ImportActivty.WALLET_MODEL_WIF_KEY);
+            Intent intent = new Intent(ModelSelectActivity.this, ImportActivity.class);
+            intent.putExtra("model", ImportActivity.WALLET_MODEL_WIF_KEY);
             startActivity(intent);
         });
 
         findViewById(R.id.textViewWalletModelBin).setOnClickListener(v -> {
-            Intent intent = new Intent(ModelSelectActivity.this, ImportActivty.class);
-            intent.putExtra("model", ImportActivty.WALLET_MODEL_BIN_FILE);
+            Intent intent = new Intent(ModelSelectActivity.this, ImportActivity.class);
+            intent.putExtra("model", ImportActivity.WALLET_MODEL_BIN_FILE);
             startActivity(intent);
         });
 
         findViewById(R.id.textViewWalletModelBrainKey).setOnClickListener(v -> {
-            Intent intent = new Intent(ModelSelectActivity.this, ImportActivty.class);
-            intent.putExtra("model", ImportActivty.WALLET_MODEL_BRAIN_KEY);
+            Intent intent = new Intent(ModelSelectActivity.this, ImportActivity.class);
+            intent.putExtra("model", ImportActivity.WALLET_MODEL_BRAIN_KEY);
             startActivity(intent);
         });
     }

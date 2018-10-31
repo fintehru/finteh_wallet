@@ -140,7 +140,7 @@ implements OnFragmentInteractionListener{
     }
 
     private void setTitleVisible(boolean visible){
-        mLayoutTitle.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        mLayoutTitle.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
