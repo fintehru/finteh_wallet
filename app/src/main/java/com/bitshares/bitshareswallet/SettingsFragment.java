@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import com.bitshares.bitshareswallet.room.BitsharesBalanceAsset;
 import com.good.code.starts.here.ColorUtils;
 import com.good.code.starts.here.dialog.hide.TokenHideAdapter;
+import com.good.code.starts.here.pairs.PairsFragment;
 import com.good.code.starts.here.servers.ServersFragment;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 import com.kizitonwose.colorpreference.ColorDialog;
@@ -57,13 +58,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         Preference pinPreference = findPreference("pin_settings");
         pinPreference.setOnPreferenceClickListener(p -> {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new PinSettingsFragment()).addToBackStack(null).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, PinSettingsFragment.newInstance()).addToBackStack(null).commit();
             return true;
         });
 
         Preference serverSelectPreference = findPreference("full_node_api_server");
         serverSelectPreference.setOnPreferenceClickListener(p -> {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ServersFragment()).addToBackStack(null).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, ServersFragment.newInstance()).addToBackStack(null).commit();
+            return true;
+        });
+
+        Preference pairSelectPreference = findPreference("pairs");
+        pairSelectPreference.setOnPreferenceClickListener(p -> {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, PairsFragment.newInstance()).addToBackStack(null).commit();
             return true;
         });
 

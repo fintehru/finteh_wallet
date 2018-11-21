@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.PreferenceManager;
@@ -251,11 +252,11 @@ public class TransactionSellBuyFragment extends BaseFragment
                 .setAnimationSpeed(2)
                 .setDimAmount(0.5f);
 
-        Button restButton = (Button) view.findViewById(R.id.restButton);
+        Button restButton = view.findViewById(R.id.restButton);
         restButton.setOnClickListener(this);
 
-        qEditText = (EditText) view.findViewById(R.id.qEditText);
-        pEditText = (EditText) view.findViewById(R.id.pEditText);
+        qEditText = view.findViewById(R.id.qEditText);
+        pEditText = view.findViewById(R.id.pEditText);
         pEditText.addTextChangedListener(this);
         qEditText.addTextChangedListener(this);
 
@@ -296,20 +297,20 @@ public class TransactionSellBuyFragment extends BaseFragment
             tokenSelectDialog.close();
         }));
 
-        tEditText = (EditText) view.findViewById(R.id.tEditText);
-        fEditText = (EditText) view.findViewById(R.id.fEditText);
-        pTextLastView = (TextView) view.findViewById(R.id.pTextLastView);
-        qTextLastView = (TextView) view.findViewById(R.id.qTextLastView);
-        tTextLastView = (TextView) view.findViewById(R.id.tTextLastView);
+        tEditText = view.findViewById(R.id.tEditText);
+        fEditText = view.findViewById(R.id.fEditText);
+        pTextLastView = view.findViewById(R.id.pTextLastView);
+        qTextLastView = view.findViewById(R.id.qTextLastView);
+        tTextLastView = view.findViewById(R.id.tTextLastView);
 
-        balanceText = (TextView) view.findViewById(R.id.balanceText);
-        askText = (TextView) view.findViewById(R.id.askText);
+        balanceText = view.findViewById(R.id.balanceText);
+        askText = view.findViewById(R.id.askText);
 
-        balanceTextBase = (TextView) view.findViewById(R.id.balanceTextBase);
-        askTextBase = (TextView) view.findViewById(R.id.askTextBase);
-        askTextInfo = (TextView) view.findViewById(R.id.askTextInfo);
+        balanceTextBase = view.findViewById(R.id.balanceTextBase);
+        askTextBase = view.findViewById(R.id.askTextBase);
+        askTextInfo = view.findViewById(R.id.askTextInfo);
 
-        buyRecyclerView = (RecyclerView) view.findViewById(R.id.buy_recycler);
+        buyRecyclerView = view.findViewById(R.id.buy_recycler);
         buyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
             public boolean canScrollVertically() {
@@ -320,7 +321,7 @@ public class TransactionSellBuyFragment extends BaseFragment
         buyRecyclerView.setAdapter(buyRecyclerViewAdapter);
         buyRecyclerView.setItemAnimator(null);
 
-        sellRecyclerView = (RecyclerView) view.findViewById(R.id.sell_recycler);
+        sellRecyclerView = view.findViewById(R.id.sell_recycler);
         sellRecyclerViewAdapter = new TransactionSellBuyRecyclerViewAdapter();
         sellRecyclerView.setAdapter(sellRecyclerViewAdapter);
 
@@ -381,8 +382,22 @@ public class TransactionSellBuyFragment extends BaseFragment
         switch (v.getId()) {
             case R.id.okButton:
                 if(lastFeeAsset == null) {
-                    Toast.makeText(getActivity(), R.string.fee_first, Toast.LENGTH_SHORT).show();
-                    return;
+
+                    String qString = qEditText.getText().toString();
+                    String pString = pEditText.getText().toString();
+                    if (TextUtils.isEmpty(qString) || TextUtils.isEmpty(pString)) {
+                        return;
+                    }
+                    double qValue = NumericUtil.parseDouble(qString, -1.0D);
+                    double pValue = NumericUtil.parseDouble(pString, -1.0D);
+
+                    if (isBuy()) {
+                        calculateBuyFee(quoteAssetObj, baseAssetObj, pValue, qValue);
+                    } else {
+                        calculateSellFee(quoteAssetObj, baseAssetObj, pValue, qValue);
+                    }
+                    //Toast.makeText(getActivity(), R.string.fee_first, Toast.LENGTH_SHORT).show();
+                    //return;
                 }
                 ConfirmOrderDialog.ConfirmOrderData confirmOrderData = new ConfirmOrderDialog.ConfirmOrderData();
                 if (transactionType == TRANSACTION_BUY) {
@@ -600,7 +615,7 @@ public class TransactionSellBuyFragment extends BaseFragment
             askText.setText(" ");
         } else {
             balanceTextBase.setText(quoteAssetDisplay);
-            askTextBase.setText(quoteAssetDisplay);
+            askTextBase.setText(baseAssetDisplay);
             askTextInfo.setText(getString(R.string.label_highest_bid));
             askText.setText(" ");
         }

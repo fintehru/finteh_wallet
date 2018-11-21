@@ -26,6 +26,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.PreferenceManager;
+import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,8 +63,11 @@ import com.good.code.starts.here.ColorUtils;
 import com.good.code.starts.here.dialog.keys.KeysAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
@@ -98,6 +102,9 @@ implements OnFragmentInteractionListener{
     private static final int REQUEST_CODE_SETTINGS = 1;
 
     private int color;
+
+    private QuotationViewModel quotationViewModel;
+    private SharedPreferences prefs;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -148,6 +155,8 @@ implements OnFragmentInteractionListener{
         super.onCreate(savedInstanceState);
         //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
+        prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
+        quotationViewModel = ViewModelProviders.of(MainActivity.this).get(QuotationViewModel.class);
 
         account_object account = BitsharesWalletWraper.getInstance().get_account();
         Sentry.getContext().setUser(new UserBuilder()
@@ -280,17 +289,28 @@ implements OnFragmentInteractionListener{
                             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
                                 EditText editText = viewGroup.findViewById(R.id.editTextPassword);
                                 String strPassword = editText.getText().toString();
-                                int nRet = wallet.unlock(strPassword);
-                                if (nRet == 0) {
+                                /*if(strPassword.isEmpty()) {
                                     dialog.dismiss();
+
                                     List<Pair<String, String>> keyPairs = new ArrayList<>();
-                                    for(HashMap.Entry<types.public_key_type, types.private_key_type> keys : wallet.getKeys().entrySet()) {
-                                        keyPairs.add(new Pair<>(keys.getKey().toString(), keys.getValue().toString()));
+                                    for (types.public_key_type key : wallet.getPublicKeys()) {
+                                        keyPairs.add(new Pair<>(key.toString(), getString(R.string.enter_pass_private_key)));
                                     }
                                     showKeys(keyPairs);
-                                } else {
-                                    viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
-                                }
+
+                                } else {*/
+                                    int nRet = wallet.unlock(strPassword);
+                                    if (nRet == 0) {
+                                        dialog.dismiss();
+                                        List<Pair<String, String>> keyPairs = new ArrayList<>();
+                                        for (HashMap.Entry<types.public_key_type, types.private_key_type> keys : wallet.getKeys().entrySet()) {
+                                            keyPairs.add(new Pair<>(keys.getKey().toString(), keys.getValue().toString()));
+                                        }
+                                        showKeys(keyPairs);
+                                    } else {
+                                        viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
+                                    }
+                                //}
                             });
                         }
                     } else {
@@ -375,8 +395,7 @@ implements OnFragmentInteractionListener{
             return false;
         });
 
-        QuotationViewModel viewModel = ViewModelProviders.of(this).get(QuotationViewModel.class);
-        viewModel.getSelectedMarketTicker().observe(this,
+        quotationViewModel.getSelectedMarketTicker().observe(this,
                 currencyPair -> {
                     mTxtTitle.setText(String.format("%s : %s ",
                             utils.getAssetSymbolDisply(currencyPair.second),
@@ -406,10 +425,19 @@ implements OnFragmentInteractionListener{
         mMainFragmentPageAdapter.updateShowing(false);
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
         mMainFragmentPageAdapter.updateShowing(true);
+
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
+        String strAsset[] = strCurrencySetting.split(":");
+
+        quotationViewModel.selectedMarketTicker(new Pair(strAsset[1], strAsset[0]));
+        onCurrencyUpdate();
+
     }
 
     @Override
@@ -492,24 +520,31 @@ implements OnFragmentInteractionListener{
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MainActivity.this);
         dialogBuilder.setTitle(R.string.title_select_currency);
         Resources res = getResources();
-        final String[] arrValues = res.getStringArray(R.array.quotation_currency_pair_values);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
-        int currSelectIndex = 0;
-        for(int i=0; i<arrValues.length; i++){
-            if(arrValues[i].equals(strCurrencySetting)){
-                currSelectIndex = i;
-                break;
-            }
+        //final String[] arrValues = res.getStringArray(R.array.quotation_currency_pair_values);
+        List<String> valuesList = new ArrayList<>(prefs.getStringSet("pairs", new HashSet<>()));
+        if(valuesList.size() == 0) {
+            String[] fromRes = getResources().getStringArray(R.array.quotation_currency_pair_values);
+            Set<String> pairsSet = new HashSet<>();
+            Collections.addAll(pairsSet, fromRes);
+            Collections.addAll(valuesList, fromRes);
+            prefs.edit().putStringSet("pairs", pairsSet).apply();
         }
-        dialogBuilder.setSingleChoiceItems(R.array.quotation_currency_pair_options, currSelectIndex, (dialog, which) -> {
+
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
+        int currSelectIndex = valuesList.indexOf(strCurrencySetting);
+
+        CharSequence[] dataForDialog = new CharSequence[valuesList.size()];
+        for(int i = 0; i < dataForDialog.length; i++) {
+            dataForDialog[i] = valuesList.get(i);
+        }
+
+        dialogBuilder.setSingleChoiceItems(dataForDialog, currSelectIndex, (dialog, which) -> {
             dialog.dismiss();
             prefs.edit().
-                    putString("quotation_currency_pair", arrValues[which])
+                    putString("quotation_currency_pair", valuesList.get(which))
                     .apply();
-            String strAsset[] = arrValues[which].split(":");
-            QuotationViewModel viewModel = ViewModelProviders.of(MainActivity.this).get(QuotationViewModel.class);
-            viewModel.selectedMarketTicker(new Pair(strAsset[1], strAsset[0]));
+            String strAsset[] = valuesList.get(which).split(":");
+            quotationViewModel.selectedMarketTicker(new Pair(strAsset[1], strAsset[0]));
 
             onCurrencyUpdate();
         });

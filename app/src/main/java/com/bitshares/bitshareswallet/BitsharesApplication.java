@@ -62,20 +62,6 @@ public class BitsharesApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //Fabric.with(this, new Answers(), new Crashlytics());
-        /*CoreConfigurationBuilder builder = new CoreConfigurationBuilder(this)
-                .setBuildConfigClass(BuildConfig.class)
-                .setReportFormat(StringFormat.JSON);
-        builder.getPluginConfigurationBuilder(HttpSenderConfigurationBuilder.class)
-                .setUri("http://95.179.134.24:5984/acra-bitshares/_design/acra-storage/_update/report")
-                .setHttpMethod(HttpSender.Method.POST)
-                .setBasicAuthLogin("bitshares_reporter")
-                .setBasicAuthPassword("yUofei783Jh0lseg94Qw")
-                .setEnabled(true);
-
-        ACRA.init(this, builder);*/
-
-        //ACRA.init(this);
 
         String sentryDsn = "https://f7a95030510e4047ae1f7463327395b4@sentry.io/1261657";
         Sentry.init(sentryDsn, new AndroidSentryClientFactory(this));

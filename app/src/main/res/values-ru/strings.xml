@@ -219,5 +219,13 @@
     <string name="pub_copied">Публичный ключ скопирован</string>
     <string name="priv_copied">Приватный ключ скопирован</string>
     <string name="copy_success">Успешно скопировано</string>
+    <string name="create_account_account_name_incorrect">Имя аккаунта может содержать только строчные латинские символы, цифры и тире</string>
+    <string name="first_asset">Base актив</string>
+    <string name="second_asset">Quote актив</string>
+    <string name="add_pair_err">Некорректное имя актива!</string>
+    <string name="add_pair">Добавление торговой пары</string>
+    <string name="add_pair_exist">Такая торговая пара уже существует!</string>
+    <string name="cannot_delete_selected_pair">Нельзя удалить выбранную торговую пару!</string>
+    <string name="enter_pass_private_key">Введите пароль для прсомотра приватных ключей</string>
 
 </resources>

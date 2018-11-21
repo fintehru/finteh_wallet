@@ -84,12 +84,12 @@ public class OrdersFragment extends BaseFragment
 
         adapterOrders = new OrderListAdapter();
 
-        listOrders = (RecyclerView) view.findViewById(R.id.fo_list);
+        listOrders = view.findViewById(R.id.fo_list);
         listOrders.setAdapter(adapterOrders);
         listOrders.setLayoutManager(new LinearLayoutManager(getContext()));
         listOrders.setItemAnimator(null);
 
-        txtNone = (TextView)view.findViewById(R.id.fo_txt_none);
+        txtNone = view.findViewById(R.id.fo_txt_none);
 
         mProcessHud = KProgressHUD.create(getActivity())
                 .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
@@ -196,14 +196,14 @@ public class OrdersFragment extends BaseFragment
         public OrderViewHolder(View itemView) {
             super(itemView);
 
-            txtExpiration = (TextView)itemView.findViewById(R.id.voi_txt_expiration);
-            txtCacel = (TextView)itemView.findViewById(R.id.voi_txt_cacel);
-            txtOperation = (TextView)itemView.findViewById(R.id.voi_txt_operation);
-            txtPrice = (TextView)itemView.findViewById(R.id.voi_txt_price);
-            txtSrcCoin = (TextView)itemView.findViewById(R.id.voi_txt_src_coin);
-            txtSrcCoinName = (TextView)itemView.findViewById(R.id.voi_txt_src_coin_name);
-            txtTargetCoin = (TextView)itemView.findViewById(R.id.voi_txt_target_coin);
-            txtTargetCoinName = (TextView)itemView.findViewById(R.id.voi_txt_target_coin_name);
+            txtExpiration = itemView.findViewById(R.id.voi_txt_expiration);
+            txtCacel = itemView.findViewById(R.id.voi_txt_cacel);
+            txtOperation = itemView.findViewById(R.id.voi_txt_operation);
+            txtPrice = itemView.findViewById(R.id.voi_txt_price);
+            txtSrcCoin = itemView.findViewById(R.id.voi_txt_src_coin);
+            txtSrcCoinName = itemView.findViewById(R.id.voi_txt_src_coin_name);
+            txtTargetCoin = itemView.findViewById(R.id.voi_txt_target_coin);
+            txtTargetCoinName = itemView.findViewById(R.id.voi_txt_target_coin_name);
 
             txtCacel.setOnClickListener(onCancelClickListener);
         }

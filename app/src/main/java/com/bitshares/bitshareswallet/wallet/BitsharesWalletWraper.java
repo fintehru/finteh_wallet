@@ -319,6 +319,10 @@ public class BitsharesWalletWraper {
         return mWalletApi.getKeys();
     }
 
+    public List<types.public_key_type> getPublicKeys() {
+        return mWalletApi.getPublicKeys();
+    }
+
     public int unlock(String strPassword) {
         return mWalletApi.unlock(strPassword);
     }
