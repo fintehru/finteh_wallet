@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +41,8 @@ import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
 import com.bituniverse.network.Status;
 import com.bituniverse.utils.NumericUtil;
 import com.good.code.starts.here.dialog.select.TokenSelectDialog;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.text.DecimalFormat;
@@ -109,6 +112,8 @@ public class TransactionSellBuyFragment extends BaseFragment
     private global_property_object globalPropertyObject;
     private boolean isAssetObjIsInit;
     private boolean isInitPriceValue;
+
+    private Gson gson = new Gson();
 
     NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
     DecimalFormat decimalFormat = (DecimalFormat)nf;
@@ -383,7 +388,7 @@ public class TransactionSellBuyFragment extends BaseFragment
             case R.id.okButton:
                 if(lastFeeAsset == null) {
 
-                    String qString = qEditText.getText().toString();
+                    /*String qString = qEditText.getText().toString();
                     String pString = pEditText.getText().toString();
                     if (TextUtils.isEmpty(qString) || TextUtils.isEmpty(pString)) {
                         return;
@@ -395,10 +400,11 @@ public class TransactionSellBuyFragment extends BaseFragment
                         calculateBuyFee(quoteAssetObj, baseAssetObj, pValue, qValue);
                     } else {
                         calculateSellFee(quoteAssetObj, baseAssetObj, pValue, qValue);
-                    }
-                    //Toast.makeText(getActivity(), R.string.fee_first, Toast.LENGTH_SHORT).show();
-                    //return;
+                    }*/
+                    Toast.makeText(getActivity(), R.string.fee_first, Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
                 ConfirmOrderDialog.ConfirmOrderData confirmOrderData = new ConfirmOrderDialog.ConfirmOrderData();
                 if (transactionType == TRANSACTION_BUY) {
                     confirmOrderData.setOperationName(getResources().getString(R.string.title_buy));
@@ -567,7 +573,15 @@ public class TransactionSellBuyFragment extends BaseFragment
                 BitsharesWalletWraper.getInstance().buy(quoteAsset, baseAsset, rate, amount, timeSec, lastFeeAsset);
                 getActivity().runOnUiThread(() -> mProcessHud.dismiss());
             } catch (Exception e) {
-                getActivity().runOnUiThread(() -> mProcessHud.dismiss());
+                getActivity().runOnUiThread(() -> {
+                    mProcessHud.dismiss();
+                    try {
+                        JsonObject jsonObject = gson.fromJson(e.getMessage(), JsonObject.class);
+                        Toast.makeText(getActivity(), jsonObject.getAsJsonPrimitive("message").getAsString(), Toast.LENGTH_LONG).show();
+                    } catch (Exception ex) {
+                        Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
                 e.printStackTrace();
             }
         }).start();
@@ -580,7 +594,15 @@ public class TransactionSellBuyFragment extends BaseFragment
                 BitsharesWalletWraper.getInstance().sell(quoteAsset, baseAsset, rate, amount, timeSec, lastFeeAsset);
                 getActivity().runOnUiThread(() -> mProcessHud.dismiss());
             } catch (Exception e) {
-                getActivity().runOnUiThread(() -> mProcessHud.dismiss());
+                getActivity().runOnUiThread(() -> {
+                    mProcessHud.dismiss();
+                    try {
+                        JsonObject jsonObject = gson.fromJson(e.getMessage(), JsonObject.class);
+                        Toast.makeText(getActivity(), jsonObject.getAsJsonPrimitive("message").getAsString(), Toast.LENGTH_LONG).show();
+                    } catch (Exception ex) {
+                        Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
                 e.printStackTrace();
             }
         }).start();
@@ -635,6 +657,7 @@ public class TransactionSellBuyFragment extends BaseFragment
         try {
             asset a = BitsharesWalletWraper.getInstance().calculate_sell_fee(symbolToSell, symbolToReceive,
                     rate, amount, globalPropertyObject, feeButton.getText().toString());
+            lastFeeAsset = a;
             if (a.asset_id.equals(btsAssetObj.id)) {
                 return utils.get_asset_amount(a.amount, btsAssetObj);
             } else if (a.asset_id.equals(baseAssetObj.id)) {
@@ -659,6 +682,7 @@ public class TransactionSellBuyFragment extends BaseFragment
         try {
             asset a = BitsharesWalletWraper.getInstance().calculate_buy_fee(symbolToReceive, symbolToSell,
                     rate, amount, globalPropertyObject, feeButton.getText().toString());
+
             lastFeeAsset = a;
             if (a.asset_id.equals(btsAssetObj.id)) {
                 return utils.get_asset_amount(a.amount, btsAssetObj);

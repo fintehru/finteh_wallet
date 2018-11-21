@@ -36,8 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.bitsharesmunich.graphenej.FileBin;
 import de.bitsharesmunich.graphenej.models.backup.LinkedAccount;
 import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
-import io.sentry.Sentry;
-import io.sentry.event.UserBuilder;
 
 public class BitsharesWalletWraper {
     public interface BitsharesDataObserver {
