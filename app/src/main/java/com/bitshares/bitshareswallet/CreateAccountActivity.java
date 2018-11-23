@@ -92,6 +92,12 @@ public class CreateAccountActivity extends LocalizationActivity {
                 TextInputLayout textViewPasswordConfirm = findViewById(R.id.passwordConfIL);
 
                 boolean bError = false;
+
+                if(!strAccount.matches("^[-a-z0-9]+$")) {
+                    textViewAccount.setError(getString(R.string.create_account_account_name_incorrect));
+                    bError = true;
+                }
+
                 if (strAccount.isEmpty()) {
                     textViewAccount.setError(getString(R.string.create_account_account_name_empty));
                     bError = true;

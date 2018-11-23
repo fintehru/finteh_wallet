@@ -66,6 +66,7 @@ public class utils {
     }
 
     public static String getAssetSymbolDisply(String strAssetSymbol) {
-        return strAssetSymbol.replaceAll("OPEN.", "");
+        return strAssetSymbol;
+        //return strAssetSymbol.replaceAll("OPEN.", "");
     }
 }

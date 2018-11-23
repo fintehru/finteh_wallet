@@ -95,6 +95,7 @@ public class wallet_api {
     private websocket_api mWebsocketApi;
     private wallet_object mWalletObject;
     private boolean mbLogin = false;
+    private List<types.public_key_type> publicKeys = new ArrayList<>();
     private HashMap<types.public_key_type, types.private_key_type> mHashMapPub2Priv = new HashMap<>();
     private sha512_object mCheckSum = new sha512_object();
 
@@ -232,6 +233,10 @@ public class wallet_api {
         }
     }
 
+    public List<types.public_key_type> getPublicKeys() {
+        return publicKeys;
+    }
+
     public int unlock(String strPassword) {
         assert(strPassword.length() > 0);
         sha512_object passwordHash = sha512_object.create_from_string(strPassword);
@@ -249,9 +254,11 @@ public class wallet_api {
                 new ByteArrayInputStream(byteDecrypt.array())
         );
 
+        publicKeys = new ArrayList<>();
         for (Map.Entry<types.public_key_type, String> entry : dataResult.keys.entrySet()) {
             types.private_key_type privateKeyType = new types.private_key_type(entry.getValue());
             mHashMapPub2Priv.put(entry.getKey(), privateKeyType);
+            publicKeys.add(entry.getKey());
         }
 
         mCheckSum = passwordHash;
@@ -448,6 +455,8 @@ public class wallet_api {
         List<types.public_key_type> listPublicKeyType = new ArrayList<>();
         listPublicKeyType.addAll(mapPublic2Private.keySet());
 
+        publicKeys.addAll(mapPublic2Private.keySet());
+
         mWalletObject.extra_keys.put(accountObject.id, listPublicKeyType);
         mHashMapPub2Priv.putAll(mapPublic2Private);
 
@@ -487,6 +496,8 @@ public class wallet_api {
 
         List<types.public_key_type> listPublicKeyType = new ArrayList<>();
         listPublicKeyType.add(publicKeyType);
+
+        publicKeys.add(publicKeyType);
 
         mWalletObject.extra_keys.put(accountObject.id, listPublicKeyType);
         mHashMapPub2Priv.put(publicKeyType, privateKeyType);
@@ -543,6 +554,9 @@ public class wallet_api {
         listPublicKeyType.add(publicKeyType1);
         listPublicKeyType.add(publicKeyType2);
 
+        publicKeys.add(publicKeyType1);
+        publicKeys.add(publicKeyType2);
+
         mWalletObject.extra_keys.put(accountObject.id, listPublicKeyType);
         mHashMapPub2Priv.put(publicKeyType1, privateKeyType1);
         mHashMapPub2Priv.put(publicKeyType2, privateKeyType2);
@@ -583,6 +597,10 @@ public class wallet_api {
         List<types.public_key_type> listPublicKeyType = new ArrayList<>();
         listPublicKeyType.add(publicActiveKeyType);
         listPublicKeyType.add(publicOwnerKeyType);
+
+        publicKeys.add(publicActiveKeyType);
+        publicKeys.add(publicOwnerKeyType);
+
         mWalletObject.update_account(accountObject);
         mWalletObject.extra_keys.put(accountObject.id, listPublicKeyType);
         mHashMapPub2Priv.put(publicActiveKeyType, new types.private_key_type(privateActiveKey));

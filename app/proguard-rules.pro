@@ -266,3 +266,8 @@
 -keepattributes *JavascriptInterface*
 -keep class android.webkit.WebSettings { *; }
 -dontwarn android.webkit.WebSettings
+
+
+-dontwarn javax.naming.**
+-dontwarn javax.servlet.**
+-dontwarn org.slf4j.**

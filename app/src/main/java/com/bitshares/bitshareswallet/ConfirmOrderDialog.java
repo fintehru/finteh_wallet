@@ -129,37 +129,37 @@ public class ConfirmOrderDialog {
 
         View view = mActivity.getLayoutInflater().inflate(R.layout.dialog_confirm_order, null);
 
-        TextView tokenText = (TextView) view.findViewById(R.id.dco_txt_target_coin_name);
+        TextView tokenText = view.findViewById(R.id.dco_txt_target_coin_name);
         tokenText.setText(confirmOrderData.getQuantityType() + ":");
 
-        TextView txtOperation = (TextView) view.findViewById(R.id.dco_txt_operation);
+        TextView txtOperation = view.findViewById(R.id.dco_txt_operation);
         txtOperation.setText(confirmOrderData.getOperationName());
 
-        TextView txtPrice2 = (TextView) view.findViewById(R.id.dco_txt_price2);
+        TextView txtPrice2 = view.findViewById(R.id.dco_txt_price2);
         txtPrice2.setText(confirmOrderData.getTotalType() + "/" + confirmOrderData.getQuantityType());
 
-        TextView txtPrice = (TextView)view.findViewById(R.id.dco_txt_price);
+        TextView txtPrice = view.findViewById(R.id.dco_txt_price);
         txtPrice.setText(confirmOrderData.getPrice());
 
-        TextView txtSrcCoin = (TextView)view.findViewById(R.id.dco_txt_src_coin);
+        TextView txtSrcCoin = view.findViewById(R.id.dco_txt_src_coin);
         txtSrcCoin.setText(confirmOrderData.getTotal());
 
         //TextView txtSrcCoinName = (TextView)view.findViewById(R.id.dco_txt_src_coin_name);
         //txtSrcCoinName.setText(confirmOrderData.getTotalType() + ":");
 
-        TextView txtTargetCoin = (TextView)view.findViewById(R.id.dco_txt_target_coin);
+        TextView txtTargetCoin = view.findViewById(R.id.dco_txt_target_coin);
         txtTargetCoin.setText(confirmOrderData.getQuantity());
 
         //TextView txtTargetCoinName = (TextView)view.findViewById(R.id.dco_txt_target_coin_name);
         //txtTargetCoinName.setText(confirmOrderData.getQuantityType() + ":");
 
-        TextView txtExpiration = (TextView)view.findViewById(R.id.dco_txt_expiration);
+        TextView txtExpiration = view.findViewById(R.id.dco_txt_expiration);
         txtExpiration.setText(confirmOrderData.getTimeExpiration());
 
-        TextView txtFee = (TextView)view.findViewById(R.id.dco_txt_fee);
+        TextView txtFee = view.findViewById(R.id.dco_txt_fee);
         txtFee.setText(confirmOrderData.getFree() + " " + confirmOrderData.getFeeType());
 
-        TextView txtConfirm = (TextView)view.findViewById(R.id.dco_txt_confirm);
+        TextView txtConfirm = view.findViewById(R.id.dco_txt_confirm);
         txtConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +170,7 @@ public class ConfirmOrderDialog {
             }
         });
 
-        TextView txtNo = (TextView)view.findViewById(R.id.dco_txt_no);
+        TextView txtNo = view.findViewById(R.id.dco_txt_no);
         txtNo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -38,9 +38,9 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
             super(itemView);
             view = itemView;
 
-            viewActionDetail = (TextView) view.findViewById(R.id.textViewOperationDetail);
-            viewAction = (TextView) view.findViewById(R.id.textViewOperation);
-            imageView = (ImageView) view.findViewById(R.id.imageView);
+            viewActionDetail = view.findViewById(R.id.textViewOperationDetail);
+            viewAction = view.findViewById(R.id.textViewOperation);
+            imageView = view.findViewById(R.id.imageView);
         }
     }
     private TransactionsFragment transactionsFragment;
@@ -63,8 +63,8 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
     @Override
     public void onBindViewHolder(TransactionsItemViewHolder holder, int position) {
         BitsharesOperationHistory object = operationHistoryWrapper.bitsharesOperationHistoryList.get(position);
-        TextView viewActionDetail = (TextView) holder.view.findViewById(R.id.textViewOperationDetail);
-        TextView viewAction = (TextView) holder.view.findViewById(R.id.textViewOperation);
+        TextView viewActionDetail = holder.view.findViewById(R.id.textViewOperationDetail);
+        TextView viewAction = holder.view.findViewById(R.id.textViewOperation);
 
         int op = object.operationHistoryObject.op.nOperationType;
 
@@ -99,8 +99,8 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
         long operationTime = operationHistoryWrapper.bitsharesOperationHistoryList.get(position).timestamp;
         long lDifferenceTime = (System.currentTimeMillis() - operationTime) / 1000;
 
-        TextView textViewTime = (TextView) holder.view.findViewById(R.id.textViewTime);
-        String strTime = "";
+        TextView textViewTime = holder.view.findViewById(R.id.textViewTime);
+        String strTime;
         if (lDifferenceTime >= 365 * 24 * 3600) {
             long lYear = lDifferenceTime / (365 * 24 * 3600);
             strTime = formatTimeString(lYear, R.string.operation_history_years, R.string.operation_history_year);
@@ -126,7 +126,7 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
     }
 
     private String formatTimeString(long lCount, int nResIds, int nResId) {
-        String strResult = "";
+        String strResult;
         if (lCount > 1) {
             strResult = transactionsFragment.getString(nResIds, lCount);
         } else {
@@ -197,36 +197,23 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
         AlertDialog.Builder builder = new AlertDialog.Builder(transactionsFragment.getActivity());
         LayoutInflater layoutInflater = transactionsFragment.getActivity().getLayoutInflater();
         final View viewGroup = layoutInflater.inflate(R.layout.dialog_password_unlock, null);
-        builder.setPositiveButton(
-                R.string.password_confirm_button_confirm,
-                null);
+        builder.setPositiveButton(R.string.password_confirm_button_confirm, null);
 
-        builder.setNegativeButton(
-                R.string.password_confirm_button_cancel,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }
-        );
+        builder.setNegativeButton(R.string.password_confirm_button_cancel, null);
         builder.setView(viewGroup);
         final AlertDialog dialog = builder.create();
         dialog.show();
 
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditText editText = (EditText) viewGroup.findViewById(R.id.editTextPassword);
-                String strPassword = editText.getText().toString();
-                int nRet = BitsharesWalletWraper.getInstance().unlock(strPassword);
-                if (nRet == 0) {
-                    // 解开所有的memo数据
-                    dialog.dismiss();
-                    notifyDataSetChanged();
-                } else {
-                    viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
-                }
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            EditText editText = viewGroup.findViewById(R.id.editTextPassword);
+            String strPassword = editText.getText().toString();
+            int nRet = BitsharesWalletWraper.getInstance().unlock(strPassword);
+            if (nRet == 0) {
+                // 解开所有的memo数据
+                dialog.dismiss();
+                notifyDataSetChanged();
+            } else {
+                viewGroup.findViewById(R.id.textViewPasswordInvalid).setVisibility(View.VISIBLE);
             }
         });
 
@@ -246,7 +233,7 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
             if (BitsharesWalletWraper.getInstance().is_locked()) {
                 layoutTransaction.setOnClickListener(v -> processMemoUnlockClick());
             } else {
-                TextView textViewMemo = (TextView) holder.view.findViewById(R.id.textViewMemo);
+                TextView textViewMemo = holder.view.findViewById(R.id.textViewMemo);
                 holder.view.findViewById(R.id.imageViewMemoLock).setVisibility(View.GONE);
                 final String strMemo = "Memo: " + BitsharesWalletWraper.getInstance().get_plain_text_message(memoData);
                 textViewMemo.setText(strMemo);

@@ -67,7 +67,8 @@ public class TransactionSellBuyRecyclerViewAdapter extends RecyclerView.Adapter<
         }
 
         public void update(Order order){
-            priceTextView.setText(String .format("%.4f",order.price));
+            priceTextView.setText(String .format("%.8f",order.price));
+            priceTextView.setSelected(true);
             btsTextView.setText(String .format("%.4f",order.quote));
         }
     }
