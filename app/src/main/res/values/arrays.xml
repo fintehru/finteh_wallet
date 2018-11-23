@@ -15,20 +15,20 @@
     </string-array>
 
     <string-array name="quotation_currency_pair_options">
-        <item>KITATOKEN:RUDEX.BTC</item>
-        <item>KITATOKEN:RUDEX.ETH</item>
-        <item>KITATOKEN:RUDEX.EOS</item>
-        <item>KITATOKEN:RUDEX.STEEM</item>
-        <item>KITATOKEN:RUDEX.SBD</item>
-        <item>KITATOKEN:RUDEX.WLS</item>
-        <item>KITATOKEN:RUDEX.GBG</item>
-        <item>KITATOKEN:RUDEX.GOLOS</item>
-        <item>KITATOKEN:RUDEX.VIZ</item>
-        <item>KITATOKEN:RUBLE</item>
-        <item>KITATOKEN:EUR</item>
-        <item>KITATOKEN:USD</item>
-        <item>KITATOKEN:CNY</item>
-        <item>KITATOKEN:BTS</item>
+        <item>FINTEH:RUDEX.BTC</item>
+        <item>FINTEH:RUDEX.ETH</item>
+        <item>FINTEH:RUDEX.EOS</item>
+        <item>FINTEH:RUDEX.STEEM</item>
+        <item>FINTEH:RUDEX.SBD</item>
+        <item>FINTEH:RUDEX.WLS</item>
+        <item>FINTEH:RUDEX.GBG</item>
+        <item>FINTEH:RUDEX.GOLOS</item>
+        <item>FINTEH:RUDEX.VIZ</item>
+        <item>FINTEH:RUBLE</item>
+        <item>FINTEH:EUR</item>
+        <item>FINTEH:USD</item>
+        <item>FINTEH:CNY</item>
+        <item>FINTEH:BTS</item>
         <item>BTS:RUDEX.BTC</item>
         <item>BTS:CNY</item>
         <item>BTS:RUBLE</item>
@@ -37,20 +37,20 @@
     </string-array>
 
     <string-array name="quotation_currency_pair_values">
-        <item>KITATOKEN:RUDEX.BTC</item>
-        <item>KITATOKEN:RUDEX.ETH</item>
-        <item>KITATOKEN:RUDEX.EOS</item>
-        <item>KITATOKEN:RUDEX.STEEM</item>
-        <item>KITATOKEN:RUDEX.SBD</item>
-        <item>KITATOKEN:RUDEX.WLS</item>
-        <item>KITATOKEN:RUDEX.GBG</item>
-        <item>KITATOKEN:RUDEX.GOLOS</item>
-        <item>KITATOKEN:RUDEX.VIZ</item>
-        <item>KITATOKEN:RUBLE</item>
-        <item>KITATOKEN:EUR</item>
-        <item>KITATOKEN:USD</item>
-        <item>KITATOKEN:CNY</item>
-        <item>KITATOKEN:BTS</item>
+        <item>FINTEH:RUDEX.BTC</item>
+        <item>FINTEH:RUDEX.ETH</item>
+        <item>FINTEH:RUDEX.EOS</item>
+        <item>FINTEH:RUDEX.STEEM</item>
+        <item>FINTEH:RUDEX.SBD</item>
+        <item>FINTEH:RUDEX.WLS</item>
+        <item>FINTEH:RUDEX.GBG</item>
+        <item>FINTEH:RUDEX.GOLOS</item>
+        <item>FINTEH:RUDEX.VIZ</item>
+        <item>FINTEH:RUBLE</item>
+        <item>FINTEH:EUR</item>
+        <item>FINTEH:USD</item>
+        <item>FINTEH:CNY</item>
+        <item>FINTEH:BTS</item>
         <item>BTS:RUDEX.BTC</item>
         <item>BTS:CNY</item>
         <item>BTS:RUBLE</item>
