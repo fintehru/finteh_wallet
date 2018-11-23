@@ -128,7 +128,7 @@ implements OnFragmentInteractionListener{
 
     private void updateTitle(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "KITATOKEN:RUDEX.BTC");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
         String strAsset[] = strCurrencySetting.split(":");
 
         try {
@@ -494,7 +494,7 @@ implements OnFragmentInteractionListener{
         Resources res = getResources();
         final String[] arrValues = res.getStringArray(R.array.quotation_currency_pair_values);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "KITATOKEN:RUDEX.BTC");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
         int currSelectIndex = 0;
         for(int i=0; i<arrValues.length; i++){
             if(arrValues[i].equals(strCurrencySetting)){

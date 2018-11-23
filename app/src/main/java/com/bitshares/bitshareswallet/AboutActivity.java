@@ -51,7 +51,7 @@ public class AboutActivity extends LocalizationActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         TextView textViewAccountName = (TextView)findViewById(R.id.textViewAccountName);
-        final String strName = "cryptokita";
+        final String strName = "finteh";
         textViewAccountName.setText(strName);
 
         sha256_object.encoder encoder = new sha256_object.encoder();

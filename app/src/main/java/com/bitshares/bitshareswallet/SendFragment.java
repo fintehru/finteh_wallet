@@ -210,9 +210,9 @@ public class SendFragment extends BaseFragment {
 
         viewModel.getBalancesList().observe(this, bitsharesBalanceAssetList -> {
             symbolList = new ArrayList<>();
-            symbolList.add("KITATOKEN");
+            symbolList.add("FINTEH");
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
-                if (!bitsharesBalanceAsset.quote.equals("KITATOKEN"))
+                if (!bitsharesBalanceAsset.quote.equals("FINTEH"))
                     symbolList.add(bitsharesBalanceAsset.quote);
             }
 

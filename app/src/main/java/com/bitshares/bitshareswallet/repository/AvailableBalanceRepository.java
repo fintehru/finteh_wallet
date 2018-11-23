@@ -143,13 +143,13 @@ public class AvailableBalanceRepository {
         bitsharesDao.insertBlance(bitsharesAssetList);
         List<BitsharesAssetObject> bitsharesAssetObjectList = new ArrayList<>();
 
-        asset_object KITATOKEN = BitsharesWalletWraper.getInstance()
-                .list_assets("KITATOKEN", 1).get(0);
-        BitsharesAssetObject KITATOKENAssetObject = new BitsharesAssetObject();
-        KITATOKENAssetObject.symbol = KITATOKEN.symbol;
-        KITATOKENAssetObject.precision = KITATOKEN.get_scaled_precision();
-        KITATOKENAssetObject.asset_id = KITATOKEN.id;
-        bitsharesAssetObjectList.add(KITATOKENAssetObject);
+        asset_object FINTEH = BitsharesWalletWraper.getInstance()
+                .list_assets("FINTEH", 1).get(0);
+        BitsharesAssetObject FINTEHAssetObject = new BitsharesAssetObject();
+        FINTEHAssetObject.symbol = FINTEH.symbol;
+        FINTEHAssetObject.precision = FINTEH.get_scaled_precision();
+        FINTEHAssetObject.asset_id = FINTEH.id;
+        bitsharesAssetObjectList.add(FINTEHAssetObject);
 
         for (asset_object assetObject : mapId2Object.values()) {
             BitsharesAssetObject bitsharesAssetObject = new BitsharesAssetObject();
