@@ -46,9 +46,9 @@ public class ExchangeFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_exchange, container, false);
-        mTabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
+        mTabLayout = view.findViewById(R.id.tabLayout);
         mTabLayout.setBackgroundColor(PreferenceManager.getDefaultSharedPreferences(getActivity()).getInt("color", Color.parseColor("#303F9F")));
-        mViewPager = (ViewPager) view.findViewById(R.id.exchangeViewPager);
+        mViewPager = view.findViewById(R.id.exchangeViewPager);
         mExchangeFragmentPageAdapter = new BtsFragmentPageAdapter(getFragmentManager(), false);
         mExchangeFragmentPageAdapter.addFragment(TransactionSellBuyFragment.newInstance(TransactionSellBuyFragment.TRANSACTION_BUY), getResources().getString(R.string.label_buy));
         mExchangeFragmentPageAdapter.addFragment(TransactionSellBuyFragment.newInstance(TransactionSellBuyFragment.TRANSACTION_SELL), getResources().getString(R.string.label_sell));

@@ -36,8 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import de.bitsharesmunich.graphenej.FileBin;
 import de.bitsharesmunich.graphenej.models.backup.LinkedAccount;
 import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
-import io.sentry.Sentry;
-import io.sentry.event.UserBuilder;
 
 public class BitsharesWalletWraper {
     public interface BitsharesDataObserver {
@@ -317,6 +315,10 @@ public class BitsharesWalletWraper {
 
     public HashMap<types.public_key_type, types.private_key_type> getKeys() {
         return mWalletApi.getKeys();
+    }
+
+    public List<types.public_key_type> getPublicKeys() {
+        return mWalletApi.getPublicKeys();
     }
 
     public int unlock(String strPassword) {

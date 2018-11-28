@@ -10,6 +10,10 @@ import android.support.v7.preference.PreferenceManager;
 
 public class PinSettingsFragment extends PreferenceFragmentCompat {
 
+    public static PinSettingsFragment newInstance() {
+        return new PinSettingsFragment();
+    }
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_pin, rootKey);

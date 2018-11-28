@@ -224,5 +224,13 @@
     <string name="pub_copied">Public key copied</string>
     <string name="priv_copied">Private key copied</string>
     <string name="copy_success">Copy Successfully</string>
+    <string name="create_account_account_name_incorrect">Account name can contain only lowercase Latin characters, numbers and dashes</string>
+    <string name="first_asset">Base asset</string>
+    <string name="second_asset">Quote asset</string>
+    <string name="add_pair_err">Invalid asset name!</string>
+    <string name="add_pair">Add assets pair</string>
+    <string name="add_pair_exist">This pair already exist!</string>
+    <string name="cannot_delete_selected_pair">Can not delete selected pair!</string>
+    <string name="enter_pass_private_key">Enter password to see private key</string>
 
 </resources>

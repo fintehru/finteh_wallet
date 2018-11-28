@@ -20,13 +20,9 @@
         android:title="@string/title_full_node_api_server_select"
         android:defaultValue="autoselect"/>
 
-    <ListPreference
-        android:key="quotation_currency_pair"
-        android:title="@string/quotation_cureency_select_title"
-        android:dialogTitle="@string/quotation_cureency_select_dialog_title"
-        android:entries="@array/quotation_currency_pair_options"
-        android:entryValues="@array/quotation_currency_pair_values"
-        android:defaultValue="FINTEH:RUDEX.BTC"/>
+    <Preference
+        android:key="pairs"
+        android:title="@string/quotation_cureency_select_title"/>
 
   <Preference
         android:key="hide"
