@@ -8,6 +8,11 @@
             android:title="@string/settings_activity_title" />
 
         <item
+            android:id="@+id/deposit"
+            android:icon="@drawable/ic_coin"
+            android:title="@string/deposit" />
+
+        <item
             android:id="@+id/keys"
             android:icon="@drawable/ic_key_change"
             android:title="Show keys" />

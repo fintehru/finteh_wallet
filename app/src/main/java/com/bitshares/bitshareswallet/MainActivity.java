@@ -60,6 +60,7 @@ import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.types;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
 import com.good.code.starts.here.ColorUtils;
+import com.good.code.starts.here.deposit.DepositActivity;
 import com.good.code.starts.here.dialog.keys.KeysAdapter;
 
 import java.util.ArrayList;
@@ -261,6 +262,10 @@ implements OnFragmentInteractionListener{
                 case R.id.about:
                     Intent intentAbout = new Intent(MainActivity.this, AboutActivity.class);
                     startActivity(intentAbout);
+                    break;
+                case R.id.deposit:
+                    Intent depositIntent = new Intent(MainActivity.this, DepositActivity.class);
+                    startActivity(depositIntent);
                     break;
                 case R.id.keys:
                     BitsharesWalletWraper wallet = BitsharesWalletWraper.getInstance();
