@@ -25,12 +25,15 @@ import com.good.code.starts.here.ColorUtils;
 
 import java.util.Locale;
 
+import de.bitsharesmunich.graphenej.models.backup.WalletBackup;
+
 public class AboutActivity extends LocalizationActivity {
     private Toolbar mToolbar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         //SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         //if(preferences.contains("locale")) setLanguage(preferences.getString("locale", "ru"));
         setContentView(R.layout.activity_about);

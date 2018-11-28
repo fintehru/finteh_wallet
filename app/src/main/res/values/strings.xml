@@ -53,7 +53,7 @@
     <string name="import_activity_password_invalid">Invalid password.</string>
     <string name="import_activity_file_bin_password_invalid">Invalid wallet file or password.</string>
 
-    <string name="password_confirm_title">Please type your password to confirm the transaction:</string>
+    <string name="password_confirm_title">Please type your password:</string>
     <string name="password_confirm_button_confirm">CONFIRM</string>
     <string name="password_confirm_button_cancel">CANCEL</string>
     <string name="password_invalid">Invalid password.</string>
@@ -232,5 +232,14 @@
     <string name="add_pair_exist">This pair already exist!</string>
     <string name="cannot_delete_selected_pair">Can not delete selected pair!</string>
     <string name="enter_pass_private_key">Enter password to see private key</string>
+    <string name="deposit">Deposit</string>
+    <string name="an_error">An error has occurred. Try again later!</string>
+    <string name="loading_dots">Please wait...</string>
+    <string name="now_loading_list">Now loading a list of tokens</string>
+    <string name="now_loading_info">Now loading token information</string>
+    <string name="deposite_title">Deposit</string>
+    <string name="transfer_your_funds_to">Transfer your funds to:</string>
+    <string name="with_memo">with MEMO:</string>
+    <string name="min_amount">Min amount:</string>
 
 </resources>

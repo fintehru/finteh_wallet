@@ -53,7 +53,7 @@
     <string name="import_activity_password_invalid">Неверный пароль.</string>
     <string name="import_activity_file_bin_password_invalid">Неверный файл кошелька или пароль.</string>
 
-    <string name="password_confirm_title">Пожалуйста, напишите пароль для подтверждения транзакции:</string>
+    <string name="password_confirm_title">Пожалуйста, введите пароль:</string>
     <string name="password_confirm_button_confirm">ПОДТВЕРДИТЬ</string>
     <string name="password_confirm_button_cancel">ОТМЕНА</string>
     <string name="password_invalid">Неверный пароль.</string>
@@ -227,5 +227,14 @@
     <string name="add_pair_exist">Такая торговая пара уже существует!</string>
     <string name="cannot_delete_selected_pair">Нельзя удалить выбранную торговую пару!</string>
     <string name="enter_pass_private_key">Введите пароль для прсомотра приватных ключей</string>
+    <string name="deposit">Депозит</string>
+    <string name="an_error">Произошла ошибка! Попробуйте ещё раз через некоторое время.</string>
+    <string name="loading_dots">Пожалуйста подождите...</string>
+    <string name="now_loading_list">Загружается список токенов</string>
+    <string name="now_loading_info">Загружается информация о токене</string>
+    <string name="deposite_title">Депозит</string>
+    <string name="transfer_your_funds_to">Переведите средства на кошелёк:</string>
+    <string name="with_memo">с MEMO:</string>
+    <string name="min_amount">Минимальаня сумма:</string>
 
 </resources>
