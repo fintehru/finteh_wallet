@@ -1,4 +1,8 @@
-# FINTEHWALLET
+# FINTEHWALLET 
+
+![fintehlogo](https://i.imgur.com/Ft6fdWk.jpg)
+
+
 
 ### Technical info
 0. This fork is https://github.com/bituniverse/bitshares_wallet by t.me/jeremy_peng 
