@@ -23,11 +23,11 @@ android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
     defaultConfig {
-        applicationId "com.bitshares.bitshareswallet"
+        applicationId "com.bitshares.bitshareswallet.finteh"
         minSdkVersion 17
         targetSdkVersion 28
         versionCode 10201001
-        versionName "1.2.1.1"
+        versionName "Alpha"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
