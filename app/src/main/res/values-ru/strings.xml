@@ -69,7 +69,7 @@
     <string name="import_activity_account_model">Модель Аккаунта</string>
     <string name="title_activity_settings">Настройки</string>
 
-    <string name="about_activity_text">Если вам понравилась наше приложение, мы будем рады получить пожертвование.</string>
+    <string name="about_activity_text">Для поддержки нашего приложения купитие токены FINTEH или мы будем рады получить прямой дар.</string>
     <string name="about_activity_version">Версия</string>
     <string name="about_activity_button">ПОЖЕРТВОВАТЬ</string>
 
