@@ -122,7 +122,7 @@ public class ReceiveFragment extends BaseFragment {
         //qrView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
         new Thread(() -> {
-            String data = BitsharesWalletWraper.getInstance().get_account().name + "'" + amountEditText.getText().toString() + "'" + tokenEditText.getText().toString();
+            String data = "btswallet" + BitsharesWalletWraper.getInstance().get_account().name + "'" + amountEditText.getText().toString() + "'" + tokenEditText.getText().toString();
             QRCodeWriter writer = new QRCodeWriter();
             try {
                 BitMatrix bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, 1000, 1000);

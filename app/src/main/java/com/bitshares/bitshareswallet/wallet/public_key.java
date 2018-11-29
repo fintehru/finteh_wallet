@@ -21,9 +21,9 @@ public class public_key {
                 && !(c.data[33] == 0 && !(c.data[34] & 0x80));*/
 
         boolean bCompareOne = ((c.data[1] & 0x80) == 0);
-        boolean bCompareTwo = ((c.data[1] == 0) && ((c.data[2] & 0x80) == 0)) == false;
+        boolean bCompareTwo = !((c.data[1] == 0) && ((c.data[2] & 0x80) == 0));
         boolean bCompareThree = ((c.data[33] & 0x80) == 0);
-        boolean bCompareFour = ((c.data[33] == 0) && ((c.data[34] & 0x80) ==0)) == false;
+        boolean bCompareFour = !((c.data[33] == 0) && ((c.data[34] & 0x80) == 0));
 
         return bCompareOne && bCompareTwo && bCompareThree && bCompareFour;
     }

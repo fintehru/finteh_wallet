@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.bitsharesmunich.graphenej.Invoice;
 import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.exceptions.Exceptions;
@@ -213,7 +215,7 @@ public class SendFragment extends BaseFragment {
             symbolList.add("FINTEH");
             for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssetList) {
                 if (!bitsharesBalanceAsset.quote.equals("FINTEH"))
-                    symbolList.add(bitsharesBalanceAsset.quote);
+                    symbolList.add(bitsharesBalanceAsset.quote.toUpperCase());
             }
 
             ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
@@ -235,18 +237,32 @@ public class SendFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == ScannerActivity.REQUEST_CODE && resultCode == RESULT_OK) {
             String scanData = data.getStringExtra("DATA");
-            Toast.makeText(getActivity(), scanData, Toast.LENGTH_SHORT).show();
-            String[] splited = scanData.split("'");
-            mEditTextTo.setText(splited[0]);
-            mEditTextQuantitiy.setText(splited[1]);
-            int index = symbolList.indexOf(splited[2]);
-            if(index >= 0) {
-                mButton.setText(symbolList.get(index));
-                feeButton.setText(symbolList.get(index));
-                //mSpinner.setSelection(index);
-                //feeSpinner.setSelection(index);
+            if(scanData.startsWith("btswallet")) {
+                String[] splited = scanData.substring(9).split("'");
+                mEditTextTo.setText(splited[0]);
+                mEditTextQuantitiy.setText(splited[1]);
+                int index = symbolList.indexOf(splited[2]);
+                if (index >= 0) {
+                    mButton.setText(symbolList.get(index));
+                    feeButton.setText(symbolList.get(index));
+                    //mSpinner.setSelection(index);
+                    //feeSpinner.setSelection(index);
+                } else {
+                    Toast.makeText(getActivity(), R.string.no_req_token, Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(getActivity(), R.string.no_req_token, Toast.LENGTH_SHORT).show();
+                Invoice invoice = Invoice.fromQrCode(scanData);
+                mEditTextTo.setText(invoice.getTo());
+                mEditTextQuantitiy.setText(String.valueOf(invoice.getLineItems()[0].getPrice()));
+                String asset = invoice.getCurrency().toUpperCase();
+                if(asset.startsWith("BIT")) asset = asset.substring(3);
+                int index = symbolList.indexOf(asset);
+                if (index >= 0) {
+                    mButton.setText(symbolList.get(index));
+                    feeButton.setText(symbolList.get(index));
+                } else {
+                    Toast.makeText(getActivity(), R.string.no_req_token, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
