@@ -16,8 +16,10 @@ public class TransactionSellBuyRecyclerViewAdapter extends RecyclerView.Adapter<
     public static final int ORDERITEMHEIGHTDP = 18;
     private List<Order> list;
 
-    public TransactionSellBuyRecyclerViewAdapter() {
+    private OnItemClickListener listener;
 
+    public TransactionSellBuyRecyclerViewAdapter(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     public void setList(List<Order> list){
@@ -54,22 +56,26 @@ public class TransactionSellBuyRecyclerViewAdapter extends RecyclerView.Adapter<
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View view;
         public Order item;
         public TextView priceTextView;
         public TextView btsTextView;
 
         public ViewHolder(View view) {
             super(view);
-            this.view = view;
-            priceTextView = (TextView) view.findViewById(R.id.price_text);
-            btsTextView = (TextView) view.findViewById(R.id.bts_text);
+            priceTextView = view.findViewById(R.id.price_text);
+            btsTextView = view.findViewById(R.id.bts_text);
         }
 
         public void update(Order order){
             priceTextView.setText(String .format("%.8f",order.price));
             priceTextView.setSelected(true);
             btsTextView.setText(String .format("%.4f",order.quote));
+
+            itemView.setOnClickListener(v -> listener.onItemClick(String .format("%.8f",order.price)));
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(String data);
     }
 }

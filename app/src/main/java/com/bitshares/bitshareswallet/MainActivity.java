@@ -371,8 +371,7 @@ implements OnFragmentInteractionListener{
                 ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
                 ClipData clipData = ClipData.newPlainText("account name", accountObject.name);
                 clipboardManager.setPrimaryClip(clipData);
-                Toast toast = Toast.makeText(MainActivity.this, getString(R.string.copy_success), Toast.LENGTH_SHORT);
-                toast.show();
+                Toast.makeText(MainActivity.this, R.string.copy_success, Toast.LENGTH_SHORT).show();
             });
         }
 

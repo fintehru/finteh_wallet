@@ -251,7 +251,7 @@ public class BitsharesWalletWraper {
     public int import_file_bin(String strPassword,
                                String strFilePath) {
         File file = new File(strFilePath);
-        if (file.exists() == false) {
+        if (!file.exists()) {
             return ErrorCode.ERROR_FILE_NOT_FOUND;
         }
 
@@ -384,9 +384,7 @@ public class BitsharesWalletWraper {
     public List<operation_history_object> get_account_history(object_id<account_object> accountObjectId,
                                                               object_id<operation_history_object> startId,
                                                               int nLimit) throws NetworkStatusException {
-        List<operation_history_object> listHistoryObject =
-                mWalletApi.get_account_history(accountObjectId, startId, nLimit);
-        return listHistoryObject;
+        return mWalletApi.get_account_history(accountObjectId, startId, nLimit);
     }
 
     public List<asset_object> list_assets(String strLowerBound, int nLimit) throws NetworkStatusException {
@@ -406,7 +404,7 @@ public class BitsharesWalletWraper {
             }
         }
 
-        if (listRequestId.isEmpty() == false) {
+        if (!listRequestId.isEmpty()) {
             List<asset_object> listAssetObject = mWalletApi.get_assets(listRequestId);
             for (asset_object assetObject : listAssetObject) {
                 mapId2Object.put(assetObject.id, assetObject);
@@ -434,7 +432,7 @@ public class BitsharesWalletWraper {
             }
         }
 
-        if (listRequestId.isEmpty() == false) {
+        if (!listRequestId.isEmpty()) {
             List<account_object> listAccountObject = mWalletApi.get_accounts(listRequestId);
             for (account_object accountObject : listAccountObject) {
                 mapId2Object.put(accountObject.id, accountObject);
@@ -454,14 +452,13 @@ public class BitsharesWalletWraper {
                          String strAmount,
                          String strAssetSymbol,
                          String strMemo, asset feeAsset) throws NetworkStatusException {
-        signed_transaction signedTransaction = mWalletApi.transfer(
+        return mWalletApi.transfer(
                 strFrom,
                 strTo,
                 strAmount,
                 strAssetSymbol,
                 strMemo, feeAsset
         );
-        return signedTransaction;
     }
     
     // 获取对于基础货币的所有市场价格
@@ -495,7 +492,7 @@ public class BitsharesWalletWraper {
                     dateObjectEnd
             );
 
-            if (listBucketObject.isEmpty() == false) {
+            if (!listBucketObject.isEmpty()) {
                 bucket_object bucketObject = listBucketObject.get(listBucketObject.size() - 1);
                 mapId2BucketObject.put(objectId, bucketObject);
             }
@@ -529,7 +526,7 @@ public class BitsharesWalletWraper {
                 dateObjectEnd
         );
 
-        if (listBucketObject.isEmpty() == false) {
+        if (!listBucketObject.isEmpty()) {
             return listBucketObject.get(0);
         } else {
             return null;

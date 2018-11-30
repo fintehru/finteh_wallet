@@ -43,6 +43,10 @@ public class WalletViewModel extends ViewModel {
         currencyData.setValue(currency);
     }
 
+    public String getCurrency() {
+        return currencyData.getValue();
+    }
+
     public LiveData<Resource<List<BitsharesBalanceAsset>>> getBalanceData() {
         return resultData;
     }
