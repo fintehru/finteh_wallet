@@ -315,6 +315,8 @@ public class TransactionSellBuyFragment extends BaseFragment
         askTextBase = view.findViewById(R.id.askTextBase);
         askTextInfo = view.findViewById(R.id.askTextInfo);
 
+        TransactionSellBuyRecyclerViewAdapter.OnItemClickListener onItemClickListener = data -> pEditText.setText(data);
+
         buyRecyclerView = view.findViewById(R.id.buy_recycler);
         buyRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override
@@ -322,13 +324,17 @@ public class TransactionSellBuyFragment extends BaseFragment
                 return false;
             }
         });
-        buyRecyclerViewAdapter = new TransactionSellBuyRecyclerViewAdapter();
+        buyRecyclerViewAdapter = new TransactionSellBuyRecyclerViewAdapter(onItemClickListener);
         buyRecyclerView.setAdapter(buyRecyclerViewAdapter);
         buyRecyclerView.setItemAnimator(null);
 
         sellRecyclerView = view.findViewById(R.id.sell_recycler);
-        sellRecyclerViewAdapter = new TransactionSellBuyRecyclerViewAdapter();
+        sellRecyclerViewAdapter = new TransactionSellBuyRecyclerViewAdapter(onItemClickListener);
         sellRecyclerView.setAdapter(sellRecyclerViewAdapter);
+
+        askText.setOnClickListener(v -> {
+            pEditText.setText(askText.getText());
+        });
 
         sellRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()) {
             @Override

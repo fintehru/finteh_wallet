@@ -63,27 +63,20 @@ public class AboutActivity extends LocalizationActivity {
         WebView webView = (WebView)findViewById(R.id.webViewAvatar);
         loadWebView(webView, 70, encoder.result().toString());
 
-        findViewById(R.id.textViewCopyAccount).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                ClipData clipData = ClipData.newPlainText("account name", strName);
-                clipboardManager.setPrimaryClip(clipData);
-                Toast toast = Toast.makeText(AboutActivity.this, "Copy Successfully", Toast.LENGTH_SHORT);
-                toast.show();
-            }
+        findViewById(R.id.textViewCopyAccount).setOnClickListener(v -> {
+            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+            ClipData clipData = ClipData.newPlainText("account name", strName);
+            clipboardManager.setPrimaryClip(clipData);
+            Toast.makeText(AboutActivity.this, R.string.copy_success, Toast.LENGTH_SHORT).show();
         });
 
-        findViewById(R.id.btn_donate).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AboutActivity.this, MainActivity.class);
-                intent.putExtra("action", "donate");
-                intent.putExtra("name", strName);
-                intent.putExtra("amount", "10");
-                intent.putExtra("unit", "BTS");
-                startActivity(intent);
-            }
+        findViewById(R.id.btn_donate).setOnClickListener(v -> {
+            Intent intent = new Intent(AboutActivity.this, MainActivity.class);
+            intent.putExtra("action", "donate");
+            intent.putExtra("name", strName);
+            intent.putExtra("amount", "10");
+            intent.putExtra("unit", "BTS");
+            startActivity(intent);
         });
 
         TextView textViewVersion = (TextView)findViewById(R.id.textViewVersion);

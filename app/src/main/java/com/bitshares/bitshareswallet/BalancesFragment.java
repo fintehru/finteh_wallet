@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -24,7 +25,9 @@ import java.util.Locale;
 
 public class BalancesFragment extends BaseFragment {
 
+    private WalletViewModel walletViewModel;
     private BalancesAdapter mBalancesAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     class BalanceItemViewHolder extends RecyclerView.ViewHolder {
         public View view;
@@ -104,9 +107,11 @@ public class BalancesFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
 
-        WalletViewModel walletViewModel = ViewModelProviders.of(getActivity()).get(WalletViewModel.class);
+        walletViewModel = ViewModelProviders.of(getActivity()).get(WalletViewModel.class);
+        mSwipeRefreshLayout.setRefreshing(true);
         walletViewModel.getBalanceData().observe(
                 this, resourceBalanceList -> {
+                    mSwipeRefreshLayout.setRefreshing(false);
                     switch (resourceBalanceList.status) {
                         case SUCCESS:
                             mBalancesAdapter.notifyBalancesDataChanged(resourceBalanceList.data);
@@ -134,6 +139,13 @@ public class BalancesFragment extends BaseFragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mBalancesAdapter = new BalancesAdapter();
         recyclerView.setAdapter(mBalancesAdapter);
+
+        mSwipeRefreshLayout = view.findViewById(R.id.swipeContainer);
+        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+            mSwipeRefreshLayout.setRefreshing(true);
+            walletViewModel.changeCurrency(walletViewModel.getCurrency());
+            walletViewModel.retry();
+        });
 
         return view;
     }

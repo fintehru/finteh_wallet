@@ -1,5 +1,7 @@
 package com.bitshares.bitshareswallet.wallet;
 
+import android.util.Log;
+
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha512_object;
 import com.bitshares.bitshareswallet.wallet.fc.io.raw_type;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.compact_signature;
@@ -126,9 +128,8 @@ public class private_key {
         sha256_object.encoder encoder = new sha256_object.encoder();
 
         encoder.write(strSeed.getBytes(Charset.forName("UTF-8")));
-        private_key privateKey = new private_key(encoder.result().hash);
 
-        return privateKey;
+        return new private_key(encoder.result().hash);
     }
 
     public sha512_object get_shared_secret(public_key publicKey) {
