@@ -1,5 +1,7 @@
 package com.bitshares.bitshareswallet;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitshares.bitshareswallet.room.BitsharesAssetObject;
 import com.bitshares.bitshareswallet.room.BitsharesOperationHistory;
@@ -24,6 +27,8 @@ import com.bitshares.bitshareswallet.wallet.graphene.chain.memo_data;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.operations;
 
 import java.util.Locale;
+
+import static android.content.Context.CLIPBOARD_SERVICE;
 
 /**
  * Created by lorne on 01/11/2017.
@@ -219,8 +224,7 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
 
     }
 
-    private void processMemoMessage(TransactionsItemViewHolder holder,
-                                    memo_data memoData) {
+    private void processMemoMessage(TransactionsItemViewHolder holder, memo_data memoData) {
         if (memoData != null) {
             View layoutMemo = holder.view.findViewById(R.id.layoutMemo);
             layoutMemo.setVisibility(View.VISIBLE);
@@ -235,12 +239,19 @@ class TranactionsAdapter extends RecyclerView.Adapter<TranactionsAdapter.Transac
             } else {
                 TextView textViewMemo = holder.view.findViewById(R.id.textViewMemo);
                 holder.view.findViewById(R.id.imageViewMemoLock).setVisibility(View.GONE);
-                final String strMemo = "Memo: " + BitsharesWalletWraper.getInstance().get_plain_text_message(memoData);
+                final String m = BitsharesWalletWraper.getInstance().get_plain_text_message(memoData);
+                final String strMemo = "Memo: " + m;
                 textViewMemo.setText(strMemo);
 
                 layoutTransaction.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(transactionsFragment.getActivity());
                     builder.setMessage(strMemo);
+                    builder.setPositiveButton(context.getString(R.string.copy), (dialog, which) -> {
+                        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(CLIPBOARD_SERVICE);
+                        ClipData clipData = ClipData.newPlainText("memo", m);
+                        clipboardManager.setPrimaryClip(clipData);
+                        Toast.makeText(context, R.string.copy_success, Toast.LENGTH_SHORT).show();
+                    });
                     builder.show();
                 });
             }

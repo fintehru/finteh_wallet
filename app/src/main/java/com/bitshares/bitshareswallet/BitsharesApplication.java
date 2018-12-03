@@ -74,10 +74,13 @@ public class BitsharesApplication extends Application {
             String[] serversNames = getResources().getStringArray(R.array.full_node_api_server_options);
             String[] serversAddresses = getResources().getStringArray(R.array.full_node_api_server_values);
             Set<String> serversSet = new HashSet<>();
+            List<Server> serverList = new ArrayList<>();
             for(int i = 0; i < serversNames.length; i++) {
                 serversSet.add(serversNames[i] + " " + serversAddresses[i]);
+                serverList.add(new Server(serversNames[i], serversAddresses[i]));
             }
             preferences.edit().putStringSet("servers", serversSet).apply();
+            ServersRepository.INSTANCE.addServers(serverList);
         } else {
             List<Server> serverList = new ArrayList<>();
 

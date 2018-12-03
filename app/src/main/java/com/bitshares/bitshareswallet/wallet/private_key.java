@@ -1,5 +1,7 @@
 package com.bitshares.bitshareswallet.wallet;
 
+import android.util.Log;
+
 import com.bitshares.bitshareswallet.wallet.fc.crypto.sha512_object;
 import com.bitshares.bitshareswallet.wallet.fc.io.raw_type;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.compact_signature;
@@ -112,21 +114,17 @@ public class private_key {
         compact_signature signature = null;
         try {
             final HmacPRNG prng = new HmacPRNG(key_data);
-            RandomSource randomSource = new RandomSource() {
-                @Override
-                public void nextBytes(byte[] bytes) {
-                    prng.nextBytes(bytes);
-                }
-            };
+            RandomSource randomSource = bytes -> prng.nextBytes(bytes);
 
             while (true) {
+                Log.w("HmacPRNG", "CYCLE");
                 InMemoryPrivateKey inMemoryPrivateKey = new InMemoryPrivateKey(key_data);
                 SignedMessage signedMessage = inMemoryPrivateKey.signHash(new Sha256Hash(digest.hash), randomSource);
                 byte[] byteCompact = signedMessage.bitcoinEncodingOfSignature();
                 signature = new compact_signature(byteCompact);
 
                 boolean bResult = public_key.is_canonical(signature);
-                if (bResult == true) {
+                if (bResult) {
                     break;
                 }
             }
@@ -141,9 +139,8 @@ public class private_key {
         sha256_object.encoder encoder = new sha256_object.encoder();
 
         encoder.write(strSeed.getBytes(Charset.forName("UTF-8")));
-        private_key privateKey = new private_key(encoder.result().hash);
 
-        return privateKey;
+        return new private_key(encoder.result().hash);
     }
 
     public sha512_object get_shared_secret(public_key publicKey) {
