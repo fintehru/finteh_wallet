@@ -241,5 +241,6 @@
     <string name="transfer_your_funds_to">Transfer your funds to:</string>
     <string name="with_memo">with MEMO:</string>
     <string name="min_amount">Min amount:</string>
+    <string name="copy">Copy</string>
 
 </resources>

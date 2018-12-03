@@ -236,5 +236,6 @@
     <string name="transfer_your_funds_to">Переведите средства на кошелёк:</string>
     <string name="with_memo">с MEMO:</string>
     <string name="min_amount">Минимальаня сумма:</string>
+    <string name="copy">Копировать</string>
 
 </resources>
