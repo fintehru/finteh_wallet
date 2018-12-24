@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name_full">Bitshares Кошелек</string>
-    <string name="app_name">BTS Кошелек</string>
 
     <!--侧边栏-->
     <string name="navigation_drawer_open">Открыть панель навигации</string>
@@ -237,5 +235,7 @@
     <string name="with_memo">с MEMO:</string>
     <string name="min_amount">Минимальаня сумма:</string>
     <string name="copy">Копировать</string>
+    <string name="app_name">BTS Wallet</string>
+    <string name="app_name_full">BTS Wallet</string>
 
 </resources>

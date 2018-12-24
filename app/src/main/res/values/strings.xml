@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name_full">Bitshares Wallet</string>
     <string name="app_name">BTS Wallet</string>
 
     <!--侧边栏-->
@@ -242,5 +241,6 @@
     <string name="with_memo">with MEMO:</string>
     <string name="min_amount">Min amount:</string>
     <string name="copy">Copy</string>
+    <string name="app_name_full">BTS Wallet</string>
 
 </resources>

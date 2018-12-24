@@ -1,5 +1,4 @@
 ﻿<resources>
-    <string name="app_name_full">Cartera de Bitshares</string>
     <string name="app_name">BTS Wallet</string>
 
     <string name="navigation_drawer_open">Abrir menu de Navegacion</string>
@@ -137,4 +136,5 @@
     <string name="label_bts_cny">bitCNY/BTS</string>
     <string name="label_bts">BTS</string>
     <string name="label_cny">bitCNY</string>
+    <string name="app_name_full">BTS Wallet</string>
 </resources>

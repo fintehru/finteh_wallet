@@ -325,12 +325,9 @@ public class websocket_api extends WebSocketListener {
                 Gson gson = global_config_object.getInstance().getGsonBuilder().create();
                 final BitsharesNoticeMessage bitsharesNoticeMessage = gson.fromJson(text, BitsharesNoticeMessage.class);
 
-                mExecutorService.execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 将数据回调
-                        mListener.onNoticeMessage(bitsharesNoticeMessage);
-                    }
+                mExecutorService.execute(() -> {
+                    // 将数据回调
+                    mListener.onNoticeMessage(bitsharesNoticeMessage);
                 });
             }
         } catch (JsonSyntaxException e) {
@@ -1016,7 +1013,7 @@ public class websocket_api extends WebSocketListener {
                 replyObjectProcess.wait();
                 Reply<T> replyObject = replyObjectProcess.getReplyObject();
                 String strError = replyObjectProcess.getError();
-                if (TextUtils.isEmpty(strError) == false) {
+                if (!TextUtils.isEmpty(strError)) {
                     throw new NetworkStatusException(strError);
                 } else if (replyObjectProcess.getException() != null) {
                     throw new NetworkStatusException(replyObjectProcess.getException());
