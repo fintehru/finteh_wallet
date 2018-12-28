@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1049070370442",
+    "firebase_url": "https://fintehwallet-bcf64.firebaseio.com",
+    "project_id": "fintehwallet-bcf64",
+    "storage_bucket": "fintehwallet-bcf64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1049070370442:android:94eab12e6beda14d",
+        "android_client_info": {
+          "package_name": "com.bitshares.bitshareswallet.finteh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1049070370442-3g9s1vu17jarr47b5vmo5c1gibibtdgr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bitshares.bitshareswallet.finteh",
+            "certificate_hash": "b0474b03dbe5740a1853c450df33608afc9f01f1"
+          }
+        },
+        {
+          "client_id": "1049070370442-ih11fua1kdupoofqlp5ujt6blon1368d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ-3p6Y8tm7aDudQsCFpjg5bZj3m-Mjfw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1049070370442-ih11fua1kdupoofqlp5ujt6blon1368d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
