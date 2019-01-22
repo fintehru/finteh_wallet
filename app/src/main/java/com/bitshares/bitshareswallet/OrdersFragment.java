@@ -150,7 +150,7 @@ public class OrdersFragment extends BaseFragment
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-        String strAssetPair = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
+        String strAssetPair = prefs.getString("quotation_currency_pair", "KITATOKEN:RUDEX.BTC");
         String strAsset[] = strAssetPair.split(":");
         baseAsset = strAsset[1];
         quoteAsset = strAsset[0];

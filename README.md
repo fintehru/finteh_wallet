@@ -10,12 +10,12 @@
  
  
 ### Product info
-#### FTAWALLET is an app for BitShares tokens with focus on FINTEH tokens for Android devices. The main features are:
+#### FTAWALLET is an app for BitShares tokens with focus on KITATOKEN tokens for Android devices. The main features are:
  
 * **Wallet:**
 1. Check your balance
 2. Check the transaction records
-3. Send your FINTEH.TOKEN or other properties to others.
+3. Send your KITATOKEN.TOKEN or other properties to others.
 4. Make QR-code and scan this one
 5. PalmPay support
  

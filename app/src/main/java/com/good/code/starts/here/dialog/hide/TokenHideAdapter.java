@@ -29,7 +29,7 @@ public class TokenHideAdapter extends RecyclerView.Adapter<TokenHideAdapter.Toke
         this.hidden = preferences.getStringSet("hidden", new HashSet<>());
         this.tokens = new ArrayList<>(tokens);
         this.tokens.remove("BTS");
-        this.tokens.remove("FINTEH");
+        this.tokens.remove("KITATOKEN");
     }
 
     @NonNull

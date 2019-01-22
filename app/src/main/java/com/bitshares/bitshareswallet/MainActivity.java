@@ -135,7 +135,7 @@ implements OnFragmentInteractionListener{
 
     private void updateTitle(){
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(BitsharesApplication.getInstance());
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "KITATOKEN:RUDEX.BTC");
         String strAsset[] = strCurrencySetting.split(":");
 
         try {
@@ -432,7 +432,7 @@ implements OnFragmentInteractionListener{
         super.onResume();
         mMainFragmentPageAdapter.updateShowing(true);
 
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "KITATOKEN:RUDEX.BTC");
         String strAsset[] = strCurrencySetting.split(":");
 
         quotationViewModel.selectedMarketTicker(new Pair(strAsset[1], strAsset[0]));
@@ -530,7 +530,7 @@ implements OnFragmentInteractionListener{
             prefs.edit().putStringSet("pairs", pairsSet).apply();
         }
 
-        String strCurrencySetting = prefs.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC");
+        String strCurrencySetting = prefs.getString("quotation_currency_pair", "KITATOKEN:RUDEX.BTC");
         int currSelectIndex = valuesList.indexOf(strCurrencySetting);
 
         CharSequence[] dataForDialog = new CharSequence[valuesList.size()];

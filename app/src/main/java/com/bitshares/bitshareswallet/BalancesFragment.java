@@ -59,7 +59,7 @@ public class BalancesFragment extends BaseFragment {
 
             holder.viewNumber.setText(balance.toPlainString());
             //holder.viewUnit.setText(bitsharesBalanceAsset.quote);
-            //if (bitsharesBalanceAsset.quote.compareTo("FINTEH") != 0) {
+            //if (bitsharesBalanceAsset.quote.compareTo("KITATOKEN") != 0) {
                 //int nResult = (int)Math.rint(bitsharesBalanceAsset.total / bitsharesBalanceAsset.base_precision);
 
                 //holder.viewEqual.setText("=");

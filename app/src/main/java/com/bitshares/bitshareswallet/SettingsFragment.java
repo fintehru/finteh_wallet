@@ -94,9 +94,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 if(!loaded) {
                     loaded = true;
                     List<String> symbolList = new ArrayList<>();
-                    symbolList.add("FINTEH");
+                    symbolList.add("KITATOKEN");
                     for (BitsharesBalanceAsset bitsharesBalanceAsset : bitsharesBalanceAssets) {
-                        if (!bitsharesBalanceAsset.quote.equals("FINTEH"))
+                        if (!bitsharesBalanceAsset.quote.equals("KITATOKEN"))
                             symbolList.add(bitsharesBalanceAsset.quote);
                     }
 

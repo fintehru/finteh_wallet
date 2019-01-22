@@ -116,14 +116,14 @@ public class WalletFragment extends BaseFragment {
                     totalBalance,
                     bitsharesBalanceAsset.currency,
                     exchangeRate,
-                    "FINTEH",
+                    "KITATOKEN",
                     bitsharesBalanceAsset.currency
             );
 
             textViewCurency.setText(strTotalCurrency);
         }*/
 
-       /* String strTotalBalance = String.format(Locale.ENGLISH, "%d %s", totalBTS, "FINTEH");
+       /* String strTotalBalance = String.format(Locale.ENGLISH, "%d %s", totalBTS, "KITATOKEN");
         textViewBalances.setText(strTotalBalance);
         textViewCurency.setVisibility(View.VISIBLE);*/
 

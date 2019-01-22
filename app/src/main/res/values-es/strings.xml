@@ -1,6 +1,6 @@
 ﻿<resources>
-    <string name="app_name_full">FINTEHWALLET</string>
-    <string name="app_name">FINTEHWALLET</string>
+    <string name="app_name_full">KITAWALLET</string>
+    <string name="app_name">KITAWALLET</string>
 
     <string name="navigation_drawer_open">Abrir menu de Navegacion</string>
     <string name="navigation_drawer_close">Cerrar menu de navegacion</string>
@@ -10,7 +10,7 @@
 
     <string name="title_activity_sign_up_button">Resgistrarse </string>
     <string name="sign_up_button">Iniciar Sesion</string>
-    <string name="dummy_content">FINTEHWALLET</string>
+    <string name="dummy_content">KITAWALLET</string>
 
     <string name="splash_page_message">Almacenamiento y transacciones mas seguras</string>
 

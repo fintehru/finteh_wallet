@@ -46,7 +46,7 @@ public class PairsRecyclerAdapter extends RecyclerView.Adapter<PairsRecyclerAdap
             Collections.addAll(pairs, fromRes);
             preferences.edit().putStringSet("pairs", pairsSet).apply();
         }
-        selected = pairs.indexOf(preferences.getString("quotation_currency_pair", "FINTEH:RUDEX.BTC"));
+        selected = pairs.indexOf(preferences.getString("quotation_currency_pair", "KITATOKEN:RUDEX.BTC"));
     }
 
     @NonNull
