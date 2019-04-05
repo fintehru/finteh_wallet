@@ -1,3 +1,7 @@
+**ATTENTION:**:
+
+This code base is **unmaintained** and **not audited**! Use at your own risk!
+
 # bitshares_wallet
 
 ### Technical info 
