@@ -236,7 +236,4 @@
     <string name="with_memo">с MEMO:</string>
     <string name="min_amount">Минимальаня сумма:</string>
     <string name="copy">Копировать</string>
-    <string name="app_name">BTS Wallet</string>
-    <string name="app_name_full">BTS Wallet</string>
-
 </resources>
