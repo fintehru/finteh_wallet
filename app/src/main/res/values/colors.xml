@@ -4,13 +4,13 @@
     <color name="colorPrimaryDark">#303f9f</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="background_color">#0C318D</color>
+    <color name="background_color">#0c318c</color>
 
     <color name="black_overlay">#66000000</color>
     <color name="blue_background">#0099cc</color>
     <color name="grey">#D3D3D3</color>
     <color name="light_grey">#F2F2F2</color>
-    <color name="blue">#2d95ff</color>
+    <color name="blue">#0c318c</color>
     <color name="red">#fe0000</color>
 
     <color name="label_black">#282828</color>

@@ -478,6 +478,7 @@ public final class Rijndael {
                             Te2[(t3 >>>  8) & 0xff] ^
                             Te3[(t0       ) & 0xff] ^
                             rek[k + 1];
+
             int a2 =
                     Te0[(t2 >>> 24)       ] ^
                             Te1[(t3 >>> 16) & 0xff] ^

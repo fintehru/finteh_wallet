@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.preference.PreferenceManager;
+import android.support.multidex.MultiDexApplication;
 
 import com.akexorcist.localizationactivity.core.LocalizationApplicationDelegate;
 import com.bitshares.bitshareswallet.room.BitsharesDatabase;
@@ -20,12 +21,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.sentry.Sentry;
-import io.sentry.android.AndroidSentryClientFactory;
-
 //@AcraCore(buildConfigClass = BuildConfig.class, reportFormat = StringFormat.JSON)
 //@AcraHttpSender(uri = "https://collector.tracepot.com/e05fd60d", httpMethod = HttpSender.Method.POST)
-public class BitsharesApplication extends Application {
+public class BitsharesApplication extends MultiDexApplication {
 
     LocalizationApplicationDelegate localizationDelegate = new LocalizationApplicationDelegate(this);
 
@@ -62,9 +60,6 @@ public class BitsharesApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        String sentryDsn = "https://f7a95030510e4047ae1f7463327395b4@sentry.io/1261657";
-        Sentry.init(sentryDsn, new AndroidSentryClientFactory(this));
 
         Security.insertProviderAt(new BouncyCastleProvider(), 1);
 

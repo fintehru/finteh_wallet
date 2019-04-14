@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name_full">比特股钱包</string>
-    <string name="app_name">比特股钱包</string>
+    <string name="app_name">BTS Wallet</string>
 
     <!--侧边栏-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -162,6 +161,7 @@
 
     <string name="trade_fragment_quantity">数量</string>
     <string name="label_change">涨跌:</string>
+    <string name="app_name_full">BTS Wallet</string>
 
 
 </resources>

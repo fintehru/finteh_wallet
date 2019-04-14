@@ -24,7 +24,7 @@
         android:key="pairs"
         android:title="@string/quotation_cureency_select_title"/>
 
-    <Preference
+  <Preference
         android:key="hide"
         android:title="@string/hide_assets"
         android:defaultValue="null" />

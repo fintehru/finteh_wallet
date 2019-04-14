@@ -1152,7 +1152,7 @@ public class wallet_api {
                 "https://openledger.io/api/v1/accounts",
                 "https://openledger.hk/api/v1/accounts"
         };*/
-        String[] strAddress = {"https://faucet.rudex.org/api/v1/accounts"};//"https://openledger.io/api/v1/accounts"};
+        String[] strAddress = {"https://reg.fintehru.org/api/v1/accounts"};//"https://openledger.io/api/v1/accounts"};
 
         int nRet = -1;
         for (int i = 0; i < strAddress.length; ++i) {
@@ -1208,7 +1208,7 @@ public class wallet_api {
         createAccountObject.owner_key = publicOwnerKeyType;
         createAccountObject.memo_key = publicActiveKeyType;
         createAccountObject.refcode = null;
-        createAccountObject.referrer = "tnam0rken";
+        createAccountObject.referrer = null;
         Gson gson = global_config_object.getInstance().getGsonBuilder().create();
 
         String strAddress = strServerUrl;

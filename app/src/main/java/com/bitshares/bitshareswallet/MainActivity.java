@@ -59,6 +59,7 @@ import com.bitshares.bitshareswallet.wallet.fc.crypto.sha256_object;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.signed_transaction;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.types;
 import com.bitshares.bitshareswallet.wallet.graphene.chain.utils;
+import com.crashlytics.android.Crashlytics;
 import com.good.code.starts.here.ColorUtils;
 import com.good.code.starts.here.deposit.DepositActivity;
 import com.good.code.starts.here.dialog.keys.KeysAdapter;
@@ -72,8 +73,6 @@ import java.util.Set;
 
 import io.reactivex.Flowable;
 import io.reactivex.schedulers.Schedulers;
-import io.sentry.Sentry;
-import io.sentry.event.UserBuilder;
 
 
 public class MainActivity extends LocalizationActivity
@@ -160,11 +159,9 @@ implements OnFragmentInteractionListener{
         quotationViewModel = ViewModelProviders.of(MainActivity.this).get(QuotationViewModel.class);
 
         account_object account = BitsharesWalletWraper.getInstance().get_account();
-        Sentry.getContext().setUser(new UserBuilder()
-                .setUsername(account.name)
-                .setId(account.id.toString())
-                .withData("pin", PreferenceManager.getDefaultSharedPreferences(this).contains("val"))
-                .build());
+        Crashlytics.setUserName(account.name);
+        Crashlytics.setUserIdentifier(account.id.toString());
+        Crashlytics.setBool("pin_enabled", PreferenceManager.getDefaultSharedPreferences(this).contains("val"));
 
         rasingColorRevers = getResources().getConfiguration().locale.getCountry().equals("CN");
         setContentView(R.layout.activity_main);

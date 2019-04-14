@@ -57,8 +57,7 @@ public class BalancesFragment extends BaseFragment {
             /*String strBalances = String.format(
                     Locale.ENGLISH,
                     "%.4f",
-                    (float)bitsharesBalanceAsset.amount / bitsharesBalanceAsset.quote_precision
-            );*/
+                    (float)bitsharesBalanceAsset.amount / bitsharesBalanceAsset.quote_precision */
             BigDecimal balance = new BigDecimal(bitsharesBalanceAsset.amount).setScale(String.valueOf(bitsharesBalanceAsset.quote_precision).length()-1, BigDecimal.ROUND_UNNECESSARY).divide(new BigDecimal(bitsharesBalanceAsset.quote_precision), RoundingMode.UNNECESSARY).stripTrailingZeros();
 
             holder.viewNumber.setText(balance.toPlainString());
@@ -70,7 +69,6 @@ public class BalancesFragment extends BaseFragment {
                 //holder.viewConvertNumber.setText(Integer.valueOf(nResult).toString());
                 holder.viewConvertUnit.setText(bitsharesBalanceAsset.quote);
             //}
-
         }
 
         @Override

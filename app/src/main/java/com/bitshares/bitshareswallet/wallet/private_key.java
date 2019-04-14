@@ -112,7 +112,6 @@ public class private_key {
 
     public compact_signature sign_compact(sha256_object digest, boolean require_canonical ) {
         compact_signature signature = null;
-
         InMemoryPrivateKey inMemoryPrivateKey = new InMemoryPrivateKey(key_data);
         SignedMessage signedMessage = inMemoryPrivateKey.signHash(new Sha256Hash(digest.hash));
         byte[] byteCompact = signedMessage.bitcoinEncodingOfSignature();
